@@ -47,10 +47,13 @@ class ProfileFragment : Fragment() {
                     binding.btnAdminPanel.visibility = if (it.role == "admin") View.VISIBLE else View.GONE
                     
                     val orderHistoryLayout = binding.root.findViewById<ViewGroup>(R.id.order_history_layout)
+                    val adminLogsLayout = binding.root.findViewById<ViewGroup>(R.id.admin_logs_layout)
                     if (it.role == "admin") {
                         orderHistoryLayout?.visibility = View.GONE
+                        adminLogsLayout?.visibility = View.VISIBLE
                     } else {
                         orderHistoryLayout?.visibility = View.VISIBLE
+                        adminLogsLayout?.visibility = View.GONE
                     }
 
                     if (it.profilePictureUrl.isNotEmpty()) {
@@ -94,6 +97,13 @@ class ProfileFragment : Fragment() {
         val orderHistoryLayout = binding.root.findViewById<ViewGroup>(R.id.order_history_layout)
         orderHistoryLayout?.setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_orders)
+        }
+
+        // NEW: Admin Logs click listener - navigate to AdminFragment
+        val adminLogsLayout = binding.root.findViewById<ViewGroup>(R.id.admin_logs_layout)
+        adminLogsLayout?.setOnClickListener {
+            val bundle = Bundle().apply { putInt("selectedTab", 2) }
+            findNavController().navigate(R.id.action_profile_to_admin, bundle)
         }
     }
 

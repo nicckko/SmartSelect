@@ -64,12 +64,12 @@
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-4:\\layout\\activity_login.xml",
-        "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\activity_login.xml"
-    },
-    {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-4:\\layout\\fragment_home.xml",
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-4:\\layout\\activity_login.xml",
+        "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\activity_login.xml"
     },
     {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-4:\\layout\\item_phone_card.xml",
@@ -80,6 +80,10 @@
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\fragment_admin_phones.xml"
     },
     {
+        "merged": "com.smartselect.app-mergeDebugResources-4:/layout/fragment_admin_dashboard.xml",
+        "source": "com.smartselect.app-main-7:/layout/fragment_admin_dashboard.xml"
+    },
+    {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-4:\\layout\\fragment_admin_dashboard.xml",
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\fragment_admin_dashboard.xml"
     },
@@ -88,16 +92,16 @@
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\item_spec_row.xml"
     },
     {
+        "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-4:\\layout\\item_admin_log.xml",
+        "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\item_admin_log.xml"
+    },
+    {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-4:\\layout\\fragment_admin_orders.xml",
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\fragment_admin_orders.xml"
     },
     {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-4:\\layout\\fragment_phone_details.xml",
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\fragment_phone_details.xml"
-    },
-    {
-        "merged": "com.smartselect.app-mergeDebugResources-4:/layout/item_admin_log.xml",
-        "source": "com.smartselect.app-main-7:/layout/item_admin_log.xml"
     },
     {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-4:\\layout\\dialog_add_edit_phone.xml",

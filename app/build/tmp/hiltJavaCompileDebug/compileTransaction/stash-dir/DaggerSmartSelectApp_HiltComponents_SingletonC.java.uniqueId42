@@ -12,6 +12,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.smartselect.data.repository.AdminLogRepository;
 import com.smartselect.data.repository.AuthRepository;
 import com.smartselect.data.repository.OrderRepository;
 import com.smartselect.data.repository.PhoneRepository;
@@ -437,6 +438,7 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
     @CanIgnoreReturnValue
     private AddEditPhoneDialog injectAddEditPhoneDialog2(AddEditPhoneDialog instance) {
       AddEditPhoneDialog_MembersInjector.injectPhoneRepository(instance, singletonCImpl.phoneRepositoryProvider.get());
+      AddEditPhoneDialog_MembersInjector.injectAdminLogRepository(instance, singletonCImpl.adminLogRepositoryProvider.get());
       AddEditPhoneDialog_MembersInjector.injectStorage(instance, singletonCImpl.provideFirebaseStorageProvider.get());
       return instance;
     }
@@ -452,12 +454,14 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
     private AdminFragment injectAdminFragment2(AdminFragment instance) {
       AdminFragment_MembersInjector.injectPhoneRepository(instance, singletonCImpl.phoneRepositoryProvider.get());
       AdminFragment_MembersInjector.injectOrderRepository(instance, singletonCImpl.orderRepositoryProvider.get());
+      AdminFragment_MembersInjector.injectAdminLogRepository(instance, singletonCImpl.adminLogRepositoryProvider.get());
       return instance;
     }
 
     @CanIgnoreReturnValue
     private AdminOrdersFragment injectAdminOrdersFragment2(AdminOrdersFragment instance) {
       AdminOrdersFragment_MembersInjector.injectOrderRepository(instance, singletonCImpl.orderRepositoryProvider.get());
+      AdminOrdersFragment_MembersInjector.injectAdminLogRepository(instance, singletonCImpl.adminLogRepositoryProvider.get());
       return instance;
     }
 
@@ -703,9 +707,11 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
 
     private Provider<PhoneRepository> phoneRepositoryProvider;
 
-    private Provider<FirebaseStorage> provideFirebaseStorageProvider;
-
     private Provider<FirebaseAuth> provideFirebaseAuthProvider;
+
+    private Provider<AdminLogRepository> adminLogRepositoryProvider;
+
+    private Provider<FirebaseStorage> provideFirebaseStorageProvider;
 
     private Provider<OrderRepository> orderRepositoryProvider;
 
@@ -721,10 +727,11 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
     private void initialize() {
       this.provideFirebaseFirestoreProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseFirestore>(singletonCImpl, 1));
       this.phoneRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<PhoneRepository>(singletonCImpl, 0));
-      this.provideFirebaseStorageProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseStorage>(singletonCImpl, 2));
-      this.provideFirebaseAuthProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseAuth>(singletonCImpl, 4));
-      this.orderRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<OrderRepository>(singletonCImpl, 3));
-      this.authRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepository>(singletonCImpl, 5));
+      this.provideFirebaseAuthProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseAuth>(singletonCImpl, 3));
+      this.adminLogRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AdminLogRepository>(singletonCImpl, 2));
+      this.provideFirebaseStorageProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseStorage>(singletonCImpl, 4));
+      this.orderRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<OrderRepository>(singletonCImpl, 5));
+      this.authRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepository>(singletonCImpl, 6));
     }
 
     @Override
@@ -766,16 +773,19 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
           case 1: // com.google.firebase.firestore.FirebaseFirestore 
           return (T) AppModule_ProvideFirebaseFirestoreFactory.provideFirebaseFirestore();
 
-          case 2: // com.google.firebase.storage.FirebaseStorage 
-          return (T) AppModule_ProvideFirebaseStorageFactory.provideFirebaseStorage();
+          case 2: // com.smartselect.data.repository.AdminLogRepository 
+          return (T) new AdminLogRepository(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirebaseFirestoreProvider.get());
 
-          case 3: // com.smartselect.data.repository.OrderRepository 
-          return (T) new OrderRepository(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirebaseFirestoreProvider.get());
-
-          case 4: // com.google.firebase.auth.FirebaseAuth 
+          case 3: // com.google.firebase.auth.FirebaseAuth 
           return (T) AppModule_ProvideFirebaseAuthFactory.provideFirebaseAuth();
 
-          case 5: // com.smartselect.data.repository.AuthRepository 
+          case 4: // com.google.firebase.storage.FirebaseStorage 
+          return (T) AppModule_ProvideFirebaseStorageFactory.provideFirebaseStorage();
+
+          case 5: // com.smartselect.data.repository.OrderRepository 
+          return (T) new OrderRepository(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirebaseFirestoreProvider.get());
+
+          case 6: // com.smartselect.data.repository.AuthRepository 
           return (T) new AuthRepository(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirebaseFirestoreProvider.get());
 
           default: throw new AssertionError(id);

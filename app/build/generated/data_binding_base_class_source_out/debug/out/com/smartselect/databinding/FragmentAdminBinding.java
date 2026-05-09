@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.tabs.TabLayout;
 import com.smartselect.R;
 import java.lang.NullPointerException;
@@ -28,6 +30,21 @@ public final class FragmentAdminBinding implements ViewBinding {
   public final MaterialButton btnSeedData;
 
   @NonNull
+  public final ChipGroup chipGroupStock;
+
+  @NonNull
+  public final Chip chipStockAll;
+
+  @NonNull
+  public final Chip chipStockIn;
+
+  @NonNull
+  public final Chip chipStockLow;
+
+  @NonNull
+  public final Chip chipStockSoldout;
+
+  @NonNull
   public final RecyclerView rvLogs;
 
   @NonNull
@@ -41,11 +58,18 @@ public final class FragmentAdminBinding implements ViewBinding {
 
   private FragmentAdminBinding(@NonNull CoordinatorLayout rootView,
       @NonNull MaterialButton btnAddPhone, @NonNull MaterialButton btnSeedData,
-      @NonNull RecyclerView rvLogs, @NonNull RecyclerView rvOrders, @NonNull RecyclerView rvPhones,
+      @NonNull ChipGroup chipGroupStock, @NonNull Chip chipStockAll, @NonNull Chip chipStockIn,
+      @NonNull Chip chipStockLow, @NonNull Chip chipStockSoldout, @NonNull RecyclerView rvLogs,
+      @NonNull RecyclerView rvOrders, @NonNull RecyclerView rvPhones,
       @NonNull TabLayout tabLayout) {
     this.rootView = rootView;
     this.btnAddPhone = btnAddPhone;
     this.btnSeedData = btnSeedData;
+    this.chipGroupStock = chipGroupStock;
+    this.chipStockAll = chipStockAll;
+    this.chipStockIn = chipStockIn;
+    this.chipStockLow = chipStockLow;
+    this.chipStockSoldout = chipStockSoldout;
     this.rvLogs = rvLogs;
     this.rvOrders = rvOrders;
     this.rvPhones = rvPhones;
@@ -91,6 +115,36 @@ public final class FragmentAdminBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.chip_group_stock;
+      ChipGroup chipGroupStock = ViewBindings.findChildViewById(rootView, id);
+      if (chipGroupStock == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_stock_all;
+      Chip chipStockAll = ViewBindings.findChildViewById(rootView, id);
+      if (chipStockAll == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_stock_in;
+      Chip chipStockIn = ViewBindings.findChildViewById(rootView, id);
+      if (chipStockIn == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_stock_low;
+      Chip chipStockLow = ViewBindings.findChildViewById(rootView, id);
+      if (chipStockLow == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_stock_soldout;
+      Chip chipStockSoldout = ViewBindings.findChildViewById(rootView, id);
+      if (chipStockSoldout == null) {
+        break missingId;
+      }
+
       id = R.id.rv_logs;
       RecyclerView rvLogs = ViewBindings.findChildViewById(rootView, id);
       if (rvLogs == null) {
@@ -116,7 +170,8 @@ public final class FragmentAdminBinding implements ViewBinding {
       }
 
       return new FragmentAdminBinding((CoordinatorLayout) rootView, btnAddPhone, btnSeedData,
-          rvLogs, rvOrders, rvPhones, tabLayout);
+          chipGroupStock, chipStockAll, chipStockIn, chipStockLow, chipStockSoldout, rvLogs,
+          rvOrders, rvPhones, tabLayout);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

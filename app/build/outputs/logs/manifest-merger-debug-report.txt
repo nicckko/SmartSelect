@@ -73,6 +73,7 @@ MERGED from [androidx.fragment:fragment-ktx:1.6.2] C:\Users\LENOVO\.gradle\cache
 MERGED from [androidx.activity:activity-ktx:1.8.2] C:\Users\LENOVO\.gradle\caches\8.13\transforms\1b9b835c3f6f60585cd69a3da018ae6d\transformed\jetified-activity-ktx-1.8.2\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\212e98f0ff6e9e99a567d7307b761e18\transformed\jetified-lifecycle-viewmodel-ktx-2.7.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\LENOVO\.gradle\caches\8.13\transforms\ee27d92ee8d7b57acaccdc99609c9808\transformed\jetified-core-splashscreen-1.0.1\AndroidManifest.xml:17:1-24:12
+MERGED from [com.github.PhilJay:MPAndroidChart:v3.1.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\1d35656824b4fb94310cc1dd9384362d\transformed\jetified-MPAndroidChart-v3.1.0\AndroidManifest.xml:2:1-20:12
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\a41c0fb1ebf63676433f5a4574cfea77\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\53a1efc52c65ef1b6b6e7c74eee6c289\transformed\cardview-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.github.bumptech.glide:gifdecoder:4.16.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\8061ee467ddf9684820349b0bab96165\transformed\jetified-gifdecoder-4.16.0\AndroidManifest.xml:2:1-9:12
@@ -351,6 +352,8 @@ MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0] C:\Users\LENOVO\.
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\212e98f0ff6e9e99a567d7307b761e18\transformed\jetified-lifecycle-viewmodel-ktx-2.7.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\LENOVO\.gradle\caches\8.13\transforms\ee27d92ee8d7b57acaccdc99609c9808\transformed\jetified-core-splashscreen-1.0.1\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\LENOVO\.gradle\caches\8.13\transforms\ee27d92ee8d7b57acaccdc99609c9808\transformed\jetified-core-splashscreen-1.0.1\AndroidManifest.xml:20:5-22:41
+MERGED from [com.github.PhilJay:MPAndroidChart:v3.1.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\1d35656824b4fb94310cc1dd9384362d\transformed\jetified-MPAndroidChart-v3.1.0\AndroidManifest.xml:16:5-18:41
+MERGED from [com.github.PhilJay:MPAndroidChart:v3.1.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\1d35656824b4fb94310cc1dd9384362d\transformed\jetified-MPAndroidChart-v3.1.0\AndroidManifest.xml:16:5-18:41
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\a41c0fb1ebf63676433f5a4574cfea77\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\a41c0fb1ebf63676433f5a4574cfea77\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\LENOVO\.gradle\caches\8.13\transforms\53a1efc52c65ef1b6b6e7c74eee6c289\transformed\cardview-1.0.0\AndroidManifest.xml:20:5-44

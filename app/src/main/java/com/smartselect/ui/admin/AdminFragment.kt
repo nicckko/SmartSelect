@@ -31,6 +31,8 @@ class AdminFragment : Fragment() {
     private lateinit var orderAdapter: AdminOrderAdapter
     private lateinit var logAdapter: AdminLogAdapter
 
+    private var allPhones: List<com.smartselect.data.model.Phone> = emptyList()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAdminBinding.inflate(inflater, container, false)
         return binding.root
@@ -52,7 +54,15 @@ class AdminFragment : Fragment() {
     }
 
     private fun setupTabs() {
-        showPhones()
+        val selectedTab = arguments?.getInt("selectedTab", 0) ?: 0
+        binding.tabLayout.getTabAt(selectedTab)?.select()
+        
+        when (selectedTab) {
+            0 -> showPhones()
+            1 -> showOrders()
+            2 -> showLogs()
+        }
+
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) { 
@@ -68,6 +78,7 @@ class AdminFragment : Fragment() {
 
     private fun showPhones() {
         binding.rvPhones.visibility = View.VISIBLE
+        binding.chipGroupStock.visibility = View.VISIBLE
         binding.rvOrders.visibility = View.GONE
         binding.rvLogs.visibility = View.GONE
         binding.btnAddPhone.visibility = View.VISIBLE
@@ -76,6 +87,7 @@ class AdminFragment : Fragment() {
 
     private fun showOrders() {
         binding.rvPhones.visibility = View.GONE
+        binding.chipGroupStock.visibility = View.GONE
         binding.rvOrders.visibility = View.VISIBLE
         binding.rvLogs.visibility = View.GONE
         binding.btnAddPhone.visibility = View.GONE
@@ -84,6 +96,7 @@ class AdminFragment : Fragment() {
 
     private fun showLogs() {
         binding.rvPhones.visibility = View.GONE
+        binding.chipGroupStock.visibility = View.GONE
         binding.rvOrders.visibility = View.GONE
         binding.rvLogs.visibility = View.VISIBLE
         binding.btnAddPhone.visibility = View.GONE
@@ -115,12 +128,29 @@ class AdminFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
 
+        binding.chipGroupStock.setOnCheckedStateChangeListener { _, _ ->
+            applyStockFilter()
+        }
+
         lifecycleScope.launch {
             phoneRepository.getPhones().collect { resource ->
                 if (_binding == null) return@collect
-                if (resource is Resource.Success) phoneAdapter.submitList(resource.data ?: emptyList())
+                if (resource is Resource.Success) {
+                    allPhones = resource.data ?: emptyList()
+                    applyStockFilter()
+                }
             }
         }
+    }
+
+    private fun applyStockFilter() {
+        val filtered = when (binding.chipGroupStock.checkedChipId) {
+            com.smartselect.R.id.chip_stock_soldout -> allPhones.filter { it.stock <= 0 }
+            com.smartselect.R.id.chip_stock_low -> allPhones.filter { it.stock in 1..3 }
+            com.smartselect.R.id.chip_stock_in -> allPhones.filter { it.stock > 3 }
+            else -> allPhones
+        }
+        phoneAdapter.submitList(filtered)
     }
 
     private fun setupOrderList() {

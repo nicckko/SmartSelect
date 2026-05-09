@@ -142,10 +142,10 @@
                     app:chipCornerRadius="10dp" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_iphone"
+                    android:id="@+id/chip_flagship"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:text="iPhone"
+                    android:text="Flagship"
                     android:textColor="@color/chip_text_color"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
                     app:chipBackgroundColor="@color/chip_color"
@@ -154,10 +154,34 @@
                     app:chipCornerRadius="10dp" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_android"
+                    android:id="@+id/chip_midrange"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:text="Android"
+                    android:text="Mid-range"
+                    android:textColor="@color/chip_text_color"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    app:chipBackgroundColor="@color/chip_color"
+                    app:chipStrokeColor="@color/divider"
+                    app:chipStrokeWidth="1dp"
+                    app:chipCornerRadius="10dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_gaming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Gaming"
+                    android:textColor="@color/chip_text_color"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    app:chipBackgroundColor="@color/chip_color"
+                    app:chipStrokeColor="@color/divider"
+                    app:chipStrokeWidth="1dp"
+                    app:chipCornerRadius="10dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_budget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Budget"
                     android:textColor="@color/chip_text_color"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
                     app:chipBackgroundColor="@color/chip_color"

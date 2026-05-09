@@ -36,13 +36,19 @@ public final class FragmentHomeBinding implements ViewBinding {
   public final Chip chipAll;
 
   @NonNull
-  public final Chip chipAndroid;
+  public final Chip chipBudget;
+
+  @NonNull
+  public final Chip chipFlagship;
+
+  @NonNull
+  public final Chip chipGaming;
 
   @NonNull
   public final ChipGroup chipGroup;
 
   @NonNull
-  public final Chip chipIphone;
+  public final Chip chipMidrange;
 
   @NonNull
   public final TextInputEditText etSearch;
@@ -57,17 +63,20 @@ public final class FragmentHomeBinding implements ViewBinding {
   public final TextView tvPhoneCount;
 
   private FragmentHomeBinding(@NonNull CoordinatorLayout rootView, @NonNull AppBarLayout appBar,
-      @NonNull MaterialButton btnFilter, @NonNull Chip chipAll, @NonNull Chip chipAndroid,
-      @NonNull ChipGroup chipGroup, @NonNull Chip chipIphone, @NonNull TextInputEditText etSearch,
+      @NonNull MaterialButton btnFilter, @NonNull Chip chipAll, @NonNull Chip chipBudget,
+      @NonNull Chip chipFlagship, @NonNull Chip chipGaming, @NonNull ChipGroup chipGroup,
+      @NonNull Chip chipMidrange, @NonNull TextInputEditText etSearch,
       @NonNull ProgressBar progressBar, @NonNull RecyclerView rvPhones,
       @NonNull TextView tvPhoneCount) {
     this.rootView = rootView;
     this.appBar = appBar;
     this.btnFilter = btnFilter;
     this.chipAll = chipAll;
-    this.chipAndroid = chipAndroid;
+    this.chipBudget = chipBudget;
+    this.chipFlagship = chipFlagship;
+    this.chipGaming = chipGaming;
     this.chipGroup = chipGroup;
-    this.chipIphone = chipIphone;
+    this.chipMidrange = chipMidrange;
     this.etSearch = etSearch;
     this.progressBar = progressBar;
     this.rvPhones = rvPhones;
@@ -119,9 +128,21 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.chip_android;
-      Chip chipAndroid = ViewBindings.findChildViewById(rootView, id);
-      if (chipAndroid == null) {
+      id = R.id.chip_budget;
+      Chip chipBudget = ViewBindings.findChildViewById(rootView, id);
+      if (chipBudget == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_flagship;
+      Chip chipFlagship = ViewBindings.findChildViewById(rootView, id);
+      if (chipFlagship == null) {
+        break missingId;
+      }
+
+      id = R.id.chip_gaming;
+      Chip chipGaming = ViewBindings.findChildViewById(rootView, id);
+      if (chipGaming == null) {
         break missingId;
       }
 
@@ -131,9 +152,9 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.chip_iphone;
-      Chip chipIphone = ViewBindings.findChildViewById(rootView, id);
-      if (chipIphone == null) {
+      id = R.id.chip_midrange;
+      Chip chipMidrange = ViewBindings.findChildViewById(rootView, id);
+      if (chipMidrange == null) {
         break missingId;
       }
 
@@ -162,7 +183,8 @@ public final class FragmentHomeBinding implements ViewBinding {
       }
 
       return new FragmentHomeBinding((CoordinatorLayout) rootView, appBar, btnFilter, chipAll,
-          chipAndroid, chipGroup, chipIphone, etSearch, progressBar, rvPhones, tvPhoneCount);
+          chipBudget, chipFlagship, chipGaming, chipGroup, chipMidrange, etSearch, progressBar,
+          rvPhones, tvPhoneCount);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

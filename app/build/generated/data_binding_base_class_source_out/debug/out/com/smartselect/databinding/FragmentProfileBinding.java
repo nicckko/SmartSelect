@@ -24,6 +24,9 @@ public final class FragmentProfileBinding implements ViewBinding {
   private final NestedScrollView rootView;
 
   @NonNull
+  public final LinearLayout adminLogsLayout;
+
+  @NonNull
   public final MaterialButton btnAdminPanel;
 
   @NonNull
@@ -57,12 +60,14 @@ public final class FragmentProfileBinding implements ViewBinding {
   public final TextView tvRole;
 
   private FragmentProfileBinding(@NonNull NestedScrollView rootView,
-      @NonNull MaterialButton btnAdminPanel, @NonNull MaterialButton btnEditProfile,
-      @NonNull MaterialButton btnLogout, @NonNull ShapeableImageView ivAvatar,
-      @NonNull TextView labelAdmin, @NonNull LinearLayout orderHistoryLayout,
-      @NonNull SwitchMaterial switchDarkMode, @NonNull TextView tvAvatar, @NonNull TextView tvEmail,
-      @NonNull TextView tvName, @NonNull TextView tvRole) {
+      @NonNull LinearLayout adminLogsLayout, @NonNull MaterialButton btnAdminPanel,
+      @NonNull MaterialButton btnEditProfile, @NonNull MaterialButton btnLogout,
+      @NonNull ShapeableImageView ivAvatar, @NonNull TextView labelAdmin,
+      @NonNull LinearLayout orderHistoryLayout, @NonNull SwitchMaterial switchDarkMode,
+      @NonNull TextView tvAvatar, @NonNull TextView tvEmail, @NonNull TextView tvName,
+      @NonNull TextView tvRole) {
     this.rootView = rootView;
+    this.adminLogsLayout = adminLogsLayout;
     this.btnAdminPanel = btnAdminPanel;
     this.btnEditProfile = btnEditProfile;
     this.btnLogout = btnLogout;
@@ -103,6 +108,12 @@ public final class FragmentProfileBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.admin_logs_layout;
+      LinearLayout adminLogsLayout = ViewBindings.findChildViewById(rootView, id);
+      if (adminLogsLayout == null) {
+        break missingId;
+      }
+
       id = R.id.btn_admin_panel;
       MaterialButton btnAdminPanel = ViewBindings.findChildViewById(rootView, id);
       if (btnAdminPanel == null) {
@@ -169,9 +180,9 @@ public final class FragmentProfileBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentProfileBinding((NestedScrollView) rootView, btnAdminPanel, btnEditProfile,
-          btnLogout, ivAvatar, labelAdmin, orderHistoryLayout, switchDarkMode, tvAvatar, tvEmail,
-          tvName, tvRole);
+      return new FragmentProfileBinding((NestedScrollView) rootView, adminLogsLayout, btnAdminPanel,
+          btnEditProfile, btnLogout, ivAvatar, labelAdmin, orderHistoryLayout, switchDarkMode,
+          tvAvatar, tvEmail, tvName, tvRole);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

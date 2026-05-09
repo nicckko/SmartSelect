@@ -188,6 +188,17 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         val phone = buildPhoneFromForm() ?: return
         lifecycleScope.launch {
             setLoadingState(true)
+
+            // Check duplicate only if it's a new phone
+            if (editPhone == null) {
+                val exists = phoneRepository.checkIfExists(phone.brand, phone.model)
+                if (exists) {
+                    setLoadingState(false)
+                    Snackbar.make(binding.root, "A phone with this brand and model already exists!", Snackbar.LENGTH_LONG).show()
+                    return@launch
+                }
+            }
+
             val finalImageUrl = if (selectedImageUri != null) uploadImageToStorage(selectedImageUri!!) else existingImageUrl
             val phoneToSave = phone.copy(imageUrl = finalImageUrl)
             if (editPhone != null) {
@@ -228,32 +239,37 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         (binding.etPrice.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = null
         (binding.actvCategory.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = null
 
-        if (brand.isEmpty()) {
-            binding.tilBrand?.error = "Brand is required"; binding.etBrand.requestFocus(); return null
-        }
-        if (model.isEmpty()) {
-            binding.tilModel?.error = "Model is required"; binding.etModel.requestFocus(); return null
-        }
-        if (priceStr.isEmpty()) {
-            (binding.etPrice.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Price is required"
-            binding.etPrice.requestFocus(); return null
-        }
-        if (category.isEmpty()) {
-            (binding.actvCategory.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Category is required"
-            binding.actvCategory.requestFocus(); return null
-        }
+        val stockStr = binding.etStock.text.toString().trim()
+        val ram = binding.etRam.text.toString().trim()
+        val storage = binding.etStorage.text.toString().trim()
+        val camera = binding.etCamera.text.toString().trim()
+        val battery = binding.etBattery.text.toString().trim()
+        val chipset = binding.etChipset.text.toString().trim()
+        val display = binding.etDisplay.text.toString().trim()
+
+        if (brand.isEmpty()) { binding.tilBrand?.error = "Required"; binding.etBrand.requestFocus(); return null }
+        if (model.isEmpty()) { binding.tilModel?.error = "Required"; binding.etModel.requestFocus(); return null }
+        if (priceStr.isEmpty()) { (binding.etPrice.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etPrice.requestFocus(); return null }
+        if (stockStr.isEmpty()) { (binding.etStock.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etStock.requestFocus(); return null }
+        if (category.isEmpty()) { (binding.actvCategory.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.actvCategory.requestFocus(); return null }
+        if (ram.isEmpty()) { (binding.etRam.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etRam.requestFocus(); return null }
+        if (storage.isEmpty()) { (binding.etStorage.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etStorage.requestFocus(); return null }
+        if (camera.isEmpty()) { (binding.etCamera.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etCamera.requestFocus(); return null }
+        if (battery.isEmpty()) { (binding.etBattery.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etBattery.requestFocus(); return null }
+        if (chipset.isEmpty()) { (binding.etChipset.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etChipset.requestFocus(); return null }
+        if (display.isEmpty()) { (binding.etDisplay.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etDisplay.requestFocus(); return null }
 
         return Phone(
             brand = brand, model = model,
             price = priceStr.toDoubleOrNull() ?: 0.0,
-            stock = binding.etStock.text.toString().toIntOrNull() ?: 10,
+            stock = stockStr.toIntOrNull() ?: 0,
             category = category,
-            ram = binding.etRam.text.toString().trim(),
-            storage = binding.etStorage.text.toString().trim(),
-            camera = binding.etCamera.text.toString().trim(),
-            battery = binding.etBattery.text.toString().trim(),
-            chipset = binding.etChipset.text.toString().trim(),
-            display = binding.etDisplay.text.toString().trim(),
+            ram = ram,
+            storage = storage,
+            camera = camera,
+            battery = battery,
+            chipset = chipset,
+            display = display,
             imageUrl = existingImageUrl,
             isBestValue = binding.switchBestValue.isChecked
         )

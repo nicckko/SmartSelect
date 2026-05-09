@@ -28,14 +28,14 @@ fun Double.toPeso(): String {
 }
 
 fun Int.getStockLabel(): String = when {
-    this == 0 -> "Out of Stock"
-    this <= 3 -> "Low Stock"
-    else -> "In Stock"
+    this <= 0 -> "Sold Out (0)"
+    this <= 3 -> "Low Stock ($this left)"
+    else -> "In Stock ($this left)"
 }
 
 // Fixed: use R.color instead of android.R.color for proper color resource access
 fun Int.getStockColor(): Int = when {
-    this == 0 -> R.color.error
+    this <= 0 -> R.color.error
     this <= 3 -> R.color.warning
     else -> R.color.success
 }

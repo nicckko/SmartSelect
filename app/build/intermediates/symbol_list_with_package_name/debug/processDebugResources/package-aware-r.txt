@@ -3358,6 +3358,7 @@ id adjust_width
 id adminFragment
 id adminOrdersFragment
 id adminPhonesFragment
+id admin_logs_layout
 id alertTitle
 id aligned
 id all
@@ -3443,9 +3444,16 @@ id checkbox
 id checked
 id checkoutFragment
 id chip_all
-id chip_android
+id chip_budget
+id chip_flagship
+id chip_gaming
 id chip_group
-id chip_iphone
+id chip_group_stock
+id chip_midrange
+id chip_stock_all
+id chip_stock_in
+id chip_stock_low
+id chip_stock_soldout
 id chronometer
 id circle_center
 id clear_text

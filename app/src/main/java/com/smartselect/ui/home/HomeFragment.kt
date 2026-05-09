@@ -95,8 +95,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun getSelectedCategory(): String = when (binding.chipGroup.checkedChipId) {
-        R.id.chip_iphone -> "iPhone"
-        R.id.chip_android -> "Android"
+        R.id.chip_flagship -> "Flagship"
+        R.id.chip_midrange -> "Mid-range"
+        R.id.chip_gaming -> "Gaming"
+        R.id.chip_budget -> "Budget"
         else -> ""
     }
 

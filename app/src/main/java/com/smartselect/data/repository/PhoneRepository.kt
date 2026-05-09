@@ -54,6 +54,18 @@ class PhoneRepository @Inject constructor(
         awaitClose { listener.remove() }
     }
 
+    suspend fun checkIfExists(brand: String, model: String): Boolean {
+        return try {
+            val querySnapshot = phonesCollection
+                .whereEqualTo("brand", brand)
+                .whereEqualTo("model", model)
+                .get().await()
+            !querySnapshot.isEmpty
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     suspend fun getPhoneById(id: String): Resource<Phone> {
         return try {
             val doc = phonesCollection.document(id).get().await()

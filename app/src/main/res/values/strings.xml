@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SmartSelect</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_compare">Compare</string>
+    <string name="nav_orders">Orders</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_profile">Profile</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_register">Register</string>
+    <string name="btn_order_now">Order Now 🛒</string>
+    <string name="btn_add_to_compare">Compare ➕</string>
+    <string name="btn_add_favorite">Add to Favorites ❤️</string>
+    <string name="label_best_value">⭐ Best Value</string>
+    <string name="label_in_stock">In Stock</string>
+    <string name="label_low_stock">Low Stock</string>
+    <string name="label_out_of_stock">Out of Stock</string>
+    <string name="hint_search">Search brand or model…</string>
+    <string name="hint_email">Email address</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_name">Full name</string>
+    <string name="empty_favorites">No saved phones yet.\nTap ❤️ on any phone to save it!</string>
+    <string name="empty_compare">No phones in compare list.\nTap ➕ on any phone to add!</string>
+    <string name="empty_cart">Your cart is empty.\nBrowse phones to add items!</string>
+    <string name="order_success_title">Order Placed! 🎉</string>
+    <string name="order_success_body">Your order has been received and is being processed.</string>
+</resources>

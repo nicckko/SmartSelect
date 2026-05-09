@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- ===== USER SCREENS ===== -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.smartselect.ui.home.HomeFragment"
+        android:label="Home">
+        <action android:id="@+id/action_home_to_details" app:destination="@id/phoneDetailsFragment"
+            app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+        <action android:id="@+id/action_home_to_compare" app:destination="@id/compareFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/phoneDetailsFragment"
+        android:name="com.smartselect.ui.details.PhoneDetailsFragment"
+        android:label="Details">
+        <action android:id="@+id/action_details_to_compare" app:destination="@id/compareFragment"/>
+        <action android:id="@+id/action_details_to_orders" app:destination="@id/ordersFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/compareFragment"
+        android:name="com.smartselect.ui.compare.CompareFragment"
+        android:label="Compare"/>
+
+    <fragment
+        android:id="@+id/ordersFragment"
+        android:name="com.smartselect.ui.orders.OrdersFragment"
+        android:label="Orders">
+        <action android:id="@+id/action_orders_to_checkout" app:destination="@id/checkoutFragment"
+            app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/checkoutFragment"
+        android:name="com.smartselect.ui.orders.CheckoutFragment"
+        android:label="Checkout">
+        <!-- Fixed: added action_checkout_to_home that was missing but referenced in OrderSuccessDialog -->
+        <action android:id="@+id/action_checkout_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.smartselect.ui.favorites.FavoritesFragment"
+        android:label="Favorites">
+        <action android:id="@+id/action_favorites_to_details" app:destination="@id/phoneDetailsFragment"
+            app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+        <action android:id="@+id/action_favorites_to_compare" app:destination="@id/compareFragment"/>
+    </fragment>
+
+    <!-- Shared Profile -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.smartselect.ui.profile.ProfileFragment"
+        android:label="Profile">
+        <action android:id="@+id/action_profile_to_admin" app:destination="@id/adminFragment"
+            app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <!-- ===== ADMIN SCREENS ===== -->
+    <!-- Fixed: AdminDashboardFragment now uses proper ViewBinding layout -->
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.smartselect.ui.admin.AdminDashboardFragment"
+        android:label="Dashboard"/>
+
+    <fragment
+        android:id="@+id/adminPhonesFragment"
+        android:name="com.smartselect.ui.admin.AdminPhonesFragment"
+        android:label="Phones"/>
+
+    <fragment
+        android:id="@+id/adminOrdersFragment"
+        android:name="com.smartselect.ui.admin.AdminOrdersFragment"
+        android:label="Orders"/>
+
+</navigation>

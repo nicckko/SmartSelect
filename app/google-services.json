@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "337172204497",
+    "project_id": "smartselect-c7fdf",
+    "storage_bucket": "smartselect-c7fdf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337172204497:android:3f0a1f5f084125b0c06ef0",
+        "android_client_info": {
+          "package_name": "com.smartselect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHyyLMOqFhsLU9335BLojPHxa4ryuRHiY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

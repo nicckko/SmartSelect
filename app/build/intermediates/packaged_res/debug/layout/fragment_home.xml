@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        app:elevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:paddingTop="52dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SmartSelect"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:letterSpacing="-0.01" />
+                    <TextView
+                        android:id="@+id/tv_phone_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="#64748B" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_filter"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="0dp"
+                    app:icon="@drawable/ic_filter"
+                    app:iconSize="20dp"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:strokeColor="#334155"
+                    app:iconTint="#94A3B8"
+                    app:cornerRadius="12dp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+            </LinearLayout>
+
+            <!-- Search Bar -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                app:boxBackgroundColor="#1E293B"
+                app:boxCornerRadiusBottomEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusTopStart="14dp"
+                app:boxStrokeColor="#334155"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="#64748B"
+                android:layout_marginBottom="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Search brand or model…"
+                    android:textColorHint="#64748B"
+                    android:textColor="#FFFFFF"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:background="@null" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Filter Chips -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="false">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All"
+                    android:textColor="@color/chip_text_color"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    app:chipBackgroundColor="@color/chip_color"
+                    app:chipStrokeColor="#334155"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_iphone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="iPhone"
+                    android:textColor="@color/chip_text_color"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    app:chipBackgroundColor="@color/chip_color"
+                    app:chipStrokeColor="#334155"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Android"
+                    android:textColor="@color/chip_text_color"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    app:chipBackgroundColor="@color/chip_color"
+                    app:chipStrokeColor="#334155"
+                    app:chipStrokeWidth="1dp" />
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_phones"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

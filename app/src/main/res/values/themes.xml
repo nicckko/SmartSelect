@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SmartSelect" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorSecondaryVariant">@color/accent_dark</item>
+        <item name="colorOnSecondary">@color/text_on_accent</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorError">@color/error</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:navigationBarColor">@color/surface</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SmartSelect.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SmartSelect.Large</item>
+
+        <!-- AppBar background to use surface color that changes with theme -->
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+
+    <!-- Toolbar style that uses colorSurface -->
+    <style name="SmartSelect.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Toolbar.Surface</item>
+        <item name="titleTextColor">@color/text_primary</item>
+        <item name="navigationIconTint">@color/text_primary</item>
+    </style>
+
+    <!-- AppBarLayout style for fragments -->
+    <style name="SmartSelect.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Toolbar.Surface</item>
+    </style>
+
+    <style name="ShapeAppearance.SmartSelect.Medium" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">14dp</item>
+    </style>
+
+    <style name="ShapeAppearance.SmartSelect.Large" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="Theme.SmartSelect.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.SmartSelect</item>
+    </style>
+
+    <!-- Card Styles -->
+    <style name="SmartSelect.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="strokeColor">@color/divider</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="SmartSelect.Card.Elevated" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">8dp</item>
+        <item name="cardBackgroundColor">@color/surface</item>
+    </style>
+
+    <!-- Button Styles -->
+    <style name="SmartSelect.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="backgroundTint">@color/accent</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <style name="SmartSelect.Button.Dark" parent="Widget.MaterialComponents.Button">
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <style name="SmartSelect.Button.Outline" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="strokeColor">@color/accent</item>
+        <item name="android:textColor">@color/accent</item>
+    </style>
+
+    <style name="SmartSelect.Button.Ghost" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="cornerRadius">14dp</item>
+    </style>
+
+    <!-- TextAppearance -->
+    <style name="SmartSelect.TextAppearance" parent="TextAppearance.MaterialComponents.Body1"/>
+
+    <style name="SmartSelect.TextAppearance.Price" parent="SmartSelect.TextAppearance">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SmartSelect.TextAppearance.Brand" parent="SmartSelect.TextAppearance">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/text_tertiary</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.12</item>
+    </style>
+
+    <style name="SmartSelect.TextAppearance.Model" parent="SmartSelect.TextAppearance">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SmartSelect.TextAppearance.Headline" parent="SmartSelect.TextAppearance">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="FullScreenDialogStyle" parent="Theme.MaterialComponents.DayNight.Dialog">
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+</resources>

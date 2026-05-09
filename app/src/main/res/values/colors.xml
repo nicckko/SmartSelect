@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand -->
+    <color name="primary">#0B1120</color> <!-- Deeper midnight blue -->
+    <color name="primary_dark">#060913</color>
+    <color name="primary_light">#1E293B</color>
+    <color name="accent">#4F46E5</color> <!-- Vibrant Indigo -->
+    <color name="secondary">#4F46E5</color>
+    <color name="accent_light">#EEF2FF</color>
+    <color name="accent_dark">#3730A3</color>
+    <color name="teal">#0D9488</color> <!-- Elegant Teal -->
+    <color name="teal_light">#CCFBF1</color>
+
+    <!-- Background -->
+    <color name="background">#F8FAFC</color> <!-- Soft off-white for app bg -->
+    <color name="surface">#FFFFFF</color> <!-- Pure white for cards -->
+    <color name="surface_variant">#F1F5F9</color> <!-- Slight gray for inactive elements -->
+    <color name="card_background">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#475569</color>
+    <color name="text_tertiary">#94A3B8</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_on_accent">#FFFFFF</color>
+
+    <!-- Status -->
+    <color name="success">#059669</color>
+    <color name="success_light">#D1FAE5</color>
+    <color name="warning">#D97706</color>
+    <color name="warning_light">#FEF3C7</color>
+    <color name="error">#DC2626</color>
+    <color name="error_light">#FEE2E2</color>
+    <color name="info">#2563EB</color>
+    <color name="info_light">#DBEAFE</color>
+
+    <!-- Badges -->
+    <color name="badge_best_value">#0D9488</color>
+    <color name="badge_iphone">#4F46E5</color>
+    <color name="badge_android">#059669</color>
+
+    <!-- Divider -->
+    <color name="divider">#E2E8F0</color>
+
+    <!-- Material theme colors -->
+    <color name="colorPrimary">#0B1120</color>
+    <color name="colorPrimaryVariant">#060913</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#4F46E5</color>
+    <color name="colorSecondaryVariant">#3730A3</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorOnSurface">#0F172A</color>
+    <color name="colorBackground">#F8FAFC</color>
+    <color name="colorOnBackground">#0F172A</color>
+    <color name="colorError">#DC2626</color>
+    <color name="colorOnError">#FFFFFF</color>
+
+    <!-- Surface containers - for AppBar -->
+    <color name="surface_container">#F8FAFC</color>
+    <color name="surface_container_dark">#1E293B</color>
+</resources>

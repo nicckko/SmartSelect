@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🎉"
+        android:textSize="56sp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order Placed!"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#0F172A"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your order has been received and is being processed. Thank you!"
+        android:textSize="14sp"
+        android:textColor="#64748B"
+        android:gravity="center"
+        android:layout_marginBottom="28dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_done"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Done"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        style="@style/SmartSelect.Button.Primary" />
+</LinearLayout>

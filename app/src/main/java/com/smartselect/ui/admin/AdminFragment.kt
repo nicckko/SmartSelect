@@ -25,44 +25,40 @@ class AdminFragment : Fragment() {
 
     @Inject lateinit var phoneRepository: PhoneRepository
     @Inject lateinit var orderRepository: OrderRepository
+    @Inject lateinit var adminLogRepository: com.smartselect.data.repository.AdminLogRepository
 
     private lateinit var phoneAdapter: AdminPhoneAdapter
     private lateinit var orderAdapter: AdminOrderAdapter
+    private lateinit var logAdapter: AdminLogAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAdminBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupPhoneList()
         setupOrderList()
+        setupLogsList()
         setupTabs()
         setupButtons()
     }
 
     private fun setupButtons() {
-        // ✅ Add Phone — opens the BottomSheet dialog
         binding.btnAddPhone.setOnClickListener {
             AddEditPhoneDialog().show(parentFragmentManager, "add_phone")
         }
-
-
     }
 
     private fun setupTabs() {
-        // Default: show phones tab
         showPhones()
-
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab.position) {
+                when (tab.position) { 
                     0 -> showPhones()
                     1 -> showOrders()
+                    2 -> showLogs()
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -73,6 +69,7 @@ class AdminFragment : Fragment() {
     private fun showPhones() {
         binding.rvPhones.visibility = View.VISIBLE
         binding.rvOrders.visibility = View.GONE
+        binding.rvLogs.visibility = View.GONE
         binding.btnAddPhone.visibility = View.VISIBLE
         binding.btnSeedData.visibility = View.VISIBLE
     }
@@ -80,6 +77,15 @@ class AdminFragment : Fragment() {
     private fun showOrders() {
         binding.rvPhones.visibility = View.GONE
         binding.rvOrders.visibility = View.VISIBLE
+        binding.rvLogs.visibility = View.GONE
+        binding.btnAddPhone.visibility = View.GONE
+        binding.btnSeedData.visibility = View.GONE
+    }
+
+    private fun showLogs() {
+        binding.rvPhones.visibility = View.GONE
+        binding.rvOrders.visibility = View.GONE
+        binding.rvLogs.visibility = View.VISIBLE
         binding.btnAddPhone.visibility = View.GONE
         binding.btnSeedData.visibility = View.GONE
     }
@@ -87,33 +93,32 @@ class AdminFragment : Fragment() {
     private fun setupPhoneList() {
         phoneAdapter = AdminPhoneAdapter(
             onEdit = { phone ->
-                AddEditPhoneDialog.newInstance(phone)
-                    .show(parentFragmentManager, "edit_phone")
+                AddEditPhoneDialog.newInstance(phone).show(parentFragmentManager, "edit_phone")
             },
             onDelete = { phone ->
-                lifecycleScope.launch {
-                    phoneRepository.deletePhone(phone.id)
-                    Snackbar.make(
-                        binding.root,
-                        "${phone.brand} ${phone.model} deleted",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
+                com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Delete Phone")
+                    .setMessage("Are you sure you want to delete ${phone.brand} ${phone.model}?")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("Delete") { _, _ ->
+                        lifecycleScope.launch {
+                            phoneRepository.deletePhone(phone.id)
+                            adminLogRepository.logAction("Deleted Phone", "Deleted ${phone.brand} ${phone.model}")
+                            Snackbar.make(binding.root, "${phone.brand} ${phone.model} deleted", Snackbar.LENGTH_SHORT).show()
+                        }
+                    }.show()
             }
         )
 
         binding.rvPhones.apply {
             adapter = phoneAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(false)
         }
 
         lifecycleScope.launch {
             phoneRepository.getPhones().collect { resource ->
                 if (_binding == null) return@collect
-                if (resource is Resource.Success) {
-                    phoneAdapter.submitList(resource.data ?: emptyList())
-                }
+                if (resource is Resource.Success) phoneAdapter.submitList(resource.data ?: emptyList())
             }
         }
     }
@@ -122,15 +127,22 @@ class AdminFragment : Fragment() {
         orderAdapter = AdminOrderAdapter(
             onStatusChange = { order, status ->
                 lifecycleScope.launch {
-                    orderRepository.updateOrderStatus(order.orderId, status)
+                    val result = orderRepository.updateOrderStatus(order.orderId, status)
+                    if (result is Resource.Error) {
+                        com.google.android.material.snackbar.Snackbar.make(binding.root, "Failed to update: ${result.message}", com.google.android.material.snackbar.Snackbar.LENGTH_LONG).show()
+                    } else {
+                        adminLogRepository.logAction("Order Status Changed", "Order #${order.orderId.take(8).uppercase()} changed to $status")
+                    }
                 }
+            },
+            onOrderClick = { order ->
+                OrderDetailDialog.newInstance(order).show(parentFragmentManager, "order_detail")
             }
         )
 
         binding.rvOrders.apply {
             adapter = orderAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(false)
         }
 
         lifecycleScope.launch {
@@ -138,26 +150,40 @@ class AdminFragment : Fragment() {
                 if (_binding == null) return@collect
                 if (resource is Resource.Success) {
                     val orders = resource.data ?: emptyList()
-                    // Auto-cancel expired pickup orders
                     orderRepository.checkAndCancelExpiredOrders(orders)
-                    orderAdapter.submitList(
-                        orders.sortedBy { statusPriority(it.status) }
-                    )
+                    orderAdapter.submitList(orders.sortedBy { statusPriority(it.status) })
+
+                    // Badge on Orders tab
+                    val pending = orders.count { it.status == "pending" }
+                    val ordersTab = binding.tabLayout.getTabAt(1)
+                    if (pending > 0) {
+                        ordersTab?.orCreateBadge?.apply { number = pending; isVisible = true }
+                    } else { ordersTab?.removeBadge() }
+                }
+            }
+        }
+    }
+
+    private fun setupLogsList() {
+        logAdapter = AdminLogAdapter()
+        binding.rvLogs.apply {
+            adapter = logAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        lifecycleScope.launch {
+            adminLogRepository.getLogs().collect { resource ->
+                if (_binding == null) return@collect
+                if (resource is Resource.Success) {
+                    logAdapter.submitList(resource.data ?: emptyList())
                 }
             }
         }
     }
 
     private fun statusPriority(status: String) = when (status) {
-        "pending"   -> 0
-        "confirmed" -> 1
-        "picked_up" -> 2
-        "cancelled" -> 3
-        else        -> 4
+        "pending" -> 0; "confirmed" -> 1; "picked_up" -> 2; "cancelled" -> 3; else -> 4
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    override fun onDestroyView() { super.onDestroyView(); _binding = null }
 }

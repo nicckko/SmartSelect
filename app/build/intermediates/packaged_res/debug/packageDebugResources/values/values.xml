@@ -82,6 +82,10 @@
     <string name="order_success_body">Your order has been received and is being processed.</string>
     <string name="order_success_title">Order Placed! 🎉</string>
     <string name="project_id" translatable="false">smartselect-c7fdf</string>
+    <style name="CircleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
     <style name="FullScreenDialogStyle" parent="Theme.MaterialComponents.DayNight.Dialog">
         <item name="android:windowMinWidthMajor">100%</item>
         <item name="android:windowMinWidthMinor">100%</item>

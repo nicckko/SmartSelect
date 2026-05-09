@@ -1,9 +1,8 @@
 package com.smartselect.ui.admin
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -18,7 +17,9 @@ import com.smartselect.utils.getStockColor
 import com.smartselect.utils.getStockLabel
 import com.smartselect.utils.toPeso
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class AdminPhoneAdapter(
     private val onEdit: (Phone) -> Unit,
@@ -31,132 +32,160 @@ class AdminPhoneAdapter(
             binding.tvPhoneName.text = "${phone.brand} ${phone.model}"
             binding.tvPrice.text = phone.price.toPeso()
             binding.tvStock.text = phone.stock.getStockLabel()
-            binding.tvStock.setTextColor(
-                ContextCompat.getColor(binding.root.context, phone.stock.getStockColor())
-            )
-            Glide.with(binding.root.context)
-                .load(phone.imageUrl)
-                .placeholder(R.drawable.placeholder_phone)
-                .error(R.drawable.placeholder_phone)
+            binding.tvStock.setTextColor(ContextCompat.getColor(binding.root.context, phone.stock.getStockColor()))
+            Glide.with(binding.root.context).load(phone.imageUrl)
+                .placeholder(R.drawable.placeholder_phone).error(R.drawable.placeholder_phone)
                 .into(binding.ivPhone)
             binding.btnEdit.setOnClickListener { onEdit(phone) }
             binding.btnDelete.setOnClickListener { onDelete(phone) }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemAdminPhoneBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-        return ViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(getItem(position))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        ItemAdminPhoneBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    )
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position))
 
     class DiffCallback : DiffUtil.ItemCallback<Phone>() {
-        override fun areItemsTheSame(oldItem: Phone, newItem: Phone) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Phone, newItem: Phone) = oldItem == newItem
+        override fun areItemsTheSame(a: Phone, b: Phone) = a.id == b.id
+        override fun areContentsTheSame(a: Phone, b: Phone) = a == b
     }
 }
 
 class AdminOrderAdapter(
-    private val onStatusChange: (Order, String) -> Unit
+    private val onStatusChange: (Order, String) -> Unit,
+    private val onOrderClick: (Order) -> Unit = {}
 ) : ListAdapter<Order, AdminOrderAdapter.ViewHolder>(DiffCallback()) {
-
-    // Updated status flow: pending → confirmed → picked_up (or cancelled)
-    private val statusOptions = listOf("pending", "confirmed", "picked_up", "cancelled")
 
     inner class ViewHolder(private val binding: ItemAdminOrderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(order: Order) {
-            val fmt = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            val fullFmt = SimpleDateFormat("MMM dd, yyyy · h:mm a", Locale.getDefault())
             val ctx = binding.root.context
 
-            binding.tvOrderId.text   = "#${order.orderId.take(8).uppercase()}"
-            binding.tvCustomer.text  = order.userName.ifEmpty { "Unknown" }
-            binding.tvPhones.text    = order.phoneNames.joinToString(" · ")
-            binding.tvTotal.text     = order.totalPrice.toPeso()
+            binding.tvOrderId.text = "#${order.orderId.take(8).uppercase()}"
+            binding.tvCustomer.text = order.userName.ifEmpty { "Unknown" }
+            binding.tvPhones.text = order.phoneNames.joinToString(" · ")
+            binding.tvTotal.text = order.totalPrice.toPeso()
 
+            // Card click → show full detail
+            binding.root.setOnClickListener { onOrderClick(order) }
+
+            // Full datetime
             order.timestamp?.toDate()?.let {
-                binding.tvDate.text = "Placed: ${fmt.format(it)}"
+                binding.tvDate.text = "Placed: ${fullFmt.format(it)}"
             }
 
-            // Pickup info
+            // Relative time
+            order.timestamp?.toDate()?.let { date ->
+                binding.tvRelativeTime.text = getRelativeTime(date)
+                binding.tvRelativeTime.visibility = View.VISIBLE
+            } ?: run { binding.tvRelativeTime.visibility = View.GONE }
+
+            // Contact number
+            if (order.contact.isNotEmpty()) {
+                binding.tvContact.text = "📞 ${order.contact}"
+                binding.tvContact.visibility = View.VISIBLE
+            } else { binding.tvContact.visibility = View.GONE }
+
+            // Pickup code
             if (order.pickupCode.isNotEmpty()) {
-                binding.tvPickupCode.text = "Code: ${order.pickupCode}"
-                binding.tvPickupCode.visibility = android.view.View.VISIBLE
-            } else {
-                binding.tvPickupCode.visibility = android.view.View.GONE
-            }
+                binding.tvPickupCode.text = order.pickupCode
+                binding.tvPickupCode.visibility = View.VISIBLE
+            } else { binding.tvPickupCode.visibility = View.GONE }
 
-            order.pickupDate?.toDate()?.let {
-                binding.tvPickupDate.text = "Pickup: ${fmt.format(it)}"
-                binding.tvPickupDate.visibility = android.view.View.VISIBLE
-            } ?: run {
-                binding.tvPickupDate.visibility = android.view.View.GONE
-            }
+            // Pickup date + overdue
+            val pickupFmt = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            order.pickupDate?.toDate()?.let { pickupDate ->
+                val isOverdue = pickupDate.before(Date()) &&
+                        order.status != "picked_up" && order.status != "cancelled"
+                if (isOverdue) {
+                    binding.tvPickupDate.text = "⚠️ OVERDUE · ${pickupFmt.format(pickupDate)}"
+                    binding.tvPickupDate.setTextColor(ContextCompat.getColor(ctx, R.color.error))
+                } else {
+                    binding.tvPickupDate.text = pickupFmt.format(pickupDate)
+                    binding.tvPickupDate.setTextColor(ContextCompat.getColor(ctx, R.color.accent))
+                }
+                binding.tvPickupDate.visibility = View.VISIBLE
+            } ?: run { binding.tvPickupDate.visibility = View.GONE }
 
-            // Status Button Logic
+            // Status button with text + color
             val statusMap = mapOf(
-                "pending"   to "⏳ Pending",
-                "confirmed" to "✅ Confirmed",
-                "picked_up" to "📦 Picked Up",
-                "cancelled" to "❌ Cancelled"
+                "pending" to "⏳ Pending", "confirmed" to "✅ Confirmed",
+                "picked_up" to "📦 Picked Up", "cancelled" to "❌ Cancelled"
             )
-
             binding.btnStatus.text = statusMap[order.status] ?: order.status.replaceFirstChar { it.uppercase() }
 
-            // Set dynamic color based on status
             val colorRes = when (order.status) {
-                "pending" -> android.R.color.holo_orange_dark
-                "confirmed" -> com.smartselect.R.color.primary
-                "picked_up" -> android.R.color.holo_green_dark
-                "cancelled" -> android.R.color.holo_red_dark
-                else -> com.smartselect.R.color.text_primary
+                "pending" -> R.color.warning
+                "confirmed" -> R.color.info
+                "picked_up" -> R.color.success
+                "cancelled" -> R.color.error
+                else -> R.color.text_primary
             }
             val colorVal = ContextCompat.getColor(ctx, colorRes)
             binding.btnStatus.setTextColor(colorVal)
-            (binding.btnStatus as? com.google.android.material.button.MaterialButton)?.strokeColor = android.content.res.ColorStateList.valueOf(colorVal)
+            (binding.btnStatus as? com.google.android.material.button.MaterialButton)?.strokeColor =
+                android.content.res.ColorStateList.valueOf(colorVal)
 
+            // Left color accent strip
+            binding.viewStatusStrip.setBackgroundColor(colorVal)
+
+            // Status popup menu
             binding.btnStatus.setOnClickListener { view ->
                 val popup = android.widget.PopupMenu(ctx, view)
                 statusMap.values.forEachIndexed { index, label ->
                     popup.menu.add(android.view.Menu.NONE, index, index, label)
                 }
                 popup.setOnMenuItemClickListener { item ->
-                    val selectedStatus = statusMap.keys.elementAt(item.itemId)
-                    if (selectedStatus != order.status) {
-                        onStatusChange(order, selectedStatus)
-                    }
+                    val sel = statusMap.keys.elementAt(item.itemId)
+                    if (sel != order.status) onStatusChange(order, sel)
                     true
                 }
                 popup.show()
             }
 
-            // Visual feedback for cancelled orders
-            if (order.status == "cancelled") {
-                binding.root.alpha = 0.6f
+            // Quick action buttons for pending
+            if (order.status == "pending") {
+                binding.layoutQuickActions.visibility = View.VISIBLE
+                binding.btnQuickConfirm.setOnClickListener { onStatusChange(order, "confirmed") }
+                binding.btnQuickCancel.setOnClickListener { onStatusChange(order, "cancelled") }
             } else {
-                binding.root.alpha = 1f
+                binding.layoutQuickActions.visibility = View.GONE
+            }
+
+            // Dim cancelled/picked_up
+            binding.root.alpha = when (order.status) {
+                "cancelled" -> 0.5f
+                "picked_up" -> 0.8f
+                else -> 1f
+            }
+        }
+
+        private fun getRelativeTime(date: Date): String {
+            val diff = System.currentTimeMillis() - date.time
+            val mins = TimeUnit.MILLISECONDS.toMinutes(diff)
+            val hrs = TimeUnit.MILLISECONDS.toHours(diff)
+            val days = TimeUnit.MILLISECONDS.toDays(diff)
+            return when {
+                mins < 1 -> "Just now"
+                mins < 60 -> "${mins}m ago"
+                hrs < 24 -> "${hrs}h ago"
+                days < 2 -> "Yesterday"
+                days < 7 -> "${days}d ago"
+                else -> SimpleDateFormat("MMM dd", Locale.getDefault()).format(date)
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemAdminOrderBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-        return ViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(getItem(position))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        ItemAdminOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    )
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position))
 
     class DiffCallback : DiffUtil.ItemCallback<Order>() {
-        override fun areItemsTheSame(oldItem: Order, newItem: Order) =
-            oldItem.orderId == newItem.orderId
-        override fun areContentsTheSame(oldItem: Order, newItem: Order) = oldItem == newItem
+        override fun areItemsTheSame(a: Order, b: Order) = a.orderId == b.orderId
+        override fun areContentsTheSame(a: Order, b: Order) = a == b
     }
 }

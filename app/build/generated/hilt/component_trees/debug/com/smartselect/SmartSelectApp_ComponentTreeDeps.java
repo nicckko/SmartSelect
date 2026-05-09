@@ -31,7 +31,9 @@ import hilt_aggregated_deps._com_smartselect_ui_details_PhoneDetailsFragment_Gen
 import hilt_aggregated_deps._com_smartselect_ui_favorites_FavoritesFragment_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_home_HomeFragment_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_orders_CheckoutFragment_GeneratedInjector;
+import hilt_aggregated_deps._com_smartselect_ui_orders_CustomerOrderDetailDialog_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_orders_OrdersFragment_GeneratedInjector;
+import hilt_aggregated_deps._com_smartselect_ui_profile_EditProfileDialog_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_profile_ProfileFragment_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_viewmodel_AuthViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._com_smartselect_viewmodel_AuthViewModel_HiltModules_KeyModule;
@@ -90,7 +92,9 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_smartselect_ui_favorites_FavoritesFragment_GeneratedInjector.class,
         _com_smartselect_ui_home_HomeFragment_GeneratedInjector.class,
         _com_smartselect_ui_orders_CheckoutFragment_GeneratedInjector.class,
+        _com_smartselect_ui_orders_CustomerOrderDetailDialog_GeneratedInjector.class,
         _com_smartselect_ui_orders_OrdersFragment_GeneratedInjector.class,
+        _com_smartselect_ui_profile_EditProfileDialog_GeneratedInjector.class,
         _com_smartselect_ui_profile_ProfileFragment_GeneratedInjector.class,
         _com_smartselect_viewmodel_AuthViewModel_HiltModules_BindsModule.class,
         _com_smartselect_viewmodel_AuthViewModel_HiltModules_KeyModule.class,

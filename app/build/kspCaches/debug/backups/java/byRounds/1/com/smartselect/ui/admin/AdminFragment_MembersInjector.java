@@ -1,5 +1,6 @@
 package com.smartselect.ui.admin;
 
+import com.smartselect.data.repository.AdminLogRepository;
 import com.smartselect.data.repository.OrderRepository;
 import com.smartselect.data.repository.PhoneRepository;
 import dagger.MembersInjector;
@@ -26,22 +27,28 @@ public final class AdminFragment_MembersInjector implements MembersInjector<Admi
 
   private final Provider<OrderRepository> orderRepositoryProvider;
 
+  private final Provider<AdminLogRepository> adminLogRepositoryProvider;
+
   public AdminFragment_MembersInjector(Provider<PhoneRepository> phoneRepositoryProvider,
-      Provider<OrderRepository> orderRepositoryProvider) {
+      Provider<OrderRepository> orderRepositoryProvider,
+      Provider<AdminLogRepository> adminLogRepositoryProvider) {
     this.phoneRepositoryProvider = phoneRepositoryProvider;
     this.orderRepositoryProvider = orderRepositoryProvider;
+    this.adminLogRepositoryProvider = adminLogRepositoryProvider;
   }
 
   public static MembersInjector<AdminFragment> create(
       Provider<PhoneRepository> phoneRepositoryProvider,
-      Provider<OrderRepository> orderRepositoryProvider) {
-    return new AdminFragment_MembersInjector(phoneRepositoryProvider, orderRepositoryProvider);
+      Provider<OrderRepository> orderRepositoryProvider,
+      Provider<AdminLogRepository> adminLogRepositoryProvider) {
+    return new AdminFragment_MembersInjector(phoneRepositoryProvider, orderRepositoryProvider, adminLogRepositoryProvider);
   }
 
   @Override
   public void injectMembers(AdminFragment instance) {
     injectPhoneRepository(instance, phoneRepositoryProvider.get());
     injectOrderRepository(instance, orderRepositoryProvider.get());
+    injectAdminLogRepository(instance, adminLogRepositoryProvider.get());
   }
 
   @InjectedFieldSignature("com.smartselect.ui.admin.AdminFragment.phoneRepository")
@@ -54,5 +61,11 @@ public final class AdminFragment_MembersInjector implements MembersInjector<Admi
   public static void injectOrderRepository(AdminFragment instance,
       OrderRepository orderRepository) {
     instance.orderRepository = orderRepository;
+  }
+
+  @InjectedFieldSignature("com.smartselect.ui.admin.AdminFragment.adminLogRepository")
+  public static void injectAdminLogRepository(AdminFragment instance,
+      AdminLogRepository adminLogRepository) {
+    instance.adminLogRepository = adminLogRepository;
   }
 }

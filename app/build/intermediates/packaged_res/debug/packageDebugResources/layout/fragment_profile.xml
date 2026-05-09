@@ -33,6 +33,14 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_avatar_circle" />
 
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/CircleImageView"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/tv_avatar"
                     android:layout_width="match_parent"

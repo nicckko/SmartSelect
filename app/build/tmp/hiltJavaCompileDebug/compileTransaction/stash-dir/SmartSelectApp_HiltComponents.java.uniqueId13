@@ -13,7 +13,9 @@ import com.smartselect.ui.details.PhoneDetailsFragment_GeneratedInjector;
 import com.smartselect.ui.favorites.FavoritesFragment_GeneratedInjector;
 import com.smartselect.ui.home.HomeFragment_GeneratedInjector;
 import com.smartselect.ui.orders.CheckoutFragment_GeneratedInjector;
+import com.smartselect.ui.orders.CustomerOrderDetailDialog_GeneratedInjector;
 import com.smartselect.ui.orders.OrdersFragment_GeneratedInjector;
+import com.smartselect.ui.profile.EditProfileDialog_GeneratedInjector;
 import com.smartselect.ui.profile.ProfileFragment_GeneratedInjector;
 import com.smartselect.viewmodel.AuthViewModel_HiltModules;
 import com.smartselect.viewmodel.PhoneViewModel_HiltModules;
@@ -245,7 +247,9 @@ public final class SmartSelectApp_HiltComponents {
       FavoritesFragment_GeneratedInjector,
       HomeFragment_GeneratedInjector,
       CheckoutFragment_GeneratedInjector,
+      CustomerOrderDetailDialog_GeneratedInjector,
       OrdersFragment_GeneratedInjector,
+      EditProfileDialog_GeneratedInjector,
       ProfileFragment_GeneratedInjector,
       FragmentComponent,
       DefaultViewModelFactories.FragmentEntryPoint,

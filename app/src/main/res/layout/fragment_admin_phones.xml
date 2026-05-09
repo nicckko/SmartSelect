@@ -49,9 +49,34 @@
                         android:textColor="#94A3B8"
                         android:layout_marginTop="2dp" />
                 </LinearLayout>
-
-
             </LinearLayout>
+
+            <!-- Search bar -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Search by brand, model, category..."
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxCornerRadiusBottomEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusTopStart="14dp"
+                app:boxStrokeColor="#334155"
+                app:boxBackgroundColor="#1E293B"
+                app:hintTextColor="#64748B"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="#64748B">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#64748B"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

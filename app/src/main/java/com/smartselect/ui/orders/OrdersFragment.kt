@@ -74,7 +74,11 @@ class OrdersFragment : Fragment() {
     }
 
     private fun loadOrderHistory() {
-        val orderAdapter = OrderHistoryAdapter()
+        val orderAdapter = OrderHistoryAdapter(
+            onOrderClick = { order ->
+                CustomerOrderDetailDialog.newInstance(order).show(childFragmentManager, "customer_order_detail")
+            }
+        )
         binding.rvOrders.apply {
             adapter = orderAdapter
             layoutManager = LinearLayoutManager(requireContext())

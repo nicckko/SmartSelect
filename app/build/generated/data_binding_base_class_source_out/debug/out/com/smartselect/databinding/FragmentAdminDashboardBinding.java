@@ -4,12 +4,14 @@ package com.smartselect.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.card.MaterialCardView;
 import com.smartselect.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -20,16 +22,40 @@ public final class FragmentAdminDashboardBinding implements ViewBinding {
   private final NestedScrollView rootView;
 
   @NonNull
+  public final AutoCompleteTextView actvRevenueFilter;
+
+  @NonNull
+  public final MaterialCardView cardPendingAlert;
+
+  @NonNull
+  public final TextView tvCancellationRate;
+
+  @NonNull
   public final TextView tvConfirmedOrders;
 
   @NonNull
   public final TextView tvDeliveredOrders;
 
   @NonNull
+  public final TextView tvGreeting;
+
+  @NonNull
   public final TextView tvInStock;
 
   @NonNull
+  public final TextView tvPendingAlertMsg;
+
+  @NonNull
+  public final TextView tvPendingCount;
+
+  @NonNull
   public final TextView tvPendingOrders;
+
+  @NonNull
+  public final TextView tvRevenueSubtitle;
+
+  @NonNull
+  public final TextView tvStockWarning;
 
   @NonNull
   public final TextView tvTotalOrders;
@@ -41,15 +67,27 @@ public final class FragmentAdminDashboardBinding implements ViewBinding {
   public final TextView tvTotalRevenue;
 
   private FragmentAdminDashboardBinding(@NonNull NestedScrollView rootView,
-      @NonNull TextView tvConfirmedOrders, @NonNull TextView tvDeliveredOrders,
-      @NonNull TextView tvInStock, @NonNull TextView tvPendingOrders,
+      @NonNull AutoCompleteTextView actvRevenueFilter, @NonNull MaterialCardView cardPendingAlert,
+      @NonNull TextView tvCancellationRate, @NonNull TextView tvConfirmedOrders,
+      @NonNull TextView tvDeliveredOrders, @NonNull TextView tvGreeting,
+      @NonNull TextView tvInStock, @NonNull TextView tvPendingAlertMsg,
+      @NonNull TextView tvPendingCount, @NonNull TextView tvPendingOrders,
+      @NonNull TextView tvRevenueSubtitle, @NonNull TextView tvStockWarning,
       @NonNull TextView tvTotalOrders, @NonNull TextView tvTotalPhones,
       @NonNull TextView tvTotalRevenue) {
     this.rootView = rootView;
+    this.actvRevenueFilter = actvRevenueFilter;
+    this.cardPendingAlert = cardPendingAlert;
+    this.tvCancellationRate = tvCancellationRate;
     this.tvConfirmedOrders = tvConfirmedOrders;
     this.tvDeliveredOrders = tvDeliveredOrders;
+    this.tvGreeting = tvGreeting;
     this.tvInStock = tvInStock;
+    this.tvPendingAlertMsg = tvPendingAlertMsg;
+    this.tvPendingCount = tvPendingCount;
     this.tvPendingOrders = tvPendingOrders;
+    this.tvRevenueSubtitle = tvRevenueSubtitle;
+    this.tvStockWarning = tvStockWarning;
     this.tvTotalOrders = tvTotalOrders;
     this.tvTotalPhones = tvTotalPhones;
     this.tvTotalRevenue = tvTotalRevenue;
@@ -82,6 +120,24 @@ public final class FragmentAdminDashboardBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.actv_revenue_filter;
+      AutoCompleteTextView actvRevenueFilter = ViewBindings.findChildViewById(rootView, id);
+      if (actvRevenueFilter == null) {
+        break missingId;
+      }
+
+      id = R.id.card_pending_alert;
+      MaterialCardView cardPendingAlert = ViewBindings.findChildViewById(rootView, id);
+      if (cardPendingAlert == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_cancellation_rate;
+      TextView tvCancellationRate = ViewBindings.findChildViewById(rootView, id);
+      if (tvCancellationRate == null) {
+        break missingId;
+      }
+
       id = R.id.tv_confirmed_orders;
       TextView tvConfirmedOrders = ViewBindings.findChildViewById(rootView, id);
       if (tvConfirmedOrders == null) {
@@ -94,15 +150,45 @@ public final class FragmentAdminDashboardBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_greeting;
+      TextView tvGreeting = ViewBindings.findChildViewById(rootView, id);
+      if (tvGreeting == null) {
+        break missingId;
+      }
+
       id = R.id.tv_in_stock;
       TextView tvInStock = ViewBindings.findChildViewById(rootView, id);
       if (tvInStock == null) {
         break missingId;
       }
 
+      id = R.id.tv_pending_alert_msg;
+      TextView tvPendingAlertMsg = ViewBindings.findChildViewById(rootView, id);
+      if (tvPendingAlertMsg == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_pending_count;
+      TextView tvPendingCount = ViewBindings.findChildViewById(rootView, id);
+      if (tvPendingCount == null) {
+        break missingId;
+      }
+
       id = R.id.tv_pending_orders;
       TextView tvPendingOrders = ViewBindings.findChildViewById(rootView, id);
       if (tvPendingOrders == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_revenue_subtitle;
+      TextView tvRevenueSubtitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvRevenueSubtitle == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_stock_warning;
+      TextView tvStockWarning = ViewBindings.findChildViewById(rootView, id);
+      if (tvStockWarning == null) {
         break missingId;
       }
 
@@ -124,9 +210,10 @@ public final class FragmentAdminDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentAdminDashboardBinding((NestedScrollView) rootView, tvConfirmedOrders,
-          tvDeliveredOrders, tvInStock, tvPendingOrders, tvTotalOrders, tvTotalPhones,
-          tvTotalRevenue);
+      return new FragmentAdminDashboardBinding((NestedScrollView) rootView, actvRevenueFilter,
+          cardPendingAlert, tvCancellationRate, tvConfirmedOrders, tvDeliveredOrders, tvGreeting,
+          tvInStock, tvPendingAlertMsg, tvPendingCount, tvPendingOrders, tvRevenueSubtitle,
+          tvStockWarning, tvTotalOrders, tvTotalPhones, tvTotalRevenue);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

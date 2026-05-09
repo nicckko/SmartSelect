@@ -4,6 +4,7 @@ package com.smartselect.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +22,19 @@ public final class ItemAdminOrderBinding implements ViewBinding {
   private final MaterialCardView rootView;
 
   @NonNull
+  public final MaterialButton btnQuickCancel;
+
+  @NonNull
+  public final MaterialButton btnQuickConfirm;
+
+  @NonNull
   public final MaterialButton btnStatus;
+
+  @NonNull
+  public final LinearLayout layoutQuickActions;
+
+  @NonNull
+  public final TextView tvContact;
 
   @NonNull
   public final TextView tvCustomer;
@@ -42,21 +55,36 @@ public final class ItemAdminOrderBinding implements ViewBinding {
   public final TextView tvPickupDate;
 
   @NonNull
+  public final TextView tvRelativeTime;
+
+  @NonNull
   public final TextView tvTotal;
 
+  @NonNull
+  public final View viewStatusStrip;
+
   private ItemAdminOrderBinding(@NonNull MaterialCardView rootView,
-      @NonNull MaterialButton btnStatus, @NonNull TextView tvCustomer, @NonNull TextView tvDate,
+      @NonNull MaterialButton btnQuickCancel, @NonNull MaterialButton btnQuickConfirm,
+      @NonNull MaterialButton btnStatus, @NonNull LinearLayout layoutQuickActions,
+      @NonNull TextView tvContact, @NonNull TextView tvCustomer, @NonNull TextView tvDate,
       @NonNull TextView tvOrderId, @NonNull TextView tvPhones, @NonNull TextView tvPickupCode,
-      @NonNull TextView tvPickupDate, @NonNull TextView tvTotal) {
+      @NonNull TextView tvPickupDate, @NonNull TextView tvRelativeTime, @NonNull TextView tvTotal,
+      @NonNull View viewStatusStrip) {
     this.rootView = rootView;
+    this.btnQuickCancel = btnQuickCancel;
+    this.btnQuickConfirm = btnQuickConfirm;
     this.btnStatus = btnStatus;
+    this.layoutQuickActions = layoutQuickActions;
+    this.tvContact = tvContact;
     this.tvCustomer = tvCustomer;
     this.tvDate = tvDate;
     this.tvOrderId = tvOrderId;
     this.tvPhones = tvPhones;
     this.tvPickupCode = tvPickupCode;
     this.tvPickupDate = tvPickupDate;
+    this.tvRelativeTime = tvRelativeTime;
     this.tvTotal = tvTotal;
+    this.viewStatusStrip = viewStatusStrip;
   }
 
   @Override
@@ -86,9 +114,33 @@ public final class ItemAdminOrderBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btn_quick_cancel;
+      MaterialButton btnQuickCancel = ViewBindings.findChildViewById(rootView, id);
+      if (btnQuickCancel == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_quick_confirm;
+      MaterialButton btnQuickConfirm = ViewBindings.findChildViewById(rootView, id);
+      if (btnQuickConfirm == null) {
+        break missingId;
+      }
+
       id = R.id.btn_status;
       MaterialButton btnStatus = ViewBindings.findChildViewById(rootView, id);
       if (btnStatus == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_quick_actions;
+      LinearLayout layoutQuickActions = ViewBindings.findChildViewById(rootView, id);
+      if (layoutQuickActions == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_contact;
+      TextView tvContact = ViewBindings.findChildViewById(rootView, id);
+      if (tvContact == null) {
         break missingId;
       }
 
@@ -128,14 +180,27 @@ public final class ItemAdminOrderBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_relative_time;
+      TextView tvRelativeTime = ViewBindings.findChildViewById(rootView, id);
+      if (tvRelativeTime == null) {
+        break missingId;
+      }
+
       id = R.id.tv_total;
       TextView tvTotal = ViewBindings.findChildViewById(rootView, id);
       if (tvTotal == null) {
         break missingId;
       }
 
-      return new ItemAdminOrderBinding((MaterialCardView) rootView, btnStatus, tvCustomer, tvDate,
-          tvOrderId, tvPhones, tvPickupCode, tvPickupDate, tvTotal);
+      id = R.id.view_status_strip;
+      View viewStatusStrip = ViewBindings.findChildViewById(rootView, id);
+      if (viewStatusStrip == null) {
+        break missingId;
+      }
+
+      return new ItemAdminOrderBinding((MaterialCardView) rootView, btnQuickCancel, btnQuickConfirm,
+          btnStatus, layoutQuickActions, tvContact, tvCustomer, tvDate, tvOrderId, tvPhones,
+          tvPickupCode, tvPickupDate, tvRelativeTime, tvTotal, viewStatusStrip);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

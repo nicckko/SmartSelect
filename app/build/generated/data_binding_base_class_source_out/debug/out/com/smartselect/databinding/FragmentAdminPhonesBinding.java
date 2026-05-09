@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.smartselect.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -25,6 +26,9 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
 
   @NonNull
   public final ExtendedFloatingActionButton btnAddPhone;
+
+  @NonNull
+  public final TextInputEditText etSearch;
 
   @NonNull
   public final ProgressBar progressBar;
@@ -39,10 +43,12 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
   public final LinearLayout tvEmpty;
 
   private FragmentAdminPhonesBinding(@NonNull CoordinatorLayout rootView,
-      @NonNull ExtendedFloatingActionButton btnAddPhone, @NonNull ProgressBar progressBar,
-      @NonNull RecyclerView rvPhones, @NonNull TextView tvCount, @NonNull LinearLayout tvEmpty) {
+      @NonNull ExtendedFloatingActionButton btnAddPhone, @NonNull TextInputEditText etSearch,
+      @NonNull ProgressBar progressBar, @NonNull RecyclerView rvPhones, @NonNull TextView tvCount,
+      @NonNull LinearLayout tvEmpty) {
     this.rootView = rootView;
     this.btnAddPhone = btnAddPhone;
+    this.etSearch = etSearch;
     this.progressBar = progressBar;
     this.rvPhones = rvPhones;
     this.tvCount = tvCount;
@@ -82,6 +88,12 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.et_search;
+      TextInputEditText etSearch = ViewBindings.findChildViewById(rootView, id);
+      if (etSearch == null) {
+        break missingId;
+      }
+
       id = R.id.progress_bar;
       ProgressBar progressBar = ViewBindings.findChildViewById(rootView, id);
       if (progressBar == null) {
@@ -106,8 +118,8 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentAdminPhonesBinding((CoordinatorLayout) rootView, btnAddPhone, progressBar,
-          rvPhones, tvCount, tvEmpty);
+      return new FragmentAdminPhonesBinding((CoordinatorLayout) rootView, btnAddPhone, etSearch,
+          progressBar, rvPhones, tvCount, tvEmpty);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

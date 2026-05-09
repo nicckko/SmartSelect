@@ -112,7 +112,6 @@
                     android:gravity="center"
                     android:padding="16dp">
 
-                    <!-- Image preview (hidden until image selected) -->
                     <ImageView
                         android:id="@+id/iv_phone_preview"
                         android:layout_width="100dp"
@@ -121,7 +120,6 @@
                         android:visibility="gone"
                         android:layout_marginBottom="12dp" />
 
-                    <!-- Placeholder icon when no image -->
                     <TextView
                         android:id="@+id/tv_image_placeholder"
                         android:layout_width="wrap_content"
@@ -167,54 +165,52 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Brand + Model -->
-            <LinearLayout
+            <!-- Brand (AutoComplete) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_brand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
+                android:hint="Brand *"
+                android:layout_marginBottom="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
+                app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="dropdown_menu">
+                <AutoCompleteTextView
+                    android:id="@+id/et_brand"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Brand *"
-                    android:layout_marginEnd="6dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
-                    app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
-                    app:boxStrokeWidthFocused="2dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_brand"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:inputType="textCapWords"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:completionThreshold="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
+            <!-- Model (AutoComplete) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_model"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Model *"
+                android:layout_marginBottom="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
+                app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="dropdown_menu">
+                <AutoCompleteTextView
+                    android:id="@+id/et_model"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Model *"
-                    android:layout_marginStart="6dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
-                    app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
-                    app:boxStrokeWidthFocused="2dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_model"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:completionThreshold="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Price + Stock -->
+            <!-- Price + Stock (keep as plain input) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -296,134 +292,130 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
-            <!-- RAM + Storage -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="RAM  (e.g. 8GB)"
-                    android:layout_marginEnd="6dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
-                    app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
-                    app:boxStrokeWidthFocused="2dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_ram"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Storage  (e.g. 128GB)"
-                    android:layout_marginStart="6dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
-                    app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
-                    app:boxStrokeWidthFocused="2dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_storage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <!-- Battery + Chipset -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Battery  (e.g. 5000mAh)"
-                    android:layout_marginEnd="6dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
-                    app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
-                    app:boxStrokeWidthFocused="2dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_battery"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Chipset"
-                    android:layout_marginStart="6dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
-                    app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
-                    app:boxStrokeWidthFocused="2dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_chipset"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <!-- Camera -->
+            <!-- RAM (AutoComplete) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Camera  (e.g. 108MP Triple OIS)"
+                android:hint="RAM (e.g. 8GB)"
                 android:layout_marginBottom="10dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
                 app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
                 app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
-                app:boxStrokeWidthFocused="2dp">
-                <com.google.android.material.textfield.TextInputEditText
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="dropdown_menu">
+                <AutoCompleteTextView
+                    android:id="@+id/et_ram"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:completionThreshold="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Storage (AutoComplete) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Storage (e.g. 128GB)"
+                android:layout_marginBottom="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
+                app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="dropdown_menu">
+                <AutoCompleteTextView
+                    android:id="@+id/et_storage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:completionThreshold="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Battery (AutoComplete) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Battery (e.g. 5000mAh)"
+                android:layout_marginBottom="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
+                app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="dropdown_menu">
+                <AutoCompleteTextView
+                    android:id="@+id/et_battery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:completionThreshold="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Chipset (AutoComplete) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Chipset"
+                android:layout_marginBottom="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
+                app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="dropdown_menu">
+                <AutoCompleteTextView
+                    android:id="@+id/et_chipset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:completionThreshold="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Camera (AutoComplete) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Camera (e.g. 108MP Triple OIS)"
+                android:layout_marginBottom="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
+                app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="dropdown_menu">
+                <AutoCompleteTextView
                     android:id="@+id/et_camera"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:completionThreshold="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Display -->
+            <!-- Display (AutoComplete) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Display  (e.g. 6.7&quot; AMOLED 120Hz)"
+                android:hint="Display (e.g. 6.7&quot; AMOLED 120Hz)"
                 android:layout_marginBottom="16dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 app:boxCornerRadiusBottomEnd="14dp" app:boxCornerRadiusBottomStart="14dp"
                 app:boxCornerRadiusTopEnd="14dp" app:boxCornerRadiusTopStart="14dp"
                 app:hintTextColor="@color/accent" app:boxStrokeColor="@color/divider"
-                app:boxStrokeWidthFocused="2dp">
-                <com.google.android.material.textfield.TextInputEditText
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="dropdown_menu">
+                <AutoCompleteTextView
                     android:id="@+id/et_display"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:completionThreshold="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Best Value toggle -->
@@ -475,6 +467,7 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
             <!-- Footer: progress + buttons -->
             <LinearLayout
                 android:layout_width="match_parent"

@@ -66,9 +66,9 @@ class AuthViewModel @Inject constructor(
         _authState.value = null
     }
 
-    fun updateProfile(newName: String) = viewModelScope.launch {
+    fun updateProfile(newName: String, newUsername: String, newPassword: String?, newProfileUrl: String?) = viewModelScope.launch {
         _authState.value = Resource.Loading()
-        val result = authRepository.updateProfile(newName)
+        val result = authRepository.updateProfile(newName, newUsername, newPassword, newProfileUrl)
         _authState.value = result
         if (result is Resource.Success) {
             _currentUser.value = result.data

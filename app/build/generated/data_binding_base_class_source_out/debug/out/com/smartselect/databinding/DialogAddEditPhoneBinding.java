@@ -16,6 +16,7 @@ import androidx.viewbinding.ViewBindings;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.smartselect.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -41,34 +42,34 @@ public final class DialogAddEditPhoneBinding implements ViewBinding {
   public final MaterialButton btnSave;
 
   @NonNull
-  public final TextInputEditText etBattery;
+  public final AutoCompleteTextView etBattery;
 
   @NonNull
-  public final TextInputEditText etBrand;
+  public final AutoCompleteTextView etBrand;
 
   @NonNull
-  public final TextInputEditText etCamera;
+  public final AutoCompleteTextView etCamera;
 
   @NonNull
-  public final TextInputEditText etChipset;
+  public final AutoCompleteTextView etChipset;
 
   @NonNull
-  public final TextInputEditText etDisplay;
+  public final AutoCompleteTextView etDisplay;
 
   @NonNull
-  public final TextInputEditText etModel;
+  public final AutoCompleteTextView etModel;
 
   @NonNull
   public final TextInputEditText etPrice;
 
   @NonNull
-  public final TextInputEditText etRam;
+  public final AutoCompleteTextView etRam;
 
   @NonNull
   public final TextInputEditText etStock;
 
   @NonNull
-  public final TextInputEditText etStorage;
+  public final AutoCompleteTextView etStorage;
 
   @NonNull
   public final ImageView ivPhonePreview;
@@ -78,6 +79,12 @@ public final class DialogAddEditPhoneBinding implements ViewBinding {
 
   @NonNull
   public final SwitchMaterial switchBestValue;
+
+  @NonNull
+  public final TextInputLayout tilBrand;
+
+  @NonNull
+  public final TextInputLayout tilModel;
 
   @NonNull
   public final TextView tvDialogSubtitle;
@@ -94,13 +101,14 @@ public final class DialogAddEditPhoneBinding implements ViewBinding {
   private DialogAddEditPhoneBinding(@NonNull LinearLayout rootView,
       @NonNull AutoCompleteTextView actvCategory, @NonNull MaterialButton btnCancel,
       @NonNull MaterialButton btnClose, @NonNull MaterialButton btnPickImage,
-      @NonNull MaterialButton btnSave, @NonNull TextInputEditText etBattery,
-      @NonNull TextInputEditText etBrand, @NonNull TextInputEditText etCamera,
-      @NonNull TextInputEditText etChipset, @NonNull TextInputEditText etDisplay,
-      @NonNull TextInputEditText etModel, @NonNull TextInputEditText etPrice,
-      @NonNull TextInputEditText etRam, @NonNull TextInputEditText etStock,
-      @NonNull TextInputEditText etStorage, @NonNull ImageView ivPhonePreview,
+      @NonNull MaterialButton btnSave, @NonNull AutoCompleteTextView etBattery,
+      @NonNull AutoCompleteTextView etBrand, @NonNull AutoCompleteTextView etCamera,
+      @NonNull AutoCompleteTextView etChipset, @NonNull AutoCompleteTextView etDisplay,
+      @NonNull AutoCompleteTextView etModel, @NonNull TextInputEditText etPrice,
+      @NonNull AutoCompleteTextView etRam, @NonNull TextInputEditText etStock,
+      @NonNull AutoCompleteTextView etStorage, @NonNull ImageView ivPhonePreview,
       @NonNull ProgressBar progressSave, @NonNull SwitchMaterial switchBestValue,
+      @NonNull TextInputLayout tilBrand, @NonNull TextInputLayout tilModel,
       @NonNull TextView tvDialogSubtitle, @NonNull TextView tvDialogTitle,
       @NonNull TextView tvImageHint, @NonNull TextView tvImagePlaceholder) {
     this.rootView = rootView;
@@ -122,6 +130,8 @@ public final class DialogAddEditPhoneBinding implements ViewBinding {
     this.ivPhonePreview = ivPhonePreview;
     this.progressSave = progressSave;
     this.switchBestValue = switchBestValue;
+    this.tilBrand = tilBrand;
+    this.tilModel = tilModel;
     this.tvDialogSubtitle = tvDialogSubtitle;
     this.tvDialogTitle = tvDialogTitle;
     this.tvImageHint = tvImageHint;
@@ -186,37 +196,37 @@ public final class DialogAddEditPhoneBinding implements ViewBinding {
       }
 
       id = R.id.et_battery;
-      TextInputEditText etBattery = ViewBindings.findChildViewById(rootView, id);
+      AutoCompleteTextView etBattery = ViewBindings.findChildViewById(rootView, id);
       if (etBattery == null) {
         break missingId;
       }
 
       id = R.id.et_brand;
-      TextInputEditText etBrand = ViewBindings.findChildViewById(rootView, id);
+      AutoCompleteTextView etBrand = ViewBindings.findChildViewById(rootView, id);
       if (etBrand == null) {
         break missingId;
       }
 
       id = R.id.et_camera;
-      TextInputEditText etCamera = ViewBindings.findChildViewById(rootView, id);
+      AutoCompleteTextView etCamera = ViewBindings.findChildViewById(rootView, id);
       if (etCamera == null) {
         break missingId;
       }
 
       id = R.id.et_chipset;
-      TextInputEditText etChipset = ViewBindings.findChildViewById(rootView, id);
+      AutoCompleteTextView etChipset = ViewBindings.findChildViewById(rootView, id);
       if (etChipset == null) {
         break missingId;
       }
 
       id = R.id.et_display;
-      TextInputEditText etDisplay = ViewBindings.findChildViewById(rootView, id);
+      AutoCompleteTextView etDisplay = ViewBindings.findChildViewById(rootView, id);
       if (etDisplay == null) {
         break missingId;
       }
 
       id = R.id.et_model;
-      TextInputEditText etModel = ViewBindings.findChildViewById(rootView, id);
+      AutoCompleteTextView etModel = ViewBindings.findChildViewById(rootView, id);
       if (etModel == null) {
         break missingId;
       }
@@ -228,7 +238,7 @@ public final class DialogAddEditPhoneBinding implements ViewBinding {
       }
 
       id = R.id.et_ram;
-      TextInputEditText etRam = ViewBindings.findChildViewById(rootView, id);
+      AutoCompleteTextView etRam = ViewBindings.findChildViewById(rootView, id);
       if (etRam == null) {
         break missingId;
       }
@@ -240,7 +250,7 @@ public final class DialogAddEditPhoneBinding implements ViewBinding {
       }
 
       id = R.id.et_storage;
-      TextInputEditText etStorage = ViewBindings.findChildViewById(rootView, id);
+      AutoCompleteTextView etStorage = ViewBindings.findChildViewById(rootView, id);
       if (etStorage == null) {
         break missingId;
       }
@@ -260,6 +270,18 @@ public final class DialogAddEditPhoneBinding implements ViewBinding {
       id = R.id.switch_best_value;
       SwitchMaterial switchBestValue = ViewBindings.findChildViewById(rootView, id);
       if (switchBestValue == null) {
+        break missingId;
+      }
+
+      id = R.id.til_brand;
+      TextInputLayout tilBrand = ViewBindings.findChildViewById(rootView, id);
+      if (tilBrand == null) {
+        break missingId;
+      }
+
+      id = R.id.til_model;
+      TextInputLayout tilModel = ViewBindings.findChildViewById(rootView, id);
+      if (tilModel == null) {
         break missingId;
       }
 
@@ -290,7 +312,8 @@ public final class DialogAddEditPhoneBinding implements ViewBinding {
       return new DialogAddEditPhoneBinding((LinearLayout) rootView, actvCategory, btnCancel,
           btnClose, btnPickImage, btnSave, etBattery, etBrand, etCamera, etChipset, etDisplay,
           etModel, etPrice, etRam, etStock, etStorage, ivPhonePreview, progressSave,
-          switchBestValue, tvDialogSubtitle, tvDialogTitle, tvImageHint, tvImagePlaceholder);
+          switchBestValue, tilBrand, tilModel, tvDialogSubtitle, tvDialogTitle, tvImageHint,
+          tvImagePlaceholder);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

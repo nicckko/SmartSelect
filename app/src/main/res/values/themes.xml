@@ -44,6 +44,11 @@
         <item name="cornerSize">20dp</item>
     </style>
 
+    <style name="CircleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
     <style name="Theme.SmartSelect.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/primary</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>

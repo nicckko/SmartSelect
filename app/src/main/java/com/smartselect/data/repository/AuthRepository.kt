@@ -2,6 +2,7 @@ package com.smartselect.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.Timestamp
 import com.smartselect.data.model.Order
 import com.smartselect.data.model.User
 import com.smartselect.utils.Resource
@@ -86,18 +87,34 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun updateProfile(newName: String): Resource<User> {
+    suspend fun updateProfile(newName: String, newUsername: String, newPassword: String?, newProfileUrl: String?): Resource<User> {
         return try {
             val uid = auth.currentUser?.uid ?: return Resource.Error("Not logged in")
             
-            // Update auth profile
-            val profileUpdates = com.google.firebase.auth.UserProfileChangeRequest.Builder()
+            // Update auth profile name and photo
+            val profileUpdatesBuilder = com.google.firebase.auth.UserProfileChangeRequest.Builder()
                 .setDisplayName(newName)
-                .build()
-            auth.currentUser?.updateProfile(profileUpdates)?.await()
+            
+            if (newProfileUrl != null && newProfileUrl.isNotEmpty()) {
+                profileUpdatesBuilder.setPhotoUri(android.net.Uri.parse(newProfileUrl))
+            }
+            
+            auth.currentUser?.updateProfile(profileUpdatesBuilder.build())?.await()
+            
+            // Update password if provided
+            if (newPassword != null && newPassword.isNotEmpty()) {
+                auth.currentUser?.updatePassword(newPassword)?.await()
+            }
 
             // Update firestore user document
-            usersCollection.document(uid).update("name", newName).await()
+            val updates = mutableMapOf<String, Any>(
+                "name" to newName,
+                "username" to newUsername
+            )
+            if (newProfileUrl != null && newProfileUrl.isNotEmpty()) {
+                updates["profilePictureUrl"] = newProfileUrl
+            }
+            usersCollection.document(uid).update(updates).await()
             
             val doc = usersCollection.document(uid).get().await()
             val user = doc.toObject(User::class.java) ?: return Resource.Error("User not found after update")
@@ -170,6 +187,15 @@ class OrderRepository @Inject constructor(
     suspend fun updateOrderStatus(orderId: String, status: String): Resource<Boolean> {
         return try {
             ordersCollection.document(orderId).update("status", status).await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Update failed")
+        }
+    }
+
+    suspend fun updateOrderPickupDate(orderId: String, newDate: Timestamp): Resource<Boolean> {
+        return try {
+            ordersCollection.document(orderId).update("pickupDate", newDate).await()
             Resource.Success(true)
         } catch (e: Exception) {
             Resource.Error(e.message ?: "Update failed")

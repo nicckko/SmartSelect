@@ -20,6 +20,10 @@
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\drawable\\bg_top_round.xml"
     },
     {
+        "merged": "com.smartselect.app-debug-5:/layout_fragment_admin.xml.flat",
+        "source": "com.smartselect.app-main-7:/layout/fragment_admin.xml"
+    },
+    {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\anim_slide_out_left.xml.flat",
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\anim\\slide_out_left.xml"
     },
@@ -42,6 +46,14 @@
     {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\layout_activity_login.xml.flat",
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\drawable_bg_login_hero.xml.flat",
+        "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\drawable\\bg_login_hero.xml"
+    },
+    {
+        "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\layout_dialog_order_detail.xml.flat",
+        "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\dialog_order_detail.xml"
     },
     {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\drawable_ic_logo.xml.flat",
@@ -148,6 +160,10 @@
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\drawable\\ic_cart.xml"
     },
     {
+        "merged": "com.smartselect.app-debug-5:/layout_item_admin_log.xml.flat",
+        "source": "com.smartselect.app-main-7:/layout/item_admin_log.xml"
+    },
+    {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\layout_fragment_admin_phones.xml.flat",
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\fragment_admin_phones.xml"
     },
@@ -188,6 +204,10 @@
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\item_admin_phone.xml"
     },
     {
+        "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\layout_dialog_customer_order_detail.xml.flat",
+        "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\dialog_customer_order_detail.xml"
+    },
+    {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\drawable_ic_lock.xml.flat",
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\drawable\\ic_lock.xml"
     },
@@ -198,10 +218,6 @@
     {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\layout_fragment_favorites.xml.flat",
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\fragment_favorites.xml"
-    },
-    {
-        "merged": "com.smartselect.app-debug-5:/layout_activity_login.xml.flat",
-        "source": "com.smartselect.app-main-7:/layout/activity_login.xml"
     },
     {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\drawable_ic_arrow_back.xml.flat",
@@ -266,10 +282,6 @@
     {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\layout_fragment_profile.xml.flat",
         "source": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-main-7:\\layout\\fragment_profile.xml"
-    },
-    {
-        "merged": "com.smartselect.app-debug-5:/drawable_bg_login_hero.xml.flat",
-        "source": "com.smartselect.app-main-7:/drawable/bg_login_hero.xml"
     },
     {
         "merged": "C:\\Users\\LENOVO\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-5:\\mipmap-xxhdpi_ic_launcher.png.flat",

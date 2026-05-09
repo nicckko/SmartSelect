@@ -7,10 +7,12 @@ data class User(
     @DocumentId
     val uid: String = "",
     val name: String = "",
+    val username: String = "",
     val email: String = "",
     val role: String = "user", // "admin" or "user"
     val address: String = "",
-    val contact: String = ""
+    val contact: String = "",
+    val profilePictureUrl: String = ""
 )
 
 data class Order(

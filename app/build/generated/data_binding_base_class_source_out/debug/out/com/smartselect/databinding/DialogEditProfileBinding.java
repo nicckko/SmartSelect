@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.smartselect.R;
@@ -25,22 +27,54 @@ public final class DialogEditProfileBinding implements ViewBinding {
   public final MaterialButton btnCancel;
 
   @NonNull
+  public final View btnPickImage;
+
+  @NonNull
   public final MaterialButton btnSave;
 
   @NonNull
   public final TextInputEditText etName;
 
   @NonNull
+  public final TextInputEditText etPassword;
+
+  @NonNull
+  public final TextInputEditText etUsername;
+
+  @NonNull
+  public final ShapeableImageView ivProfilePic;
+
+  @NonNull
   public final TextInputLayout tilName;
 
+  @NonNull
+  public final TextInputLayout tilPassword;
+
+  @NonNull
+  public final TextInputLayout tilUsername;
+
+  @NonNull
+  public final TextView tvAvatarInitial;
+
   private DialogEditProfileBinding(@NonNull LinearLayout rootView,
-      @NonNull MaterialButton btnCancel, @NonNull MaterialButton btnSave,
-      @NonNull TextInputEditText etName, @NonNull TextInputLayout tilName) {
+      @NonNull MaterialButton btnCancel, @NonNull View btnPickImage,
+      @NonNull MaterialButton btnSave, @NonNull TextInputEditText etName,
+      @NonNull TextInputEditText etPassword, @NonNull TextInputEditText etUsername,
+      @NonNull ShapeableImageView ivProfilePic, @NonNull TextInputLayout tilName,
+      @NonNull TextInputLayout tilPassword, @NonNull TextInputLayout tilUsername,
+      @NonNull TextView tvAvatarInitial) {
     this.rootView = rootView;
     this.btnCancel = btnCancel;
+    this.btnPickImage = btnPickImage;
     this.btnSave = btnSave;
     this.etName = etName;
+    this.etPassword = etPassword;
+    this.etUsername = etUsername;
+    this.ivProfilePic = ivProfilePic;
     this.tilName = tilName;
+    this.tilPassword = tilPassword;
+    this.tilUsername = tilUsername;
+    this.tvAvatarInitial = tvAvatarInitial;
   }
 
   @Override
@@ -76,6 +110,12 @@ public final class DialogEditProfileBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.btn_pick_image;
+      View btnPickImage = ViewBindings.findChildViewById(rootView, id);
+      if (btnPickImage == null) {
+        break missingId;
+      }
+
       id = R.id.btn_save;
       MaterialButton btnSave = ViewBindings.findChildViewById(rootView, id);
       if (btnSave == null) {
@@ -88,14 +128,51 @@ public final class DialogEditProfileBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.et_password;
+      TextInputEditText etPassword = ViewBindings.findChildViewById(rootView, id);
+      if (etPassword == null) {
+        break missingId;
+      }
+
+      id = R.id.et_username;
+      TextInputEditText etUsername = ViewBindings.findChildViewById(rootView, id);
+      if (etUsername == null) {
+        break missingId;
+      }
+
+      id = R.id.iv_profile_pic;
+      ShapeableImageView ivProfilePic = ViewBindings.findChildViewById(rootView, id);
+      if (ivProfilePic == null) {
+        break missingId;
+      }
+
       id = R.id.til_name;
       TextInputLayout tilName = ViewBindings.findChildViewById(rootView, id);
       if (tilName == null) {
         break missingId;
       }
 
-      return new DialogEditProfileBinding((LinearLayout) rootView, btnCancel, btnSave, etName,
-          tilName);
+      id = R.id.til_password;
+      TextInputLayout tilPassword = ViewBindings.findChildViewById(rootView, id);
+      if (tilPassword == null) {
+        break missingId;
+      }
+
+      id = R.id.til_username;
+      TextInputLayout tilUsername = ViewBindings.findChildViewById(rootView, id);
+      if (tilUsername == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_avatar_initial;
+      TextView tvAvatarInitial = ViewBindings.findChildViewById(rootView, id);
+      if (tvAvatarInitial == null) {
+        break missingId;
+      }
+
+      return new DialogEditProfileBinding((LinearLayout) rootView, btnCancel, btnPickImage, btnSave,
+          etName, etPassword, etUsername, ivProfilePic, tilName, tilPassword, tilUsername,
+          tvAvatarInitial);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

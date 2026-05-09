@@ -53,10 +53,20 @@ class ProfileFragment : Fragment() {
                         orderHistoryLayout?.visibility = View.VISIBLE
                     }
 
-                    binding.tvAvatar.text = it.name.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+                    if (it.profilePictureUrl.isNotEmpty()) {
+                        binding.tvAvatar.visibility = View.GONE
+                        val ivAvatar = binding.root.findViewById<android.widget.ImageView>(R.id.iv_avatar)
+                        if (ivAvatar != null) {
+                            ivAvatar.visibility = View.VISIBLE
+                            com.bumptech.glide.Glide.with(requireContext()).load(it.profilePictureUrl).centerCrop().into(ivAvatar)
+                        }
+                    } else {
+                        binding.tvAvatar.visibility = View.VISIBLE
+                        binding.tvAvatar.text = it.name.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+                    }
                     
                     binding.btnEditProfile.setOnClickListener { _ ->
-                        EditProfileDialog.newInstance(it.name).show(childFragmentManager, "edit_profile")
+                        EditProfileDialog.newInstance(it.name, it.username, it.profilePictureUrl).show(childFragmentManager, "edit_profile")
                     }
                 }
             }

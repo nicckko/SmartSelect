@@ -13,7 +13,9 @@ import com.smartselect.utils.toPeso
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class OrderHistoryAdapter : ListAdapter<Order, OrderHistoryAdapter.ViewHolder>(DiffCallback()) {
+class OrderHistoryAdapter(
+    private val onOrderClick: (Order) -> Unit = {}
+) : ListAdapter<Order, OrderHistoryAdapter.ViewHolder>(DiffCallback()) {
 
     inner class ViewHolder(private val binding: ItemOrderHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -79,6 +81,8 @@ class OrderHistoryAdapter : ListAdapter<Order, OrderHistoryAdapter.ViewHolder>(D
             binding.tvStatus.setBackgroundColor(bgColor)
             binding.tvStatus.setTextColor(textColor)
             binding.tvStatus.setPadding(20, 8, 20, 8)
+
+            binding.root.setOnClickListener { onOrderClick(order) }
         }
     }
 

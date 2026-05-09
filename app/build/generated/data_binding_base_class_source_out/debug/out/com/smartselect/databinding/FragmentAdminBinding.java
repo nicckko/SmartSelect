@@ -28,6 +28,9 @@ public final class FragmentAdminBinding implements ViewBinding {
   public final MaterialButton btnSeedData;
 
   @NonNull
+  public final RecyclerView rvLogs;
+
+  @NonNull
   public final RecyclerView rvOrders;
 
   @NonNull
@@ -38,11 +41,12 @@ public final class FragmentAdminBinding implements ViewBinding {
 
   private FragmentAdminBinding(@NonNull CoordinatorLayout rootView,
       @NonNull MaterialButton btnAddPhone, @NonNull MaterialButton btnSeedData,
-      @NonNull RecyclerView rvOrders, @NonNull RecyclerView rvPhones,
+      @NonNull RecyclerView rvLogs, @NonNull RecyclerView rvOrders, @NonNull RecyclerView rvPhones,
       @NonNull TabLayout tabLayout) {
     this.rootView = rootView;
     this.btnAddPhone = btnAddPhone;
     this.btnSeedData = btnSeedData;
+    this.rvLogs = rvLogs;
     this.rvOrders = rvOrders;
     this.rvPhones = rvPhones;
     this.tabLayout = tabLayout;
@@ -87,6 +91,12 @@ public final class FragmentAdminBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.rv_logs;
+      RecyclerView rvLogs = ViewBindings.findChildViewById(rootView, id);
+      if (rvLogs == null) {
+        break missingId;
+      }
+
       id = R.id.rv_orders;
       RecyclerView rvOrders = ViewBindings.findChildViewById(rootView, id);
       if (rvOrders == null) {
@@ -106,7 +116,7 @@ public final class FragmentAdminBinding implements ViewBinding {
       }
 
       return new FragmentAdminBinding((CoordinatorLayout) rootView, btnAddPhone, btnSeedData,
-          rvOrders, rvPhones, tabLayout);
+          rvLogs, rvOrders, rvPhones, tabLayout);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

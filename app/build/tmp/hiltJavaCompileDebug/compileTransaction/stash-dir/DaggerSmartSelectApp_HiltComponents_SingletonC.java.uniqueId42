@@ -37,8 +37,12 @@ import com.smartselect.ui.favorites.FavoritesFragment;
 import com.smartselect.ui.home.HomeFragment;
 import com.smartselect.ui.orders.CheckoutFragment;
 import com.smartselect.ui.orders.CheckoutFragment_MembersInjector;
+import com.smartselect.ui.orders.CustomerOrderDetailDialog;
+import com.smartselect.ui.orders.CustomerOrderDetailDialog_MembersInjector;
 import com.smartselect.ui.orders.OrdersFragment;
 import com.smartselect.ui.orders.OrdersFragment_MembersInjector;
+import com.smartselect.ui.profile.EditProfileDialog;
+import com.smartselect.ui.profile.EditProfileDialog_MembersInjector;
 import com.smartselect.ui.profile.ProfileFragment;
 import com.smartselect.viewmodel.AuthViewModel;
 import com.smartselect.viewmodel.AuthViewModel_HiltModules_KeyModule_ProvideFactory;
@@ -402,8 +406,18 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
     }
 
     @Override
+    public void injectCustomerOrderDetailDialog(CustomerOrderDetailDialog arg0) {
+      injectCustomerOrderDetailDialog2(arg0);
+    }
+
+    @Override
     public void injectOrdersFragment(OrdersFragment arg0) {
       injectOrdersFragment2(arg0);
+    }
+
+    @Override
+    public void injectEditProfileDialog(EditProfileDialog arg0) {
+      injectEditProfileDialog2(arg0);
     }
 
     @Override
@@ -461,8 +475,21 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
     }
 
     @CanIgnoreReturnValue
+    private CustomerOrderDetailDialog injectCustomerOrderDetailDialog2(
+        CustomerOrderDetailDialog instance) {
+      CustomerOrderDetailDialog_MembersInjector.injectOrderRepository(instance, singletonCImpl.orderRepositoryProvider.get());
+      return instance;
+    }
+
+    @CanIgnoreReturnValue
     private OrdersFragment injectOrdersFragment2(OrdersFragment instance) {
       OrdersFragment_MembersInjector.injectOrderRepository(instance, singletonCImpl.orderRepositoryProvider.get());
+      return instance;
+    }
+
+    @CanIgnoreReturnValue
+    private EditProfileDialog injectEditProfileDialog2(EditProfileDialog instance) {
+      EditProfileDialog_MembersInjector.injectStorage(instance, singletonCImpl.provideFirebaseStorageProvider.get());
       return instance;
     }
   }

@@ -12,6 +12,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.smartselect.R;
 import java.lang.NullPointerException;
@@ -30,6 +31,9 @@ public final class FragmentProfileBinding implements ViewBinding {
 
   @NonNull
   public final MaterialButton btnLogout;
+
+  @NonNull
+  public final ShapeableImageView ivAvatar;
 
   @NonNull
   public final TextView labelAdmin;
@@ -54,14 +58,15 @@ public final class FragmentProfileBinding implements ViewBinding {
 
   private FragmentProfileBinding(@NonNull NestedScrollView rootView,
       @NonNull MaterialButton btnAdminPanel, @NonNull MaterialButton btnEditProfile,
-      @NonNull MaterialButton btnLogout, @NonNull TextView labelAdmin,
-      @NonNull LinearLayout orderHistoryLayout, @NonNull SwitchMaterial switchDarkMode,
-      @NonNull TextView tvAvatar, @NonNull TextView tvEmail, @NonNull TextView tvName,
-      @NonNull TextView tvRole) {
+      @NonNull MaterialButton btnLogout, @NonNull ShapeableImageView ivAvatar,
+      @NonNull TextView labelAdmin, @NonNull LinearLayout orderHistoryLayout,
+      @NonNull SwitchMaterial switchDarkMode, @NonNull TextView tvAvatar, @NonNull TextView tvEmail,
+      @NonNull TextView tvName, @NonNull TextView tvRole) {
     this.rootView = rootView;
     this.btnAdminPanel = btnAdminPanel;
     this.btnEditProfile = btnEditProfile;
     this.btnLogout = btnLogout;
+    this.ivAvatar = ivAvatar;
     this.labelAdmin = labelAdmin;
     this.orderHistoryLayout = orderHistoryLayout;
     this.switchDarkMode = switchDarkMode;
@@ -116,6 +121,12 @@ public final class FragmentProfileBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.iv_avatar;
+      ShapeableImageView ivAvatar = ViewBindings.findChildViewById(rootView, id);
+      if (ivAvatar == null) {
+        break missingId;
+      }
+
       id = R.id.label_admin;
       TextView labelAdmin = ViewBindings.findChildViewById(rootView, id);
       if (labelAdmin == null) {
@@ -159,8 +170,8 @@ public final class FragmentProfileBinding implements ViewBinding {
       }
 
       return new FragmentProfileBinding((NestedScrollView) rootView, btnAdminPanel, btnEditProfile,
-          btnLogout, labelAdmin, orderHistoryLayout, switchDarkMode, tvAvatar, tvEmail, tvName,
-          tvRole);
+          btnLogout, ivAvatar, labelAdmin, orderHistoryLayout, switchDarkMode, tvAvatar, tvEmail,
+          tvName, tvRole);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

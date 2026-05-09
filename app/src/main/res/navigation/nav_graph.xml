@@ -72,6 +72,12 @@
             app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="true"/>
+        <action android:id="@+id/action_profile_to_archive" app:destination="@id/archiveFragment"
+            app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+        <action android:id="@+id/action_profile_to_activity_logs" app:destination="@id/activityLogsFragment"
+            app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <!-- ===== ADMIN SCREENS ===== -->
@@ -89,5 +95,15 @@
         android:id="@+id/adminOrdersFragment"
         android:name="com.smartselect.ui.admin.AdminOrdersFragment"
         android:label="Orders"/>
+
+    <fragment
+        android:id="@+id/archiveFragment"
+        android:name="com.smartselect.ui.admin.ArchiveFragment"
+        android:label="Recently Deleted"/>
+
+    <fragment
+        android:id="@+id/activityLogsFragment"
+        android:name="com.smartselect.ui.admin.ActivityLogsFragment"
+        android:label="Activity Logs"/>
 
 </navigation>

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.smartselect.data.repository.OrderRepository
@@ -78,7 +79,7 @@ class AdminFragment : Fragment() {
 
     private fun showPhones() {
         binding.rvPhones.visibility = View.VISIBLE
-        binding.chipGroupStock.visibility = View.VISIBLE
+        binding.scrollPhoneFilters.visibility = View.VISIBLE
         binding.rvOrders.visibility = View.GONE
         binding.rvLogs.visibility = View.GONE
         binding.btnAddPhone.visibility = View.VISIBLE
@@ -87,7 +88,7 @@ class AdminFragment : Fragment() {
 
     private fun showOrders() {
         binding.rvPhones.visibility = View.GONE
-        binding.chipGroupStock.visibility = View.GONE
+        binding.scrollPhoneFilters.visibility = View.GONE
         binding.rvOrders.visibility = View.VISIBLE
         binding.rvLogs.visibility = View.GONE
         binding.btnAddPhone.visibility = View.GONE
@@ -96,7 +97,7 @@ class AdminFragment : Fragment() {
 
     private fun showLogs() {
         binding.rvPhones.visibility = View.GONE
-        binding.chipGroupStock.visibility = View.GONE
+        binding.scrollPhoneFilters.visibility = View.GONE
         binding.rvOrders.visibility = View.GONE
         binding.rvLogs.visibility = View.VISIBLE
         binding.btnAddPhone.visibility = View.GONE
@@ -109,15 +110,18 @@ class AdminFragment : Fragment() {
                 AddEditPhoneDialog.newInstance(phone).show(parentFragmentManager, "edit_phone")
             },
             onDelete = { phone ->
-                com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                val ctx = context ?: return@AdminPhoneAdapter
+                com.google.android.material.dialog.MaterialAlertDialogBuilder(ctx)
                     .setTitle("Delete Phone")
-                    .setMessage("Are you sure you want to delete ${phone.brand} ${phone.model}?")
+                    .setMessage("Archive ${phone.brand} ${phone.model}?\n\nYou can restore it from Archive later.")
                     .setNegativeButton("Cancel", null)
                     .setPositiveButton("Delete") { _, _ ->
                         lifecycleScope.launch {
                             phoneRepository.deletePhone(phone.id)
-                            adminLogRepository.logAction("Deleted Phone", "Deleted ${phone.brand} ${phone.model}")
-                            Snackbar.make(binding.root, "${phone.brand} ${phone.model} deleted", Snackbar.LENGTH_SHORT).show()
+                            adminLogRepository.logAction("Deleted Phone", "Archived ${phone.brand} ${phone.model}")
+                            if (_binding != null) {
+                                Snackbar.make(binding.root, "${phone.brand} ${phone.model} archived", Snackbar.LENGTH_SHORT).show()
+                            }
                         }
                     }.show()
             }
@@ -125,29 +129,40 @@ class AdminFragment : Fragment() {
 
         binding.rvPhones.apply {
             adapter = phoneAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = GridLayoutManager(requireContext(), 3)
+            setHasFixedSize(true)
         }
 
-        binding.chipGroupStock.setOnCheckedStateChangeListener { _, _ ->
-            applyStockFilter()
+        val options = listOf("1 Column", "2 Columns", "3 Columns")
+        val colAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
+        binding.actvAdminColumns.setAdapter(colAdapter)
+        binding.actvAdminColumns.setText("3 Columns", false)
+
+        binding.actvAdminColumns.setOnItemClickListener { _, _, position, _ ->
+            val columns = position + 1
+            (binding.rvPhones.layoutManager as GridLayoutManager).spanCount = columns
+            phoneAdapter.notifyItemRangeChanged(0, phoneAdapter.itemCount)
         }
+
+        binding.cgPhoneFilter.setOnCheckedStateChangeListener { _, _ -> applyPhoneFilter() }
 
         lifecycleScope.launch {
             phoneRepository.getPhones().collect { resource ->
                 if (_binding == null) return@collect
                 if (resource is Resource.Success) {
                     allPhones = resource.data ?: emptyList()
-                    applyStockFilter()
+                    applyPhoneFilter()
                 }
             }
         }
     }
 
-    private fun applyStockFilter() {
-        val filtered = when (binding.chipGroupStock.checkedChipId) {
-            com.smartselect.R.id.chip_stock_soldout -> allPhones.filter { it.stock <= 0 }
-            com.smartselect.R.id.chip_stock_low -> allPhones.filter { it.stock in 1..3 }
-            com.smartselect.R.id.chip_stock_in -> allPhones.filter { it.stock > 3 }
+    private fun applyPhoneFilter() {
+        if (_binding == null) return
+        val filtered = when (binding.cgPhoneFilter.checkedChipId) {
+            com.smartselect.R.id.chip_phone_soldout -> allPhones.filter { it.stock <= 0 }
+            com.smartselect.R.id.chip_phone_lowstock -> allPhones.filter { it.stock in 1..3 }
+            com.smartselect.R.id.chip_phone_instock -> allPhones.filter { it.stock > 3 }
             else -> allPhones
         }
         phoneAdapter.submitList(filtered)
@@ -159,7 +174,9 @@ class AdminFragment : Fragment() {
                 lifecycleScope.launch {
                     val result = orderRepository.updateOrderStatus(order.orderId, status)
                     if (result is Resource.Error) {
-                        com.google.android.material.snackbar.Snackbar.make(binding.root, "Failed to update: ${result.message}", com.google.android.material.snackbar.Snackbar.LENGTH_LONG).show()
+                        if (_binding != null) {
+                            com.google.android.material.snackbar.Snackbar.make(binding.root, "Failed to update: ${result.message}", com.google.android.material.snackbar.Snackbar.LENGTH_LONG).show()
+                        }
                     } else {
                         adminLogRepository.logAction("Order Status Changed", "Order #${order.orderId.take(8).uppercase()} changed to $status")
                     }

@@ -20,11 +20,13 @@ import dagger.hilt.processor.internal.definecomponent.codegen._dagger_hilt_compo
 import hilt_aggregated_deps._com_smartselect_SmartSelectApp_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_di_AppModule;
 import hilt_aggregated_deps._com_smartselect_ui_MainActivity_GeneratedInjector;
+import hilt_aggregated_deps._com_smartselect_ui_admin_ActivityLogsFragment_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_admin_AddEditPhoneDialog_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_admin_AdminDashboardFragment_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_admin_AdminFragment_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_admin_AdminOrdersFragment_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_admin_AdminPhonesFragment_GeneratedInjector;
+import hilt_aggregated_deps._com_smartselect_ui_admin_ArchiveFragment_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_auth_LoginActivity_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_compare_CompareFragment_GeneratedInjector;
 import hilt_aggregated_deps._com_smartselect_ui_details_PhoneDetailsFragment_GeneratedInjector;
@@ -81,11 +83,13 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_smartselect_SmartSelectApp_GeneratedInjector.class,
         _com_smartselect_di_AppModule.class,
         _com_smartselect_ui_MainActivity_GeneratedInjector.class,
+        _com_smartselect_ui_admin_ActivityLogsFragment_GeneratedInjector.class,
         _com_smartselect_ui_admin_AddEditPhoneDialog_GeneratedInjector.class,
         _com_smartselect_ui_admin_AdminDashboardFragment_GeneratedInjector.class,
         _com_smartselect_ui_admin_AdminFragment_GeneratedInjector.class,
         _com_smartselect_ui_admin_AdminOrdersFragment_GeneratedInjector.class,
         _com_smartselect_ui_admin_AdminPhonesFragment_GeneratedInjector.class,
+        _com_smartselect_ui_admin_ArchiveFragment_GeneratedInjector.class,
         _com_smartselect_ui_auth_LoginActivity_GeneratedInjector.class,
         _com_smartselect_ui_compare_CompareFragment_GeneratedInjector.class,
         _com_smartselect_ui_details_PhoneDetailsFragment_GeneratedInjector.class,

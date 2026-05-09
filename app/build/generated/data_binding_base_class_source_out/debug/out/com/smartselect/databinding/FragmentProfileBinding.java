@@ -24,6 +24,9 @@ public final class FragmentProfileBinding implements ViewBinding {
   private final NestedScrollView rootView;
 
   @NonNull
+  public final LinearLayout adminArchiveLayout;
+
+  @NonNull
   public final LinearLayout adminLogsLayout;
 
   @NonNull
@@ -60,13 +63,14 @@ public final class FragmentProfileBinding implements ViewBinding {
   public final TextView tvRole;
 
   private FragmentProfileBinding(@NonNull NestedScrollView rootView,
-      @NonNull LinearLayout adminLogsLayout, @NonNull MaterialButton btnAdminPanel,
-      @NonNull MaterialButton btnEditProfile, @NonNull MaterialButton btnLogout,
-      @NonNull ShapeableImageView ivAvatar, @NonNull TextView labelAdmin,
-      @NonNull LinearLayout orderHistoryLayout, @NonNull SwitchMaterial switchDarkMode,
-      @NonNull TextView tvAvatar, @NonNull TextView tvEmail, @NonNull TextView tvName,
-      @NonNull TextView tvRole) {
+      @NonNull LinearLayout adminArchiveLayout, @NonNull LinearLayout adminLogsLayout,
+      @NonNull MaterialButton btnAdminPanel, @NonNull MaterialButton btnEditProfile,
+      @NonNull MaterialButton btnLogout, @NonNull ShapeableImageView ivAvatar,
+      @NonNull TextView labelAdmin, @NonNull LinearLayout orderHistoryLayout,
+      @NonNull SwitchMaterial switchDarkMode, @NonNull TextView tvAvatar, @NonNull TextView tvEmail,
+      @NonNull TextView tvName, @NonNull TextView tvRole) {
     this.rootView = rootView;
+    this.adminArchiveLayout = adminArchiveLayout;
     this.adminLogsLayout = adminLogsLayout;
     this.btnAdminPanel = btnAdminPanel;
     this.btnEditProfile = btnEditProfile;
@@ -108,6 +112,12 @@ public final class FragmentProfileBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.admin_archive_layout;
+      LinearLayout adminArchiveLayout = ViewBindings.findChildViewById(rootView, id);
+      if (adminArchiveLayout == null) {
+        break missingId;
+      }
+
       id = R.id.admin_logs_layout;
       LinearLayout adminLogsLayout = ViewBindings.findChildViewById(rootView, id);
       if (adminLogsLayout == null) {
@@ -180,9 +190,9 @@ public final class FragmentProfileBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentProfileBinding((NestedScrollView) rootView, adminLogsLayout, btnAdminPanel,
-          btnEditProfile, btnLogout, ivAvatar, labelAdmin, orderHistoryLayout, switchDarkMode,
-          tvAvatar, tvEmail, tvName, tvRole);
+      return new FragmentProfileBinding((NestedScrollView) rootView, adminArchiveLayout,
+          adminLogsLayout, btnAdminPanel, btnEditProfile, btnLogout, ivAvatar, labelAdmin,
+          orderHistoryLayout, switchDarkMode, tvAvatar, tvEmail, tvName, tvRole);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

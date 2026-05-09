@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +13,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.smartselect.R;
 import java.lang.NullPointerException;
@@ -23,10 +26,25 @@ public final class FragmentAdminOrdersBinding implements ViewBinding {
   private final CoordinatorLayout rootView;
 
   @NonNull
+  public final AutoCompleteTextView actvDateFilter;
+
+  @NonNull
   public final AutoCompleteTextView actvStatusFilter;
 
   @NonNull
+  public final MaterialButton btnCancelSelection;
+
+  @NonNull
+  public final MaterialButton btnDeleteSelected;
+
+  @NonNull
+  public final CheckBox cbSelectAll;
+
+  @NonNull
   public final TextInputEditText etSearch;
+
+  @NonNull
+  public final MaterialCardView layoutSelectionBar;
 
   @NonNull
   public final RecyclerView rvOrders;
@@ -38,12 +56,19 @@ public final class FragmentAdminOrdersBinding implements ViewBinding {
   public final TextView tvPendingCount;
 
   private FragmentAdminOrdersBinding(@NonNull CoordinatorLayout rootView,
-      @NonNull AutoCompleteTextView actvStatusFilter, @NonNull TextInputEditText etSearch,
-      @NonNull RecyclerView rvOrders, @NonNull TextView tvOrderCount,
-      @NonNull TextView tvPendingCount) {
+      @NonNull AutoCompleteTextView actvDateFilter, @NonNull AutoCompleteTextView actvStatusFilter,
+      @NonNull MaterialButton btnCancelSelection, @NonNull MaterialButton btnDeleteSelected,
+      @NonNull CheckBox cbSelectAll, @NonNull TextInputEditText etSearch,
+      @NonNull MaterialCardView layoutSelectionBar, @NonNull RecyclerView rvOrders,
+      @NonNull TextView tvOrderCount, @NonNull TextView tvPendingCount) {
     this.rootView = rootView;
+    this.actvDateFilter = actvDateFilter;
     this.actvStatusFilter = actvStatusFilter;
+    this.btnCancelSelection = btnCancelSelection;
+    this.btnDeleteSelected = btnDeleteSelected;
+    this.cbSelectAll = cbSelectAll;
     this.etSearch = etSearch;
+    this.layoutSelectionBar = layoutSelectionBar;
     this.rvOrders = rvOrders;
     this.tvOrderCount = tvOrderCount;
     this.tvPendingCount = tvPendingCount;
@@ -76,15 +101,45 @@ public final class FragmentAdminOrdersBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.actv_date_filter;
+      AutoCompleteTextView actvDateFilter = ViewBindings.findChildViewById(rootView, id);
+      if (actvDateFilter == null) {
+        break missingId;
+      }
+
       id = R.id.actv_status_filter;
       AutoCompleteTextView actvStatusFilter = ViewBindings.findChildViewById(rootView, id);
       if (actvStatusFilter == null) {
         break missingId;
       }
 
+      id = R.id.btn_cancel_selection;
+      MaterialButton btnCancelSelection = ViewBindings.findChildViewById(rootView, id);
+      if (btnCancelSelection == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_delete_selected;
+      MaterialButton btnDeleteSelected = ViewBindings.findChildViewById(rootView, id);
+      if (btnDeleteSelected == null) {
+        break missingId;
+      }
+
+      id = R.id.cb_select_all;
+      CheckBox cbSelectAll = ViewBindings.findChildViewById(rootView, id);
+      if (cbSelectAll == null) {
+        break missingId;
+      }
+
       id = R.id.et_search;
       TextInputEditText etSearch = ViewBindings.findChildViewById(rootView, id);
       if (etSearch == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_selection_bar;
+      MaterialCardView layoutSelectionBar = ViewBindings.findChildViewById(rootView, id);
+      if (layoutSelectionBar == null) {
         break missingId;
       }
 
@@ -106,8 +161,9 @@ public final class FragmentAdminOrdersBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentAdminOrdersBinding((CoordinatorLayout) rootView, actvStatusFilter,
-          etSearch, rvOrders, tvOrderCount, tvPendingCount);
+      return new FragmentAdminOrdersBinding((CoordinatorLayout) rootView, actvDateFilter,
+          actvStatusFilter, btnCancelSelection, btnDeleteSelected, cbSelectAll, etSearch,
+          layoutSelectionBar, rvOrders, tvOrderCount, tvPendingCount);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

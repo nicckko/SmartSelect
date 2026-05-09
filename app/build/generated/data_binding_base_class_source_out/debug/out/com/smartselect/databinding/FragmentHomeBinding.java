@@ -4,6 +4,7 @@ package com.smartselect.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -14,8 +15,6 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.smartselect.R;
 import java.lang.NullPointerException;
@@ -27,28 +26,16 @@ public final class FragmentHomeBinding implements ViewBinding {
   private final CoordinatorLayout rootView;
 
   @NonNull
+  public final AutoCompleteTextView actvCategory;
+
+  @NonNull
+  public final AutoCompleteTextView actvColumns;
+
+  @NonNull
   public final AppBarLayout appBar;
 
   @NonNull
   public final MaterialButton btnFilter;
-
-  @NonNull
-  public final Chip chipAll;
-
-  @NonNull
-  public final Chip chipBudget;
-
-  @NonNull
-  public final Chip chipFlagship;
-
-  @NonNull
-  public final Chip chipGaming;
-
-  @NonNull
-  public final ChipGroup chipGroup;
-
-  @NonNull
-  public final Chip chipMidrange;
 
   @NonNull
   public final TextInputEditText etSearch;
@@ -62,21 +49,16 @@ public final class FragmentHomeBinding implements ViewBinding {
   @NonNull
   public final TextView tvPhoneCount;
 
-  private FragmentHomeBinding(@NonNull CoordinatorLayout rootView, @NonNull AppBarLayout appBar,
-      @NonNull MaterialButton btnFilter, @NonNull Chip chipAll, @NonNull Chip chipBudget,
-      @NonNull Chip chipFlagship, @NonNull Chip chipGaming, @NonNull ChipGroup chipGroup,
-      @NonNull Chip chipMidrange, @NonNull TextInputEditText etSearch,
-      @NonNull ProgressBar progressBar, @NonNull RecyclerView rvPhones,
-      @NonNull TextView tvPhoneCount) {
+  private FragmentHomeBinding(@NonNull CoordinatorLayout rootView,
+      @NonNull AutoCompleteTextView actvCategory, @NonNull AutoCompleteTextView actvColumns,
+      @NonNull AppBarLayout appBar, @NonNull MaterialButton btnFilter,
+      @NonNull TextInputEditText etSearch, @NonNull ProgressBar progressBar,
+      @NonNull RecyclerView rvPhones, @NonNull TextView tvPhoneCount) {
     this.rootView = rootView;
+    this.actvCategory = actvCategory;
+    this.actvColumns = actvColumns;
     this.appBar = appBar;
     this.btnFilter = btnFilter;
-    this.chipAll = chipAll;
-    this.chipBudget = chipBudget;
-    this.chipFlagship = chipFlagship;
-    this.chipGaming = chipGaming;
-    this.chipGroup = chipGroup;
-    this.chipMidrange = chipMidrange;
     this.etSearch = etSearch;
     this.progressBar = progressBar;
     this.rvPhones = rvPhones;
@@ -110,6 +92,18 @@ public final class FragmentHomeBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.actv_category;
+      AutoCompleteTextView actvCategory = ViewBindings.findChildViewById(rootView, id);
+      if (actvCategory == null) {
+        break missingId;
+      }
+
+      id = R.id.actv_columns;
+      AutoCompleteTextView actvColumns = ViewBindings.findChildViewById(rootView, id);
+      if (actvColumns == null) {
+        break missingId;
+      }
+
       id = R.id.app_bar;
       AppBarLayout appBar = ViewBindings.findChildViewById(rootView, id);
       if (appBar == null) {
@@ -119,42 +113,6 @@ public final class FragmentHomeBinding implements ViewBinding {
       id = R.id.btn_filter;
       MaterialButton btnFilter = ViewBindings.findChildViewById(rootView, id);
       if (btnFilter == null) {
-        break missingId;
-      }
-
-      id = R.id.chip_all;
-      Chip chipAll = ViewBindings.findChildViewById(rootView, id);
-      if (chipAll == null) {
-        break missingId;
-      }
-
-      id = R.id.chip_budget;
-      Chip chipBudget = ViewBindings.findChildViewById(rootView, id);
-      if (chipBudget == null) {
-        break missingId;
-      }
-
-      id = R.id.chip_flagship;
-      Chip chipFlagship = ViewBindings.findChildViewById(rootView, id);
-      if (chipFlagship == null) {
-        break missingId;
-      }
-
-      id = R.id.chip_gaming;
-      Chip chipGaming = ViewBindings.findChildViewById(rootView, id);
-      if (chipGaming == null) {
-        break missingId;
-      }
-
-      id = R.id.chip_group;
-      ChipGroup chipGroup = ViewBindings.findChildViewById(rootView, id);
-      if (chipGroup == null) {
-        break missingId;
-      }
-
-      id = R.id.chip_midrange;
-      Chip chipMidrange = ViewBindings.findChildViewById(rootView, id);
-      if (chipMidrange == null) {
         break missingId;
       }
 
@@ -182,9 +140,8 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentHomeBinding((CoordinatorLayout) rootView, appBar, btnFilter, chipAll,
-          chipBudget, chipFlagship, chipGaming, chipGroup, chipMidrange, etSearch, progressBar,
-          rvPhones, tvPhoneCount);
+      return new FragmentHomeBinding((CoordinatorLayout) rootView, actvCategory, actvColumns,
+          appBar, btnFilter, etSearch, progressBar, rvPhones, tvPhoneCount);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -189,14 +189,12 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         lifecycleScope.launch {
             setLoadingState(true)
 
-            // Check duplicate only if it's a new phone
-            if (editPhone == null) {
-                val exists = phoneRepository.checkIfExists(phone.brand, phone.model)
-                if (exists) {
-                    setLoadingState(false)
-                    Snackbar.make(binding.root, "A phone with this brand and model already exists!", Snackbar.LENGTH_LONG).show()
-                    return@launch
-                }
+            // Check for duplicate
+            val isDuplicate = phoneRepository.isDuplicate(phone.brand, phone.model, editPhone?.id)
+            if (isDuplicate) {
+                setLoadingState(false)
+                com.google.android.material.snackbar.Snackbar.make(binding.root, "Error: This phone already exists", com.google.android.material.snackbar.Snackbar.LENGTH_LONG).show()
+                return@launch
             }
 
             val finalImageUrl = if (selectedImageUri != null) uploadImageToStorage(selectedImageUri!!) else existingImageUrl
@@ -204,11 +202,15 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
             if (editPhone != null) {
                 phoneRepository.updatePhone(phoneToSave.copy(id = editPhone!!.id))
                 adminLogRepository.logAction("Updated Phone", "Updated details for ${phoneToSave.brand} ${phoneToSave.model}")
-                Snackbar.make(requireActivity().findViewById(android.R.id.content), "Phone updated", Snackbar.LENGTH_SHORT).show()
+                activity?.findViewById<View>(android.R.id.content)?.let { 
+                    com.google.android.material.snackbar.Snackbar.make(it, "Phone updated", com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
+                }
             } else {
                 phoneRepository.addPhone(phoneToSave)
                 adminLogRepository.logAction("Added Phone", "Added new phone: ${phoneToSave.brand} ${phoneToSave.model}")
-                Snackbar.make(requireActivity().findViewById(android.R.id.content), "Phone added", Snackbar.LENGTH_SHORT).show()
+                activity?.findViewById<View>(android.R.id.content)?.let { 
+                    com.google.android.material.snackbar.Snackbar.make(it, "Phone added", com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
+                }
             }
             setLoadingState(false)
             dismiss()
@@ -239,6 +241,21 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         (binding.etPrice.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = null
         (binding.actvCategory.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = null
 
+        if (brand.isEmpty()) {
+            binding.tilBrand?.error = "Brand is required"; binding.etBrand.requestFocus(); return null
+        }
+        if (model.isEmpty()) {
+            binding.tilModel?.error = "Model is required"; binding.etModel.requestFocus(); return null
+        }
+        if (priceStr.isEmpty()) {
+            (binding.etPrice.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Price is required"
+            binding.etPrice.requestFocus(); return null
+        }
+        if (category.isEmpty()) {
+            (binding.actvCategory.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Category is required"
+            binding.actvCategory.requestFocus(); return null
+        }
+
         val stockStr = binding.etStock.text.toString().trim()
         val ram = binding.etRam.text.toString().trim()
         val storage = binding.etStorage.text.toString().trim()
@@ -247,17 +264,34 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         val chipset = binding.etChipset.text.toString().trim()
         val display = binding.etDisplay.text.toString().trim()
 
-        if (brand.isEmpty()) { binding.tilBrand?.error = "Required"; binding.etBrand.requestFocus(); return null }
-        if (model.isEmpty()) { binding.tilModel?.error = "Required"; binding.etModel.requestFocus(); return null }
-        if (priceStr.isEmpty()) { (binding.etPrice.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etPrice.requestFocus(); return null }
-        if (stockStr.isEmpty()) { (binding.etStock.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etStock.requestFocus(); return null }
-        if (category.isEmpty()) { (binding.actvCategory.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.actvCategory.requestFocus(); return null }
-        if (ram.isEmpty()) { (binding.etRam.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etRam.requestFocus(); return null }
-        if (storage.isEmpty()) { (binding.etStorage.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etStorage.requestFocus(); return null }
-        if (camera.isEmpty()) { (binding.etCamera.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etCamera.requestFocus(); return null }
-        if (battery.isEmpty()) { (binding.etBattery.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etBattery.requestFocus(); return null }
-        if (chipset.isEmpty()) { (binding.etChipset.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etChipset.requestFocus(); return null }
-        if (display.isEmpty()) { (binding.etDisplay.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"; binding.etDisplay.requestFocus(); return null }
+        if (stockStr.isEmpty()) {
+            (binding.etStock.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"
+            binding.etStock.requestFocus(); return null
+        }
+        if (ram.isEmpty()) {
+            (binding.etRam.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"
+            binding.etRam.requestFocus(); return null
+        }
+        if (storage.isEmpty()) {
+            (binding.etStorage.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"
+            binding.etStorage.requestFocus(); return null
+        }
+        if (camera.isEmpty()) {
+            (binding.etCamera.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"
+            binding.etCamera.requestFocus(); return null
+        }
+        if (battery.isEmpty()) {
+            (binding.etBattery.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"
+            binding.etBattery.requestFocus(); return null
+        }
+        if (chipset.isEmpty()) {
+            (binding.etChipset.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"
+            binding.etChipset.requestFocus(); return null
+        }
+        if (display.isEmpty()) {
+            (binding.etDisplay.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Required"
+            binding.etDisplay.requestFocus(); return null
+        }
 
         return Phone(
             brand = brand, model = model,

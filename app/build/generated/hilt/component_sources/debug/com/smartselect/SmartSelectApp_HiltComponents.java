@@ -2,11 +2,13 @@ package com.smartselect;
 
 import com.smartselect.di.AppModule;
 import com.smartselect.ui.MainActivity_GeneratedInjector;
+import com.smartselect.ui.admin.ActivityLogsFragment_GeneratedInjector;
 import com.smartselect.ui.admin.AddEditPhoneDialog_GeneratedInjector;
 import com.smartselect.ui.admin.AdminDashboardFragment_GeneratedInjector;
 import com.smartselect.ui.admin.AdminFragment_GeneratedInjector;
 import com.smartselect.ui.admin.AdminOrdersFragment_GeneratedInjector;
 import com.smartselect.ui.admin.AdminPhonesFragment_GeneratedInjector;
+import com.smartselect.ui.admin.ArchiveFragment_GeneratedInjector;
 import com.smartselect.ui.auth.LoginActivity_GeneratedInjector;
 import com.smartselect.ui.compare.CompareFragment_GeneratedInjector;
 import com.smartselect.ui.details.PhoneDetailsFragment_GeneratedInjector;
@@ -237,11 +239,13 @@ public final class SmartSelectApp_HiltComponents {
       modules = ViewWithFragmentCBuilderModule.class
   )
   @FragmentScoped
-  public abstract static class FragmentC implements AddEditPhoneDialog_GeneratedInjector,
+  public abstract static class FragmentC implements ActivityLogsFragment_GeneratedInjector,
+      AddEditPhoneDialog_GeneratedInjector,
       AdminDashboardFragment_GeneratedInjector,
       AdminFragment_GeneratedInjector,
       AdminOrdersFragment_GeneratedInjector,
       AdminPhonesFragment_GeneratedInjector,
+      ArchiveFragment_GeneratedInjector,
       CompareFragment_GeneratedInjector,
       PhoneDetailsFragment_GeneratedInjector,
       FavoritesFragment_GeneratedInjector,

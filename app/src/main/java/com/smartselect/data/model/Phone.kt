@@ -20,5 +20,8 @@ data class Phone(
     val imageUrl: String = "",
     val category: String = "",
     val stock: Int = 10,
-    val isBestValue: Boolean = false
+    val isBestValue: Boolean = false,
+    @get:com.google.firebase.firestore.PropertyName("isDeleted")
+    @set:com.google.firebase.firestore.PropertyName("isDeleted")
+    var isDeleted: Boolean = false
 ) : Parcelable

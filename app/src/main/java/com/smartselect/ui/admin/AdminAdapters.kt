@@ -12,7 +12,7 @@ import com.smartselect.R
 import com.smartselect.data.model.Order
 import com.smartselect.data.model.Phone
 import com.smartselect.databinding.ItemAdminOrderBinding
-import com.smartselect.databinding.ItemAdminPhoneBinding
+import com.smartselect.databinding.ItemAdminPhoneGridBinding
 import com.smartselect.utils.getStockColor
 import com.smartselect.utils.getStockLabel
 import com.smartselect.utils.toPeso
@@ -23,10 +23,13 @@ import java.util.concurrent.TimeUnit
 
 class AdminPhoneAdapter(
     private val onEdit: (Phone) -> Unit,
-    private val onDelete: (Phone) -> Unit
+    private val onDelete: (Phone) -> Unit,
+    private val onLongPress: ((Phone) -> Unit)? = null,
+    private val onSelectionClick: ((Phone) -> Unit)? = null,
+    private val selectedIds: Set<String>? = null
 ) : ListAdapter<Phone, AdminPhoneAdapter.ViewHolder>(DiffCallback()) {
 
-    inner class ViewHolder(private val binding: ItemAdminPhoneBinding) :
+    inner class ViewHolder(private val binding: ItemAdminPhoneGridBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(phone: Phone) {
             binding.tvPhoneName.text = "${phone.brand} ${phone.model}"
@@ -36,13 +39,40 @@ class AdminPhoneAdapter(
             Glide.with(binding.root.context).load(phone.imageUrl)
                 .placeholder(R.drawable.placeholder_phone).error(R.drawable.placeholder_phone)
                 .into(binding.ivPhone)
-            binding.btnEdit.setOnClickListener { onEdit(phone) }
-            binding.btnDelete.setOnClickListener { onDelete(phone) }
+
+            // Selection highlight
+            val isSelected = selectedIds?.contains(phone.id) == true
+            binding.root.alpha = if (isSelected) 0.7f else 1f
+            binding.root.strokeWidth = if (isSelected) 3 else 1
+            binding.root.strokeColor = ContextCompat.getColor(
+                binding.root.context,
+                if (isSelected) R.color.accent else R.color.divider
+            )
+
+            // Click behavior depends on selection mode
+            val inSelectionMode = selectedIds != null && selectedIds.isNotEmpty()
+            if (inSelectionMode) {
+                binding.root.setOnClickListener { onSelectionClick?.invoke(phone) }
+                binding.btnEdit.visibility = View.GONE
+                binding.btnDelete.visibility = View.GONE
+            } else {
+                binding.root.setOnClickListener(null)
+                binding.btnEdit.visibility = View.VISIBLE
+                binding.btnDelete.visibility = View.VISIBLE
+                binding.btnEdit.setOnClickListener { onEdit(phone) }
+                binding.btnDelete.setOnClickListener { onDelete(phone) }
+            }
+
+            // Long press always enters selection mode
+            binding.root.setOnLongClickListener {
+                onLongPress?.invoke(phone)
+                true
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        ItemAdminPhoneBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        ItemAdminPhoneGridBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position))
 
@@ -54,7 +84,10 @@ class AdminPhoneAdapter(
 
 class AdminOrderAdapter(
     private val onStatusChange: (Order, String) -> Unit,
-    private val onOrderClick: (Order) -> Unit = {}
+    private val onOrderClick: (Order) -> Unit = {},
+    private val onLongPress: ((Order) -> Unit)? = null,
+    private val onSelectionClick: ((Order) -> Unit)? = null,
+    private val selectedIds: Set<String>? = null
 ) : ListAdapter<Order, AdminOrderAdapter.ViewHolder>(DiffCallback()) {
 
     inner class ViewHolder(private val binding: ItemAdminOrderBinding) :
@@ -69,8 +102,32 @@ class AdminOrderAdapter(
             binding.tvPhones.text = order.phoneNames.joinToString(" · ")
             binding.tvTotal.text = order.totalPrice.toPeso()
 
-            // Card click → show full detail
-            binding.root.setOnClickListener { onOrderClick(order) }
+            // Selection styling
+            val isSelected = selectedIds?.contains(order.orderId) == true
+            binding.root.alpha = if (isSelected) 0.7f else 1f
+            if (isSelected) {
+                binding.root.setCardBackgroundColor(android.graphics.Color.parseColor("#1A3B82F6"))
+                binding.root.strokeColor = ContextCompat.getColor(ctx, R.color.accent)
+                binding.root.strokeWidth = 3
+            } else {
+                binding.root.setCardBackgroundColor(ContextCompat.getColor(ctx, R.color.surface))
+                binding.root.strokeColor = ContextCompat.getColor(ctx, R.color.divider)
+                binding.root.strokeWidth = 1
+            }
+
+            val inSelectionMode = selectedIds != null && selectedIds.isNotEmpty()
+            if (inSelectionMode) {
+                binding.root.setOnClickListener { onSelectionClick?.invoke(order) }
+                binding.btnStatus.isEnabled = false
+            } else {
+                binding.root.setOnClickListener { onOrderClick(order) }
+                binding.btnStatus.isEnabled = true
+            }
+
+            binding.root.setOnLongClickListener {
+                onLongPress?.invoke(order)
+                true
+            }
 
             // Full datetime
             order.timestamp?.toDate()?.let {

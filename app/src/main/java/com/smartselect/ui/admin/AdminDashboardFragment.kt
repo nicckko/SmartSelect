@@ -121,8 +121,9 @@ class AdminDashboardFragment : Fragment() {
         if (orders.isNotEmpty()) {
             val rate = (cancelled.toDouble() / orders.size * 100)
             binding.tvCancellationRate.text = "❌ %.0f%% cancelled".format(rate)
+            val ctx = context ?: return
             binding.tvCancellationRate.setTextColor(
-                ContextCompat.getColor(requireContext(), if (rate > 20) R.color.error else R.color.text_tertiary)
+                ContextCompat.getColor(ctx, if (rate > 20) R.color.error else R.color.text_tertiary)
             )
             binding.tvCancellationRate.visibility = View.VISIBLE
         }
@@ -166,7 +167,7 @@ class AdminDashboardFragment : Fragment() {
 
         val revenue = filtered.sumOf { it.totalPrice }
         binding.tvTotalRevenue.text = revenue.toPeso()
-
+        
         val label = when (currentPeriod) {
             "today" -> "Today's sales · ${filtered.size} orders"
             "week" -> "This week · ${filtered.size} orders"

@@ -4,6 +4,8 @@ package com.smartselect.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,6 +15,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.smartselect.R;
@@ -25,10 +29,25 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
   private final CoordinatorLayout rootView;
 
   @NonNull
+  public final AutoCompleteTextView actvAdminColumns;
+
+  @NonNull
   public final ExtendedFloatingActionButton btnAddPhone;
 
   @NonNull
+  public final MaterialButton btnCancelSelection;
+
+  @NonNull
+  public final MaterialButton btnDeleteSelected;
+
+  @NonNull
+  public final CheckBox cbSelectAll;
+
+  @NonNull
   public final TextInputEditText etSearch;
+
+  @NonNull
+  public final MaterialCardView layoutSelectionBar;
 
   @NonNull
   public final ProgressBar progressBar;
@@ -43,12 +62,20 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
   public final LinearLayout tvEmpty;
 
   private FragmentAdminPhonesBinding(@NonNull CoordinatorLayout rootView,
-      @NonNull ExtendedFloatingActionButton btnAddPhone, @NonNull TextInputEditText etSearch,
+      @NonNull AutoCompleteTextView actvAdminColumns,
+      @NonNull ExtendedFloatingActionButton btnAddPhone, @NonNull MaterialButton btnCancelSelection,
+      @NonNull MaterialButton btnDeleteSelected, @NonNull CheckBox cbSelectAll,
+      @NonNull TextInputEditText etSearch, @NonNull MaterialCardView layoutSelectionBar,
       @NonNull ProgressBar progressBar, @NonNull RecyclerView rvPhones, @NonNull TextView tvCount,
       @NonNull LinearLayout tvEmpty) {
     this.rootView = rootView;
+    this.actvAdminColumns = actvAdminColumns;
     this.btnAddPhone = btnAddPhone;
+    this.btnCancelSelection = btnCancelSelection;
+    this.btnDeleteSelected = btnDeleteSelected;
+    this.cbSelectAll = cbSelectAll;
     this.etSearch = etSearch;
+    this.layoutSelectionBar = layoutSelectionBar;
     this.progressBar = progressBar;
     this.rvPhones = rvPhones;
     this.tvCount = tvCount;
@@ -82,15 +109,45 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.actv_admin_columns;
+      AutoCompleteTextView actvAdminColumns = ViewBindings.findChildViewById(rootView, id);
+      if (actvAdminColumns == null) {
+        break missingId;
+      }
+
       id = R.id.btn_add_phone;
       ExtendedFloatingActionButton btnAddPhone = ViewBindings.findChildViewById(rootView, id);
       if (btnAddPhone == null) {
         break missingId;
       }
 
+      id = R.id.btn_cancel_selection;
+      MaterialButton btnCancelSelection = ViewBindings.findChildViewById(rootView, id);
+      if (btnCancelSelection == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_delete_selected;
+      MaterialButton btnDeleteSelected = ViewBindings.findChildViewById(rootView, id);
+      if (btnDeleteSelected == null) {
+        break missingId;
+      }
+
+      id = R.id.cb_select_all;
+      CheckBox cbSelectAll = ViewBindings.findChildViewById(rootView, id);
+      if (cbSelectAll == null) {
+        break missingId;
+      }
+
       id = R.id.et_search;
       TextInputEditText etSearch = ViewBindings.findChildViewById(rootView, id);
       if (etSearch == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_selection_bar;
+      MaterialCardView layoutSelectionBar = ViewBindings.findChildViewById(rootView, id);
+      if (layoutSelectionBar == null) {
         break missingId;
       }
 
@@ -118,8 +175,9 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentAdminPhonesBinding((CoordinatorLayout) rootView, btnAddPhone, etSearch,
-          progressBar, rvPhones, tvCount, tvEmpty);
+      return new FragmentAdminPhonesBinding((CoordinatorLayout) rootView, actvAdminColumns,
+          btnAddPhone, btnCancelSelection, btnDeleteSelected, cbSelectAll, etSearch,
+          layoutSelectionBar, progressBar, rvPhones, tvCount, tvEmpty);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

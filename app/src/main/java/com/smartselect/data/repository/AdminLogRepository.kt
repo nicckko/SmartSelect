@@ -36,6 +36,15 @@ class AdminLogRepository @Inject constructor(
         }
     }
 
+    suspend fun deleteLog(logId: String): Resource<Boolean> {
+        return try {
+            logsCollection.document(logId).delete().await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Failed to delete log")
+        }
+    }
+
     fun getLogs(): Flow<Resource<List<AdminLog>>> = callbackFlow {
         trySend(Resource.Loading())
         val listener = logsCollection.addSnapshotListener { snapshot, error ->

@@ -23,7 +23,7 @@ class PhoneRepository @Inject constructor(
                 trySend(Resource.Error(error.message ?: "Unknown error"))
                 return@addSnapshotListener
             }
-            val phones = snapshot?.toObjects(Phone::class.java) ?: emptyList()
+            val phones = snapshot?.toObjects(Phone::class.java)?.filter { !it.isDeleted } ?: emptyList()
             trySend(Resource.Success(phones))
         }
         awaitClose { listener.remove() }
@@ -41,7 +41,7 @@ class PhoneRepository @Inject constructor(
                 trySend(Resource.Error(error.message ?: "Unknown error"))
                 return@addSnapshotListener
             }
-            var phones = snapshot?.toObjects(Phone::class.java) ?: emptyList()
+            var phones = snapshot?.toObjects(Phone::class.java)?.filter { !it.isDeleted } ?: emptyList()
             if (query.isNotEmpty()) {
                 phones = phones.filter {
                     it.brand.contains(query, true) || it.model.contains(query, true)
@@ -54,18 +54,6 @@ class PhoneRepository @Inject constructor(
         awaitClose { listener.remove() }
     }
 
-    suspend fun checkIfExists(brand: String, model: String): Boolean {
-        return try {
-            val querySnapshot = phonesCollection
-                .whereEqualTo("brand", brand)
-                .whereEqualTo("model", model)
-                .get().await()
-            !querySnapshot.isEmpty
-        } catch (e: Exception) {
-            false
-        }
-    }
-
     suspend fun getPhoneById(id: String): Resource<Phone> {
         return try {
             val doc = phonesCollection.document(id).get().await()
@@ -73,6 +61,22 @@ class PhoneRepository @Inject constructor(
             if (phone != null) Resource.Success(phone) else Resource.Error("Phone not found")
         } catch (e: Exception) {
             Resource.Error(e.message ?: "Unknown error")
+        }
+    }
+
+    suspend fun isDuplicate(brand: String, model: String, excludeId: String? = null): Boolean {
+        return try {
+            val snapshot = phonesCollection
+                .whereEqualTo("brand", brand)
+                .whereEqualTo("model", model)
+                .get().await()
+            if (excludeId != null) {
+                snapshot.documents.any { it.id != excludeId }
+            } else {
+                !snapshot.isEmpty
+            }
+        } catch (e: Exception) {
+            false
         }
     }
 
@@ -98,11 +102,49 @@ class PhoneRepository @Inject constructor(
 
     suspend fun deletePhone(id: String): Resource<Boolean> {
         return try {
+            if (id.isBlank()) return Resource.Error("Invalid phone ID")
+            phonesCollection.document(id)
+                .set(mapOf("isDeleted" to true), com.google.firebase.firestore.SetOptions.merge())
+                .await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Unknown error")
+        }
+    }
+
+    suspend fun restorePhone(id: String): Resource<Boolean> {
+        return try {
+            if (id.isBlank()) return Resource.Error("Invalid phone ID")
+            phonesCollection.document(id)
+                .set(mapOf("isDeleted" to false), com.google.firebase.firestore.SetOptions.merge())
+                .await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Unknown error")
+        }
+    }
+
+    suspend fun permanentlyDeletePhone(id: String): Resource<Boolean> {
+        return try {
+            if (id.isBlank()) return Resource.Error("Invalid phone ID")
             phonesCollection.document(id).delete().await()
             Resource.Success(true)
         } catch (e: Exception) {
             Resource.Error(e.message ?: "Unknown error")
         }
+    }
+
+    fun getDeletedPhones(): Flow<Resource<List<Phone>>> = callbackFlow {
+        trySend(Resource.Loading())
+        val listener = phonesCollection.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                trySend(Resource.Error(error.message ?: "Unknown error"))
+                return@addSnapshotListener
+            }
+            val phones = snapshot?.toObjects(Phone::class.java)?.filter { it.isDeleted } ?: emptyList()
+            trySend(Resource.Success(phones))
+        }
+        awaitClose { listener.remove() }
     }
 
 }

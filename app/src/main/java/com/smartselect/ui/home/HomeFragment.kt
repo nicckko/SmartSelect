@@ -35,6 +35,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        setupColumnSelector()
         setupSearch()
         setupFilters()
         observePhones()
@@ -71,8 +72,21 @@ class HomeFragment : Fragment() {
         )
         binding.rvPhones.apply {
             adapter = phoneAdapter
-            layoutManager = GridLayoutManager(requireContext(), 2)
+            layoutManager = GridLayoutManager(requireContext(), 3)
             setHasFixedSize(true)
+        }
+    }
+
+    private fun setupColumnSelector() {
+        val options = listOf("1 Column", "2 Columns", "3 Columns")
+        val adapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
+        binding.actvColumns.setAdapter(adapter)
+        binding.actvColumns.setText("3 Columns", false)
+
+        binding.actvColumns.setOnItemClickListener { _, _, position, _ ->
+            val columns = position + 1
+            (binding.rvPhones.layoutManager as androidx.recyclerview.widget.GridLayoutManager).spanCount = columns
+            phoneAdapter.notifyItemRangeChanged(0, phoneAdapter.itemCount)
         }
     }
 
@@ -83,24 +97,25 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private var currentCategory = ""
+
     private fun setupFilters() {
-        binding.chipGroup.setOnCheckedStateChangeListener { _, _ ->
+        val categories = listOf("All Categories", "Flagship", "Mid-range", "Gaming", "Budget")
+        val adapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)
+        binding.actvCategory.setAdapter(adapter)
+
+        binding.actvCategory.setOnItemClickListener { _, _, position, _ ->
+            currentCategory = if (position == 0) "" else categories[position]
             val query = binding.etSearch.text.toString()
-            val category = getSelectedCategory()
-            phoneViewModel.searchPhones(query, category)
+            phoneViewModel.searchPhones(query, currentCategory)
         }
+
         binding.btnFilter.setOnClickListener {
             FilterBottomSheet().show(childFragmentManager, "filter")
         }
     }
 
-    private fun getSelectedCategory(): String = when (binding.chipGroup.checkedChipId) {
-        R.id.chip_flagship -> "Flagship"
-        R.id.chip_midrange -> "Mid-range"
-        R.id.chip_gaming -> "Gaming"
-        R.id.chip_budget -> "Budget"
-        else -> ""
-    }
+    private fun getSelectedCategory(): String = currentCategory
 
     private fun observePhones() {
         lifecycleScope.launch {

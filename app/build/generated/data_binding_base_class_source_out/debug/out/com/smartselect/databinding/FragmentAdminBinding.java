@@ -4,6 +4,8 @@ package com.smartselect.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
+import android.widget.HorizontalScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -24,25 +26,28 @@ public final class FragmentAdminBinding implements ViewBinding {
   private final CoordinatorLayout rootView;
 
   @NonNull
+  public final AutoCompleteTextView actvAdminColumns;
+
+  @NonNull
   public final MaterialButton btnAddPhone;
 
   @NonNull
   public final MaterialButton btnSeedData;
 
   @NonNull
-  public final ChipGroup chipGroupStock;
+  public final ChipGroup cgPhoneFilter;
 
   @NonNull
-  public final Chip chipStockAll;
+  public final Chip chipPhoneAll;
 
   @NonNull
-  public final Chip chipStockIn;
+  public final Chip chipPhoneInstock;
 
   @NonNull
-  public final Chip chipStockLow;
+  public final Chip chipPhoneLowstock;
 
   @NonNull
-  public final Chip chipStockSoldout;
+  public final Chip chipPhoneSoldout;
 
   @NonNull
   public final RecyclerView rvLogs;
@@ -54,25 +59,31 @@ public final class FragmentAdminBinding implements ViewBinding {
   public final RecyclerView rvPhones;
 
   @NonNull
+  public final HorizontalScrollView scrollPhoneFilters;
+
+  @NonNull
   public final TabLayout tabLayout;
 
   private FragmentAdminBinding(@NonNull CoordinatorLayout rootView,
-      @NonNull MaterialButton btnAddPhone, @NonNull MaterialButton btnSeedData,
-      @NonNull ChipGroup chipGroupStock, @NonNull Chip chipStockAll, @NonNull Chip chipStockIn,
-      @NonNull Chip chipStockLow, @NonNull Chip chipStockSoldout, @NonNull RecyclerView rvLogs,
-      @NonNull RecyclerView rvOrders, @NonNull RecyclerView rvPhones,
+      @NonNull AutoCompleteTextView actvAdminColumns, @NonNull MaterialButton btnAddPhone,
+      @NonNull MaterialButton btnSeedData, @NonNull ChipGroup cgPhoneFilter,
+      @NonNull Chip chipPhoneAll, @NonNull Chip chipPhoneInstock, @NonNull Chip chipPhoneLowstock,
+      @NonNull Chip chipPhoneSoldout, @NonNull RecyclerView rvLogs, @NonNull RecyclerView rvOrders,
+      @NonNull RecyclerView rvPhones, @NonNull HorizontalScrollView scrollPhoneFilters,
       @NonNull TabLayout tabLayout) {
     this.rootView = rootView;
+    this.actvAdminColumns = actvAdminColumns;
     this.btnAddPhone = btnAddPhone;
     this.btnSeedData = btnSeedData;
-    this.chipGroupStock = chipGroupStock;
-    this.chipStockAll = chipStockAll;
-    this.chipStockIn = chipStockIn;
-    this.chipStockLow = chipStockLow;
-    this.chipStockSoldout = chipStockSoldout;
+    this.cgPhoneFilter = cgPhoneFilter;
+    this.chipPhoneAll = chipPhoneAll;
+    this.chipPhoneInstock = chipPhoneInstock;
+    this.chipPhoneLowstock = chipPhoneLowstock;
+    this.chipPhoneSoldout = chipPhoneSoldout;
     this.rvLogs = rvLogs;
     this.rvOrders = rvOrders;
     this.rvPhones = rvPhones;
+    this.scrollPhoneFilters = scrollPhoneFilters;
     this.tabLayout = tabLayout;
   }
 
@@ -103,6 +114,12 @@ public final class FragmentAdminBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.actv_admin_columns;
+      AutoCompleteTextView actvAdminColumns = ViewBindings.findChildViewById(rootView, id);
+      if (actvAdminColumns == null) {
+        break missingId;
+      }
+
       id = R.id.btn_add_phone;
       MaterialButton btnAddPhone = ViewBindings.findChildViewById(rootView, id);
       if (btnAddPhone == null) {
@@ -115,33 +132,33 @@ public final class FragmentAdminBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.chip_group_stock;
-      ChipGroup chipGroupStock = ViewBindings.findChildViewById(rootView, id);
-      if (chipGroupStock == null) {
+      id = R.id.cg_phone_filter;
+      ChipGroup cgPhoneFilter = ViewBindings.findChildViewById(rootView, id);
+      if (cgPhoneFilter == null) {
         break missingId;
       }
 
-      id = R.id.chip_stock_all;
-      Chip chipStockAll = ViewBindings.findChildViewById(rootView, id);
-      if (chipStockAll == null) {
+      id = R.id.chip_phone_all;
+      Chip chipPhoneAll = ViewBindings.findChildViewById(rootView, id);
+      if (chipPhoneAll == null) {
         break missingId;
       }
 
-      id = R.id.chip_stock_in;
-      Chip chipStockIn = ViewBindings.findChildViewById(rootView, id);
-      if (chipStockIn == null) {
+      id = R.id.chip_phone_instock;
+      Chip chipPhoneInstock = ViewBindings.findChildViewById(rootView, id);
+      if (chipPhoneInstock == null) {
         break missingId;
       }
 
-      id = R.id.chip_stock_low;
-      Chip chipStockLow = ViewBindings.findChildViewById(rootView, id);
-      if (chipStockLow == null) {
+      id = R.id.chip_phone_lowstock;
+      Chip chipPhoneLowstock = ViewBindings.findChildViewById(rootView, id);
+      if (chipPhoneLowstock == null) {
         break missingId;
       }
 
-      id = R.id.chip_stock_soldout;
-      Chip chipStockSoldout = ViewBindings.findChildViewById(rootView, id);
-      if (chipStockSoldout == null) {
+      id = R.id.chip_phone_soldout;
+      Chip chipPhoneSoldout = ViewBindings.findChildViewById(rootView, id);
+      if (chipPhoneSoldout == null) {
         break missingId;
       }
 
@@ -163,15 +180,21 @@ public final class FragmentAdminBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.scroll_phone_filters;
+      HorizontalScrollView scrollPhoneFilters = ViewBindings.findChildViewById(rootView, id);
+      if (scrollPhoneFilters == null) {
+        break missingId;
+      }
+
       id = R.id.tab_layout;
       TabLayout tabLayout = ViewBindings.findChildViewById(rootView, id);
       if (tabLayout == null) {
         break missingId;
       }
 
-      return new FragmentAdminBinding((CoordinatorLayout) rootView, btnAddPhone, btnSeedData,
-          chipGroupStock, chipStockAll, chipStockIn, chipStockLow, chipStockSoldout, rvLogs,
-          rvOrders, rvPhones, tabLayout);
+      return new FragmentAdminBinding((CoordinatorLayout) rootView, actvAdminColumns, btnAddPhone,
+          btnSeedData, cgPhoneFilter, chipPhoneAll, chipPhoneInstock, chipPhoneLowstock,
+          chipPhoneSoldout, rvLogs, rvOrders, rvPhones, scrollPhoneFilters, tabLayout);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity() {
     private fun observeUser() {
         lifecycleScope.launch {
             authViewModel.currentUser.collect { user ->
+                if (isFinishing || isDestroyed) return@collect
                 if (user != null && !adminSetupDone) {
                     if (user.role == "admin") {
                         setupAdminUI()
@@ -97,40 +98,48 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupAdminUI() {
+        if (isFinishing || isDestroyed) return
         binding.bottomNav.menu.clear()
         binding.bottomNav.inflateMenu(R.menu.bottom_nav_admin)
 
-        // Fixed: Use safe navigation with current destination check
         binding.bottomNav.setOnItemSelectedListener { item ->
-            val currentId = navController.currentDestination?.id
-            when (item.itemId) {
-                R.id.adminFragment -> {
-                    if (currentId != R.id.adminFragment) navController.navigate(R.id.adminFragment)
-                    true
+            if (isFinishing || isDestroyed) return@setOnItemSelectedListener false
+            try {
+                val currentId = navController.currentDestination?.id
+                when (item.itemId) {
+                    R.id.adminFragment -> {
+                        if (currentId != R.id.adminFragment) navController.navigate(R.id.adminFragment)
+                        true
+                    }
+                    R.id.adminPhonesFragment -> {
+                        if (currentId != R.id.adminPhonesFragment) navController.navigate(R.id.adminPhonesFragment)
+                        true
+                    }
+                    R.id.adminOrdersFragment -> {
+                        if (currentId != R.id.adminOrdersFragment) navController.navigate(R.id.adminOrdersFragment)
+                        true
+                    }
+                    R.id.profileFragment -> {
+                        if (currentId != R.id.profileFragment) navController.navigate(R.id.profileFragment)
+                        true
+                    }
+                    else -> false
                 }
-                R.id.adminPhonesFragment -> {
-                    if (currentId != R.id.adminPhonesFragment) navController.navigate(R.id.adminPhonesFragment)
-                    true
-                }
-                R.id.adminOrdersFragment -> {
-                    if (currentId != R.id.adminOrdersFragment) navController.navigate(R.id.adminOrdersFragment)
-                    true
-                }
-                R.id.profileFragment -> {
-                    if (currentId != R.id.profileFragment) navController.navigate(R.id.profileFragment)
-                    true
-                }
-                else -> false
+            } catch (e: Exception) {
+                false
             }
         }
 
         // Navigate to admin dashboard only on first setup
-        if (navController.currentDestination?.id == R.id.homeFragment) {
-            navController.navigate(R.id.adminFragment)
-        }
+        try {
+            if (navController.currentDestination?.id == R.id.homeFragment) {
+                navController.navigate(R.id.adminFragment)
+            }
+        } catch (_: Exception) {}
     }
 
     private fun setupUserUI() {
+        if (isFinishing || isDestroyed) return
         binding.bottomNav.menu.clear()
         binding.bottomNav.inflateMenu(R.menu.bottom_nav_menu)
         binding.bottomNav.setupWithNavController(navController)

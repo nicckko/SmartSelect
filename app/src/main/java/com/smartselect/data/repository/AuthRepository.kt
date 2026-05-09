@@ -143,6 +143,15 @@ class OrderRepository @Inject constructor(
         }
     }
 
+    suspend fun deleteOrder(orderId: String): Resource<Boolean> {
+        return try {
+            ordersCollection.document(orderId).delete().await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Delete failed")
+        }
+    }
+
     /**
      * Auto-cancels any orders whose pickupDate is in the past
      * and whose status is still "pending" or "confirmed".

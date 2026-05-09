@@ -40,6 +40,7 @@ class ProfileFragment : Fragment() {
 
         lifecycleScope.launch {
             authViewModel.currentUser.collect { user ->
+                if (_binding == null) return@collect
                 user?.let {
                     binding.tvName.text = it.name
                     binding.tvEmail.text = it.email
@@ -48,12 +49,15 @@ class ProfileFragment : Fragment() {
                     
                     val orderHistoryLayout = binding.root.findViewById<ViewGroup>(R.id.order_history_layout)
                     val adminLogsLayout = binding.root.findViewById<ViewGroup>(R.id.admin_logs_layout)
+                    val adminArchiveLayout = binding.root.findViewById<ViewGroup>(R.id.admin_archive_layout)
                     if (it.role == "admin") {
                         orderHistoryLayout?.visibility = View.GONE
                         adminLogsLayout?.visibility = View.VISIBLE
+                        adminArchiveLayout?.visibility = View.VISIBLE
                     } else {
                         orderHistoryLayout?.visibility = View.VISIBLE
                         adminLogsLayout?.visibility = View.GONE
+                        adminArchiveLayout?.visibility = View.GONE
                     }
 
                     if (it.profilePictureUrl.isNotEmpty()) {
@@ -80,10 +84,12 @@ class ProfileFragment : Fragment() {
         }
 
         binding.btnLogout.setOnClickListener {
+            val act = activity ?: return@setOnClickListener
             authViewModel.logout()
-            startActivity(Intent(requireActivity(), LoginActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-            requireActivity().finish()
+            val intent = Intent(act, LoginActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            act.finish()
         }
 
         // Fixed: persist dark mode preference across app restarts
@@ -93,17 +99,22 @@ class ProfileFragment : Fragment() {
             AppCompatDelegate.setDefaultNightMode(mode)
         }
 
-        // NEW: Order History click listener - navigate to OrdersFragment
+        // Order History click listener
         val orderHistoryLayout = binding.root.findViewById<ViewGroup>(R.id.order_history_layout)
         orderHistoryLayout?.setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_orders)
         }
 
-        // NEW: Admin Logs click listener - navigate to AdminFragment
+        // Admin Logs click listener - navigate to dedicated logs screen
         val adminLogsLayout = binding.root.findViewById<ViewGroup>(R.id.admin_logs_layout)
         adminLogsLayout?.setOnClickListener {
-            val bundle = Bundle().apply { putInt("selectedTab", 2) }
-            findNavController().navigate(R.id.action_profile_to_admin, bundle)
+            findNavController().navigate(R.id.action_profile_to_activity_logs)
+        }
+
+        // Admin Archive click listener
+        val adminArchiveLayout = binding.root.findViewById<ViewGroup>(R.id.admin_archive_layout)
+        adminArchiveLayout?.setOnClickListener {
+            findNavController().navigate(R.id.action_profile_to_archive)
         }
     }
 

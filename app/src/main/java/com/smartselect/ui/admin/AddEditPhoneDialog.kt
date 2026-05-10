@@ -2,6 +2,7 @@ package com.smartselect.ui.admin
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,17 +14,15 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.storage.FirebaseStorage
 import com.smartselect.R
 import com.smartselect.data.PhoneSpecsData
 import com.smartselect.data.model.Phone
 import com.smartselect.data.repository.PhoneRepository
 import com.smartselect.data.repository.AdminLogRepository
 import com.smartselect.databinding.DialogAddEditPhoneBinding
+import com.smartselect.utils.CloudinaryHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import java.util.UUID
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,7 +33,6 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
 
     @Inject lateinit var phoneRepository: PhoneRepository
     @Inject lateinit var adminLogRepository: AdminLogRepository
-    @Inject lateinit var storage: FirebaseStorage
 
     private var editPhone: Phone? = null
     private var selectedImageUri: Uri? = null
@@ -42,6 +40,7 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
 
     companion object {
         private const val ARG_PHONE = "phone"
+        private const val TAG = "AddEditPhoneDialog"
         fun newInstance(phone: Phone) = AddEditPhoneDialog().apply {
             arguments = Bundle().apply { putParcelable(ARG_PHONE, phone) }
         }
@@ -171,10 +170,16 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         binding.switchBestValue.isChecked = phone.isBestValue
 
         existingImageUrl = phone.imageUrl
+        Log.d(TAG, "Existing image URL: $existingImageUrl")
+
         if (phone.imageUrl.isNotEmpty()) {
             binding.ivPhonePreview.visibility = View.VISIBLE
             binding.tvImageHint.text = "Current image (tap to change)"
-            Glide.with(requireContext()).load(phone.imageUrl).centerCrop().into(binding.ivPhonePreview)
+            Glide.with(requireContext())
+                .load(phone.imageUrl)
+                .placeholder(R.drawable.placeholder_phone)
+                .error(R.drawable.placeholder_phone)
+                .into(binding.ivPhonePreview)
         }
     }
 
@@ -193,39 +198,42 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
             val isDuplicate = phoneRepository.isDuplicate(phone.brand, phone.model, editPhone?.id)
             if (isDuplicate) {
                 setLoadingState(false)
-                com.google.android.material.snackbar.Snackbar.make(binding.root, "Error: This phone already exists", com.google.android.material.snackbar.Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.root, "Error: This phone already exists", Snackbar.LENGTH_LONG).show()
                 return@launch
             }
 
-            val finalImageUrl = if (selectedImageUri != null) uploadImageToStorage(selectedImageUri!!) else existingImageUrl
+            // Upload image to Cloudinary (replaces Firebase Storage)
+            val finalImageUrl = if (selectedImageUri != null) {
+                try {
+                    val url = CloudinaryHelper.uploadImage(selectedImageUri!!)
+                    Log.d(TAG, "Cloudinary upload successful: $url")
+                    url
+                } catch (e: Exception) {
+                    Log.e(TAG, "Cloudinary upload failed", e)
+                    Snackbar.make(binding.root, "Image upload failed: ${e.message}", Snackbar.LENGTH_SHORT).show()
+                    existingImageUrl
+                }
+            } else {
+                existingImageUrl
+            }
+
             val phoneToSave = phone.copy(imageUrl = finalImageUrl)
+
             if (editPhone != null) {
                 phoneRepository.updatePhone(phoneToSave.copy(id = editPhone!!.id))
                 adminLogRepository.logAction("Updated Phone", "Updated details for ${phoneToSave.brand} ${phoneToSave.model}")
-                activity?.findViewById<View>(android.R.id.content)?.let { 
-                    com.google.android.material.snackbar.Snackbar.make(it, "Phone updated", com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
+                activity?.findViewById<View>(android.R.id.content)?.let {
+                    Snackbar.make(it, "Phone updated", Snackbar.LENGTH_SHORT).show()
                 }
             } else {
                 phoneRepository.addPhone(phoneToSave)
                 adminLogRepository.logAction("Added Phone", "Added new phone: ${phoneToSave.brand} ${phoneToSave.model}")
-                activity?.findViewById<View>(android.R.id.content)?.let { 
-                    com.google.android.material.snackbar.Snackbar.make(it, "Phone added", com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
+                activity?.findViewById<View>(android.R.id.content)?.let {
+                    Snackbar.make(it, "Phone added", Snackbar.LENGTH_SHORT).show()
                 }
             }
             setLoadingState(false)
             dismiss()
-        }
-    }
-
-    private suspend fun uploadImageToStorage(uri: Uri): String {
-        return try {
-            val filename = "phones/${UUID.randomUUID()}.jpg"
-            val ref = storage.reference.child(filename)
-            ref.putFile(uri).await()
-            ref.downloadUrl.await().toString()
-        } catch (e: Exception) {
-            Snackbar.make(binding.root, "Image upload failed: ${e.message}", Snackbar.LENGTH_SHORT).show()
-            existingImageUrl
         }
     }
 

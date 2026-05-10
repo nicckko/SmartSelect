@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.smartselect.R
 import com.smartselect.data.model.Phone
 import com.smartselect.databinding.FragmentPhoneDetailsBinding
+import com.smartselect.utils.GlideImageLoader
 import com.smartselect.utils.getStockColor
 import com.smartselect.utils.getStockLabel
 import com.smartselect.utils.toPeso
@@ -62,11 +63,7 @@ class PhoneDetailsFragment : Fragment() {
 
             updateFavoriteBtn(phone.id)
 
-            Glide.with(requireContext())
-                .load(phone.imageUrl)
-                .placeholder(R.drawable.placeholder_phone)
-                .error(R.drawable.placeholder_phone)
-                .into(ivPhone)
+            GlideImageLoader.loadImage(requireContext(), phone.imageUrl, binding.ivPhone)
         }
     }
 

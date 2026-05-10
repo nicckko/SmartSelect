@@ -11,7 +11,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 import com.smartselect.data.repository.AdminLogRepository;
 import com.smartselect.data.repository.AuthRepository;
 import com.smartselect.data.repository.OrderRepository;
@@ -19,7 +18,6 @@ import com.smartselect.data.repository.PhoneRepository;
 import com.smartselect.di.AppModule;
 import com.smartselect.di.AppModule_ProvideFirebaseAuthFactory;
 import com.smartselect.di.AppModule_ProvideFirebaseFirestoreFactory;
-import com.smartselect.di.AppModule_ProvideFirebaseStorageFactory;
 import com.smartselect.ui.MainActivity;
 import com.smartselect.ui.admin.ActivityLogsFragment;
 import com.smartselect.ui.admin.ActivityLogsFragment_MembersInjector;
@@ -47,7 +45,6 @@ import com.smartselect.ui.orders.CustomerOrderDetailDialog_MembersInjector;
 import com.smartselect.ui.orders.OrdersFragment;
 import com.smartselect.ui.orders.OrdersFragment_MembersInjector;
 import com.smartselect.ui.profile.EditProfileDialog;
-import com.smartselect.ui.profile.EditProfileDialog_MembersInjector;
 import com.smartselect.ui.profile.ProfileFragment;
 import com.smartselect.viewmodel.AuthViewModel;
 import com.smartselect.viewmodel.AuthViewModel_HiltModules_KeyModule_ProvideFactory;
@@ -432,7 +429,6 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
 
     @Override
     public void injectEditProfileDialog(EditProfileDialog arg0) {
-      injectEditProfileDialog2(arg0);
     }
 
     @Override
@@ -459,7 +455,6 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
     private AddEditPhoneDialog injectAddEditPhoneDialog2(AddEditPhoneDialog instance) {
       AddEditPhoneDialog_MembersInjector.injectPhoneRepository(instance, singletonCImpl.phoneRepositoryProvider.get());
       AddEditPhoneDialog_MembersInjector.injectAdminLogRepository(instance, singletonCImpl.adminLogRepositoryProvider.get());
-      AddEditPhoneDialog_MembersInjector.injectStorage(instance, singletonCImpl.provideFirebaseStorageProvider.get());
       return instance;
     }
 
@@ -516,12 +511,6 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
     @CanIgnoreReturnValue
     private OrdersFragment injectOrdersFragment2(OrdersFragment instance) {
       OrdersFragment_MembersInjector.injectOrderRepository(instance, singletonCImpl.orderRepositoryProvider.get());
-      return instance;
-    }
-
-    @CanIgnoreReturnValue
-    private EditProfileDialog injectEditProfileDialog2(EditProfileDialog instance) {
-      EditProfileDialog_MembersInjector.injectStorage(instance, singletonCImpl.provideFirebaseStorageProvider.get());
       return instance;
     }
   }
@@ -739,8 +728,6 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
 
     private Provider<PhoneRepository> phoneRepositoryProvider;
 
-    private Provider<FirebaseStorage> provideFirebaseStorageProvider;
-
     private Provider<OrderRepository> orderRepositoryProvider;
 
     private Provider<AuthRepository> authRepositoryProvider;
@@ -757,13 +744,12 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
       this.provideFirebaseFirestoreProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseFirestore>(singletonCImpl, 2));
       this.adminLogRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AdminLogRepository>(singletonCImpl, 0));
       this.phoneRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<PhoneRepository>(singletonCImpl, 3));
-      this.provideFirebaseStorageProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseStorage>(singletonCImpl, 4));
-      this.orderRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<OrderRepository>(singletonCImpl, 5));
-      this.authRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepository>(singletonCImpl, 6));
+      this.orderRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<OrderRepository>(singletonCImpl, 4));
+      this.authRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepository>(singletonCImpl, 5));
     }
 
     @Override
-    public void injectSmartSelectApp(SmartSelectApp smartSelectApp) {
+    public void injectSmartSelectApp(SmartSelectApp arg0) {
     }
 
     @Override
@@ -807,13 +793,10 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
           case 3: // com.smartselect.data.repository.PhoneRepository 
           return (T) new PhoneRepository(singletonCImpl.provideFirebaseFirestoreProvider.get());
 
-          case 4: // com.google.firebase.storage.FirebaseStorage 
-          return (T) AppModule_ProvideFirebaseStorageFactory.provideFirebaseStorage();
-
-          case 5: // com.smartselect.data.repository.OrderRepository 
+          case 4: // com.smartselect.data.repository.OrderRepository 
           return (T) new OrderRepository(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirebaseFirestoreProvider.get());
 
-          case 6: // com.smartselect.data.repository.AuthRepository 
+          case 5: // com.smartselect.data.repository.AuthRepository 
           return (T) new AuthRepository(singletonCImpl.provideFirebaseAuthProvider.get(), singletonCImpl.provideFirebaseFirestoreProvider.get());
 
           default: throw new AssertionError(id);

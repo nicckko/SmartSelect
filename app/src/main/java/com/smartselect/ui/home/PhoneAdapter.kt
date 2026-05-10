@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.smartselect.R
 import com.smartselect.data.model.Phone
 import com.smartselect.databinding.ItemPhoneCardBinding
+import com.smartselect.utils.GlideImageLoader
 import com.smartselect.utils.getStockColor
 import com.smartselect.utils.getStockLabel
 import com.smartselect.utils.toPeso
@@ -74,11 +75,7 @@ class PhoneAdapter(
                 bindFavorite(phone.id)
                 bindCompare(phone.id)  // NEW: bind compare highlight state
 
-                Glide.with(root.context)
-                    .load(phone.imageUrl)
-                    .placeholder(R.drawable.placeholder_phone)
-                    .error(R.drawable.placeholder_phone)
-                    .into(ivPhone)
+                GlideImageLoader.loadImage(root.context, phone.imageUrl, binding.ivPhone)
 
                 root.setOnClickListener { onPhoneClick(phone) }
                 ivFavorite.setOnClickListener { onFavoriteClick(phone) }

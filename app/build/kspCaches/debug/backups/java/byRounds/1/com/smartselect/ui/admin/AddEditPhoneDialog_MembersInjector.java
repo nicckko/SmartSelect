@@ -1,6 +1,5 @@
 package com.smartselect.ui.admin;
 
-import com.google.firebase.storage.FirebaseStorage;
 import com.smartselect.data.repository.AdminLogRepository;
 import com.smartselect.data.repository.PhoneRepository;
 import dagger.MembersInjector;
@@ -27,28 +26,22 @@ public final class AddEditPhoneDialog_MembersInjector implements MembersInjector
 
   private final Provider<AdminLogRepository> adminLogRepositoryProvider;
 
-  private final Provider<FirebaseStorage> storageProvider;
-
   public AddEditPhoneDialog_MembersInjector(Provider<PhoneRepository> phoneRepositoryProvider,
-      Provider<AdminLogRepository> adminLogRepositoryProvider,
-      Provider<FirebaseStorage> storageProvider) {
+      Provider<AdminLogRepository> adminLogRepositoryProvider) {
     this.phoneRepositoryProvider = phoneRepositoryProvider;
     this.adminLogRepositoryProvider = adminLogRepositoryProvider;
-    this.storageProvider = storageProvider;
   }
 
   public static MembersInjector<AddEditPhoneDialog> create(
       Provider<PhoneRepository> phoneRepositoryProvider,
-      Provider<AdminLogRepository> adminLogRepositoryProvider,
-      Provider<FirebaseStorage> storageProvider) {
-    return new AddEditPhoneDialog_MembersInjector(phoneRepositoryProvider, adminLogRepositoryProvider, storageProvider);
+      Provider<AdminLogRepository> adminLogRepositoryProvider) {
+    return new AddEditPhoneDialog_MembersInjector(phoneRepositoryProvider, adminLogRepositoryProvider);
   }
 
   @Override
   public void injectMembers(AddEditPhoneDialog instance) {
     injectPhoneRepository(instance, phoneRepositoryProvider.get());
     injectAdminLogRepository(instance, adminLogRepositoryProvider.get());
-    injectStorage(instance, storageProvider.get());
   }
 
   @InjectedFieldSignature("com.smartselect.ui.admin.AddEditPhoneDialog.phoneRepository")
@@ -61,10 +54,5 @@ public final class AddEditPhoneDialog_MembersInjector implements MembersInjector
   public static void injectAdminLogRepository(AddEditPhoneDialog instance,
       AdminLogRepository adminLogRepository) {
     instance.adminLogRepository = adminLogRepository;
-  }
-
-  @InjectedFieldSignature("com.smartselect.ui.admin.AddEditPhoneDialog.storage")
-  public static void injectStorage(AddEditPhoneDialog instance, FirebaseStorage storage) {
-    instance.storage = storage;
   }
 }

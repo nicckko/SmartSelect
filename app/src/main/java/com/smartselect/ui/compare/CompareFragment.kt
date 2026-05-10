@@ -19,6 +19,7 @@ import com.google.android.material.card.MaterialCardView
 import com.smartselect.R
 import com.smartselect.data.model.Phone
 import com.smartselect.databinding.FragmentCompareBinding
+import com.smartselect.utils.GlideImageLoader
 import com.smartselect.utils.toPeso
 import com.smartselect.viewmodel.PhoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -133,11 +134,7 @@ class CompareFragment : Fragment() {
                 layoutParams = LinearLayout.LayoutParams(dp(72), dp(72))
                 scaleType    = ImageView.ScaleType.FIT_CENTER
             }
-            Glide.with(requireContext())
-                .load(phone.imageUrl)
-                .placeholder(R.drawable.placeholder_phone)
-                .error(R.drawable.placeholder_phone)
-                .into(imageView)
+            GlideImageLoader.loadImage(requireContext(), phone.imageUrl, imageView)
             inner.addView(imageView)
 
             // Brand label

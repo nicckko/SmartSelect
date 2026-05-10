@@ -13,6 +13,7 @@ import com.smartselect.data.model.Order
 import com.smartselect.data.model.Phone
 import com.smartselect.databinding.ItemAdminOrderBinding
 import com.smartselect.databinding.ItemAdminPhoneGridBinding
+import com.smartselect.utils.GlideImageLoader
 import com.smartselect.utils.getStockColor
 import com.smartselect.utils.getStockLabel
 import com.smartselect.utils.toPeso
@@ -36,9 +37,7 @@ class AdminPhoneAdapter(
             binding.tvPrice.text = phone.price.toPeso()
             binding.tvStock.text = phone.stock.getStockLabel()
             binding.tvStock.setTextColor(ContextCompat.getColor(binding.root.context, phone.stock.getStockColor()))
-            Glide.with(binding.root.context).load(phone.imageUrl)
-                .placeholder(R.drawable.placeholder_phone).error(R.drawable.placeholder_phone)
-                .into(binding.ivPhone)
+            GlideImageLoader.loadImage(binding.root.context, phone.imageUrl, binding.ivPhone)
 
             // Selection highlight
             val isSelected = selectedIds?.contains(phone.id) == true

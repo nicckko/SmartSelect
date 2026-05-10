@@ -2,6 +2,7 @@ package com.smartselect.ui.profile
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,15 +11,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.storage.FirebaseStorage
 import com.smartselect.databinding.DialogEditProfileBinding
 import com.smartselect.viewmodel.AuthViewModel
+import com.smartselect.utils.CloudinaryHelper
 import com.smartselect.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import java.util.UUID
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -27,8 +25,6 @@ class EditProfileDialog : BottomSheetDialogFragment() {
     private var _binding: DialogEditProfileBinding? = null
     private val binding get() = _binding!!
     private val authViewModel: AuthViewModel by activityViewModels()
-
-    @Inject lateinit var storage: FirebaseStorage
 
     private var selectedImageUri: Uri? = null
     private var existingImageUrl: String = ""
@@ -42,6 +38,7 @@ class EditProfileDialog : BottomSheetDialogFragment() {
         }
 
     companion object {
+        private const val TAG = "EditProfileDialog"
         fun newInstance(currentName: String, currentUsername: String, currentImageUrl: String) = EditProfileDialog().apply {
             arguments = Bundle().apply {
                 putString("name", currentName)
@@ -62,7 +59,7 @@ class EditProfileDialog : BottomSheetDialogFragment() {
         val initialName = arguments?.getString("name") ?: ""
         binding.etName.setText(initialName)
         binding.etUsername.setText(arguments?.getString("username") ?: "")
-        
+
         existingImageUrl = arguments?.getString("imageUrl") ?: ""
         if (existingImageUrl.isNotEmpty()) {
             binding.tvAvatarInitial.visibility = View.GONE
@@ -79,7 +76,7 @@ class EditProfileDialog : BottomSheetDialogFragment() {
             val name = binding.etName.text.toString().trim()
             val username = binding.etUsername.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
-            
+
             if (name.isEmpty()) {
                 binding.tilName.error = "Name cannot be empty"
                 return@setOnClickListener
@@ -90,10 +87,22 @@ class EditProfileDialog : BottomSheetDialogFragment() {
             binding.btnSave.text = "Saving..."
 
             lifecycleScope.launch {
-                val finalImageUrl = if (selectedImageUri != null) uploadImage(selectedImageUri!!) else existingImageUrl
-                
+                // Upload image to Cloudinary if a new one was selected
+                val finalImageUrl = if (selectedImageUri != null) {
+                    try {
+                        val url = CloudinaryHelper.uploadImage(selectedImageUri!!)
+                        Log.d(TAG, "Profile image uploaded to Cloudinary: $url")
+                        url
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Cloudinary upload failed for profile", e)
+                        existingImageUrl
+                    }
+                } else {
+                    existingImageUrl
+                }
+
                 authViewModel.updateProfile(name, username, password.ifEmpty { null }, finalImageUrl)
-                
+
                 authViewModel.authState.collect { state ->
                     if (state is Resource.Success) {
                         dismiss()
@@ -104,17 +113,6 @@ class EditProfileDialog : BottomSheetDialogFragment() {
                     }
                 }
             }
-        }
-    }
-
-    private suspend fun uploadImage(uri: Uri): String {
-        return try {
-            val filename = "profiles/${UUID.randomUUID()}.jpg"
-            val ref = storage.reference.child(filename)
-            ref.putFile(uri).await()
-            ref.downloadUrl.await().toString()
-        } catch (e: Exception) {
-            existingImageUrl
         }
     }
 

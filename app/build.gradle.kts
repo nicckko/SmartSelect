@@ -59,7 +59,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-storage-ktx")
+    // Remove or comment out firebase-storage (no longer needed)
+    // implementation("com.google.firebase:firebase-storage-ktx")
 
     // Hilt — 2.48.1 works with KSP 1.9.10-1.0.13 + AGP 8.2.2
     implementation("com.google.dagger:hilt-android:2.48.1")
@@ -75,6 +76,9 @@ dependencies {
 
     // Charts
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // Cloudinary for image uploads (replaces Firebase Storage)
+    implementation("com.cloudinary:cloudinary-android:2.5.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

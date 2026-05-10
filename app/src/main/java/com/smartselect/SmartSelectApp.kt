@@ -3,6 +3,7 @@ package com.smartselect
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.smartselect.utils.CloudinaryHelper
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -15,5 +16,8 @@ class SmartSelectApp : Application() {
         AppCompatDelegate.setDefaultNightMode(
             if (isDark) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         )
+
+        // Initialize Cloudinary for image uploads (replaces Firebase Storage)
+        CloudinaryHelper.initialize(this)
     }
 }

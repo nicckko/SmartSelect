@@ -74,6 +74,7 @@ class HomeFragment : Fragment() {
             adapter = phoneAdapter
             layoutManager = GridLayoutManager(requireContext(), 3)
             setHasFixedSize(true)
+            addItemDecoration(GridSpacingItemDecoration(3, 8, true))
         }
     }
 
@@ -85,22 +86,28 @@ class HomeFragment : Fragment() {
 
         binding.actvColumns.setOnItemClickListener { _, _, position, _ ->
             val columns = position + 1
-            (binding.rvPhones.layoutManager as androidx.recyclerview.widget.GridLayoutManager).spanCount = columns
+            (binding.rvPhones.layoutManager as GridLayoutManager).spanCount = columns
+
+            // Update item decoration for new column count
+            binding.rvPhones.removeItemDecorationAt(0)
+            binding.rvPhones.addItemDecoration(GridSpacingItemDecoration(columns, 8, true))
+
             phoneAdapter.notifyItemRangeChanged(0, phoneAdapter.itemCount)
         }
     }
 
     private fun setupSearch() {
         binding.etSearch.addTextChangedListener { text ->
+            val query = text?.toString() ?: ""
             val category = getSelectedCategory()
-            phoneViewModel.searchPhones(text.toString(), category)
+            phoneViewModel.searchPhones(query, category)
         }
     }
 
     private var currentCategory = ""
 
     private fun setupFilters() {
-        val categories = listOf("All Categories", "Flagship", "Mid-range", "Gaming", "Budget")
+        val categories = listOf("All Categories", "iPhone", "Android", "Flagship", "Mid-range", "Budget")
         val adapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)
         binding.actvCategory.setAdapter(adapter)
 
@@ -111,7 +118,8 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnFilter.setOnClickListener {
-            FilterBottomSheet().show(childFragmentManager, "filter")
+            val filterSheet = FilterBottomSheet()
+            filterSheet.show(childFragmentManager, "filter")
         }
     }
 
@@ -120,7 +128,6 @@ class HomeFragment : Fragment() {
     private fun observePhones() {
         lifecycleScope.launch {
             phoneViewModel.phones.collect { resource ->
-                // Check if binding is still valid before updating UI
                 if (_binding != null) {
                     when (resource) {
                         is Resource.Loading -> {
@@ -146,7 +153,6 @@ class HomeFragment : Fragment() {
     private fun observeFavorites() {
         lifecycleScope.launch {
             phoneViewModel.favorites.collect { favorites ->
-                // Check if binding is still valid before updating UI
                 if (_binding != null) {
                     phoneAdapter.updateFavorites(favorites.map { it.id }.toSet())
                 }
@@ -157,7 +163,6 @@ class HomeFragment : Fragment() {
     private fun observeCompare() {
         lifecycleScope.launch {
             phoneViewModel.compareList.collect { compareList ->
-                // Check if binding is still valid before updating UI
                 if (_binding != null) {
                     phoneAdapter.updateCompare(compareList.map { it.id }.toSet())
                 }
@@ -174,5 +179,39 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+}
+
+// Add this class at the bottom of the file or in a separate file
+class GridSpacingItemDecoration(
+    private val spanCount: Int,
+    private val spacing: Int,
+    private val includeEdge: Boolean
+) : androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
+
+    override fun getItemOffsets(
+        outRect: android.graphics.Rect,
+        view: View,
+        parent: androidx.recyclerview.widget.RecyclerView,
+        state: androidx.recyclerview.widget.RecyclerView.State
+    ) {
+        val position = parent.getChildAdapterPosition(view)
+        val column = position % spanCount
+
+        if (includeEdge) {
+            outRect.left = spacing - column * spacing / spanCount
+            outRect.right = (column + 1) * spacing / spanCount
+
+            if (position < spanCount) {
+                outRect.top = spacing
+            }
+            outRect.bottom = spacing
+        } else {
+            outRect.left = column * spacing / spanCount
+            outRect.right = spacing - (column + 1) * spacing / spanCount
+            if (position >= spanCount) {
+                outRect.top = spacing
+            }
+        }
     }
 }

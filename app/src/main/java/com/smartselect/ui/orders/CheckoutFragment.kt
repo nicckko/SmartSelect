@@ -16,6 +16,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.smartselect.data.model.Order
 import com.smartselect.data.repository.OrderRepository
+import com.smartselect.data.repository.PhoneRepository
 import com.smartselect.databinding.FragmentCheckoutBinding
 import com.smartselect.utils.Resource
 import com.smartselect.utils.toPeso
@@ -37,6 +38,7 @@ class CheckoutFragment : Fragment() {
     private val phoneViewModel: PhoneViewModel by activityViewModels()
 
     @Inject lateinit var orderRepository: OrderRepository
+    @Inject lateinit var phoneRepository: PhoneRepository
     @Inject lateinit var auth: FirebaseAuth
 
     private var selectedPickupDate: Date? = null
@@ -64,7 +66,6 @@ class CheckoutFragment : Fragment() {
     }
 
     private fun setupDatePicker() {
-        // Constrain to tomorrow onward
         val tomorrow = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }.timeInMillis
 
         val constraints = CalendarConstraints.Builder()
@@ -91,7 +92,7 @@ class CheckoutFragment : Fragment() {
     }
 
     private fun placeOrder() {
-        val name    = binding.etName.text.toString().trim()
+        val name = binding.etName.text.toString().trim()
         val contact = binding.etContact.text.toString().trim()
 
         if (name.isEmpty() || contact.isEmpty()) {
@@ -113,30 +114,56 @@ class CheckoutFragment : Fragment() {
             return
         }
 
-        // Generate unique 6-char alphanumeric pickup code
-        val pickupCode = UUID.randomUUID()
-            .toString()
-            .replace("-", "")
-            .take(6)
-            .uppercase()
-
-        val order = Order(
-            userId      = auth.currentUser?.uid ?: "",
-            phoneIds    = cart.map { it.phone.id },
-            phoneNames  = cart.map { "${it.phone.brand} ${it.phone.model}" },
-            totalPrice  = phoneViewModel.getCartTotal(),
-            status      = "pending",
-            timestamp   = Timestamp.now(),
-            userName    = name,
-            contact     = contact,
-            pickupDate  = Timestamp(selectedPickupDate!!),
-            pickupCode  = pickupCode
-        )
-
         lifecycleScope.launch {
+            // First, check if all items have sufficient stock
+            var hasStockIssue = false
+            for (item in cart) {
+                val isAvailable = phoneRepository.checkStockAvailability(item.phone.id, item.quantity)
+                if (!isAvailable) {
+                    hasStockIssue = true
+                    showSnackbar("${item.phone.brand} ${item.phone.model} only has ${item.phone.stock} left in stock!")
+                    break
+                }
+            }
+
+            if (hasStockIssue) return@launch
+
+            // Generate unique 6-char alphanumeric pickup code
+            val pickupCode = UUID.randomUUID()
+                .toString()
+                .replace("-", "")
+                .take(6)
+                .uppercase()
+
+            val order = Order(
+                userId = auth.currentUser?.uid ?: "",
+                phoneIds = cart.map { it.phone.id },
+                phoneQuantities = cart.map { it.quantity },
+                phoneNames = cart.map { "${it.phone.brand} ${it.phone.model} x${it.quantity}" },
+                totalPrice = phoneViewModel.getCartTotal(),
+                status = "pending",
+                timestamp = Timestamp.now(),
+                userName = name,
+                contact = contact,
+                pickupDate = Timestamp(selectedPickupDate!!),
+                pickupCode = pickupCode
+            )
+
             binding.btnPlaceOrder.isEnabled = false
             binding.btnPlaceOrder.text = "Placing Order..."
 
+            // Decrease stock for each item
+            val stockUpdates = cart.map { it.phone.id to it.quantity }
+            val stockResult = phoneRepository.decreaseMultipleStocks(stockUpdates)
+
+            if (stockResult is Resource.Error) {
+                showSnackbar("Stock error: ${stockResult.message}")
+                binding.btnPlaceOrder.isEnabled = true
+                binding.btnPlaceOrder.text = "Place Order"
+                return@launch
+            }
+
+            // Place the order
             when (val result = orderRepository.placeOrder(order)) {
                 is Resource.Success -> {
                     phoneViewModel.clearCart()
@@ -151,6 +178,9 @@ class CheckoutFragment : Fragment() {
                     binding.btnPlaceOrder.text = "Place Order"
                 }
                 is Resource.Error -> {
+                    // If order fails, restore the stock
+                    val restoreUpdates = stockUpdates.map { it.first to -it.second }
+                    phoneRepository.decreaseMultipleStocks(restoreUpdates)
                     showSnackbar("Order failed: ${result.message ?: "Unknown error"}")
                     binding.btnPlaceOrder.isEnabled = true
                     binding.btnPlaceOrder.text = "Place Order"

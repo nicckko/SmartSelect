@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.smartselect.R
+import com.smartselect.data.model.getFullName
 import com.smartselect.databinding.FragmentProfileBinding
 import com.smartselect.ui.auth.LoginActivity
 import com.smartselect.viewmodel.AuthViewModel
@@ -25,7 +27,11 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val authViewModel: AuthViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -42,14 +48,18 @@ class ProfileFragment : Fragment() {
             authViewModel.currentUser.collect { user ->
                 if (_binding == null) return@collect
                 user?.let {
-                    binding.tvName.text = it.name
+                    binding.tvName.text = it.getFullName()
                     binding.tvEmail.text = it.email
                     binding.tvRole.text = if (it.role == "admin") "👑 Admin" else "👤 Customer"
-                    binding.btnAdminPanel.visibility = if (it.role == "admin") View.VISIBLE else View.GONE
-                    
-                    val orderHistoryLayout = binding.root.findViewById<ViewGroup>(R.id.order_history_layout)
-                    val adminLogsLayout = binding.root.findViewById<ViewGroup>(R.id.admin_logs_layout)
-                    val adminArchiveLayout = binding.root.findViewById<ViewGroup>(R.id.admin_archive_layout)
+                    binding.btnAdminPanel.visibility =
+                        if (it.role == "admin") View.VISIBLE else View.GONE
+
+                    val orderHistoryLayout =
+                        binding.root.findViewById<ViewGroup>(R.id.order_history_layout)
+                    val adminLogsLayout =
+                        binding.root.findViewById<ViewGroup>(R.id.admin_logs_layout)
+                    val adminArchiveLayout =
+                        binding.root.findViewById<ViewGroup>(R.id.admin_archive_layout)
                     if (it.role == "admin") {
                         orderHistoryLayout?.visibility = View.GONE
                         adminLogsLayout?.visibility = View.VISIBLE
@@ -62,18 +72,24 @@ class ProfileFragment : Fragment() {
 
                     if (it.profilePictureUrl.isNotEmpty()) {
                         binding.tvAvatar.visibility = View.GONE
-                        val ivAvatar = binding.root.findViewById<android.widget.ImageView>(R.id.iv_avatar)
+                        val ivAvatar =
+                            binding.root.findViewById<android.widget.ImageView>(R.id.iv_avatar)
                         if (ivAvatar != null) {
                             ivAvatar.visibility = View.VISIBLE
-                            com.bumptech.glide.Glide.with(requireContext()).load(it.profilePictureUrl).centerCrop().into(ivAvatar)
+                            com.bumptech.glide.Glide.with(requireContext())
+                                .load(it.profilePictureUrl).centerCrop().into(ivAvatar)
                         }
                     } else {
                         binding.tvAvatar.visibility = View.VISIBLE
-                        binding.tvAvatar.text = it.name.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+                        // FIXED: Changed it.name to it.getFullName()
+                        binding.tvAvatar.text =
+                            it.getFullName().firstOrNull()?.uppercaseChar()?.toString() ?: "?"
                     }
-                    
+
                     binding.btnEditProfile.setOnClickListener { _ ->
-                        EditProfileDialog.newInstance(it.name, it.username, it.profilePictureUrl).show(childFragmentManager, "edit_profile")
+                        // FIXED: Changed it.name to it.getFullName()
+                        EditProfileDialog.newInstance(it.getFullName(), it.username, it.profilePictureUrl)
+                            .show(childFragmentManager, "edit_profile")
                     }
                 }
             }
@@ -83,19 +99,16 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_profile_to_admin)
         }
 
+        // UPDATED: Logout with confirmation dialog
         binding.btnLogout.setOnClickListener {
-            val act = activity ?: return@setOnClickListener
-            authViewModel.logout()
-            val intent = Intent(act, LoginActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-            act.finish()
+            showLogoutConfirmation()
         }
 
         // Fixed: persist dark mode preference across app restarts
         binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("dark_mode", isChecked).apply()
-            val mode = if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+            val mode =
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
             AppCompatDelegate.setDefaultNightMode(mode)
         }
 
@@ -118,10 +131,28 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun showLogoutConfirmation() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to log out? You will need to log in again to access your account.")
+            .setPositiveButton("Logout") { _, _ ->
+                performLogout()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun performLogout() {
+        val act = activity ?: return
+        authViewModel.logout()
+        val intent = Intent(act, LoginActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        act.finish()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }
-

@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.smartselect.R
 import com.smartselect.data.model.Phone
 import com.smartselect.databinding.FragmentPhoneDetailsBinding
@@ -18,6 +21,7 @@ import com.smartselect.utils.getStockLabel
 import com.smartselect.utils.toPeso
 import com.smartselect.viewmodel.PhoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PhoneDetailsFragment : Fragment() {
@@ -25,6 +29,9 @@ class PhoneDetailsFragment : Fragment() {
     private var _binding: FragmentPhoneDetailsBinding? = null
     private val binding get() = _binding!!
     private val phoneViewModel: PhoneViewModel by activityViewModels()
+
+    private var currentQuantity = 1
+    private var currentPhone: Phone? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPhoneDetailsBinding.inflate(inflater, container, false)
@@ -34,7 +41,9 @@ class PhoneDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val phone = phoneViewModel.selectedPhone.value ?: return
+        currentPhone = phone
         bindPhone(phone)
+        setupQuantitySelector(phone)
         setupActions(phone)
     }
 
@@ -45,7 +54,6 @@ class PhoneDetailsFragment : Fragment() {
 
             tvBrand.text = phone.brand
             tvModel.text = phone.model
-            // Fixed: price now uses @color/accent in layout (was @color/primary = dark navy)
             tvPrice.text = phone.price.toPeso()
             tvCategory.text = phone.category
             tvStock.text = phone.stock.getStockLabel()
@@ -67,6 +75,53 @@ class PhoneDetailsFragment : Fragment() {
         }
     }
 
+    private fun setupQuantitySelector(phone: Phone) {
+        currentQuantity = 1
+        binding.tvQuantity.text = "1"
+        updateStockInfo(phone)
+
+        binding.btnDecrease.setOnClickListener {
+            if (currentQuantity > 1) {
+                currentQuantity--
+                binding.tvQuantity.text = currentQuantity.toString()
+                updateStockInfo(phone)
+            }
+        }
+
+        binding.btnIncrease.setOnClickListener {
+            if (currentQuantity < phone.stock) {
+                currentQuantity++
+                binding.tvQuantity.text = currentQuantity.toString()
+                updateStockInfo(phone)
+            } else {
+                Snackbar.make(binding.root, "Only ${phone.stock} available in stock", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun updateStockInfo(phone: Phone) {
+        val stockText = when {
+            phone.stock <= 0 -> "❌ Out of stock"
+            phone.stock <= 3 -> "⚠️ Only ${phone.stock} left in stock"
+            else -> "✓ ${phone.stock} available"
+        }
+        binding.tvStockInfo.text = stockText
+
+        val stockColor = when {
+            phone.stock <= 0 -> R.color.error
+            phone.stock <= 3 -> R.color.warning
+            else -> R.color.success
+        }
+        binding.tvStockInfo.setTextColor(ContextCompat.getColor(requireContext(), stockColor))
+
+        // Disable increase button if at max stock
+        binding.btnIncrease.isEnabled = currentQuantity < phone.stock
+        binding.btnIncrease.alpha = if (currentQuantity < phone.stock) 1.0f else 0.5f
+
+        // Update button text to show quantity
+        binding.btnOrder.text = "Add to Cart ($currentQuantity)  🛒"
+    }
+
     private fun setupActions(phone: Phone) {
         binding.btnFavorite.setOnClickListener {
             phoneViewModel.toggleFavorite(phone)
@@ -85,9 +140,24 @@ class PhoneDetailsFragment : Fragment() {
         }
 
         binding.btnOrder.setOnClickListener {
-            phoneViewModel.addToCart(phone)
-            showSnackbar("${phone.model} added to cart!", "View Cart") {
-                findNavController().navigate(R.id.action_details_to_orders)
+            if (phone.stock <= 0) {
+                showSnackbar("This phone is out of stock!")
+                return@setOnClickListener
+            }
+            if (currentQuantity > phone.stock) {
+                showSnackbar("Only ${phone.stock} available in stock")
+                return@setOnClickListener
+            }
+
+            lifecycleScope.launch {
+                val success = phoneViewModel.checkStockAndAddToCart(phone, currentQuantity)
+                if (success) {
+                    showSnackbar("${currentQuantity} x ${phone.model} added to cart!", "View Cart") {
+                        findNavController().navigate(R.id.action_details_to_orders)
+                    }
+                } else {
+                    // Error message already shown by ViewModel
+                }
             }
         }
     }
@@ -101,7 +171,7 @@ class PhoneDetailsFragment : Fragment() {
     }
 
     private fun showSnackbar(msg: String, action: String? = null, onClick: (() -> Unit)? = null) {
-        com.google.android.material.snackbar.Snackbar.make(binding.root, msg, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT)
+        Snackbar.make(binding.root, msg, Snackbar.LENGTH_SHORT)
             .apply { if (action != null && onClick != null) setAction(action) { onClick() } }
             .show()
     }

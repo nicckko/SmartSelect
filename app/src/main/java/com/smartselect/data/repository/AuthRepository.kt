@@ -23,55 +23,130 @@ class AuthRepository @Inject constructor(
 
     fun getCurrentUser() = auth.currentUser
 
-    suspend fun login(email: String, password: String): Resource<User> {
+    private fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    suspend fun login(identifier: String, password: String): Resource<User> {
         return try {
+            // Determine if identifier is email or username
+            val email = if (isValidEmail(identifier)) {
+                identifier
+            } else {
+                // If not email, try to find user by username
+                val userQuery = usersCollection.whereEqualTo("username", identifier).get().await()
+                val userDoc = userQuery.documents.firstOrNull()
+                if (userDoc == null) {
+                    return Resource.Error("User not found")
+                }
+                userDoc.getString("email") ?: return Resource.Error("Email not found for this username")
+            }
+
             val result = auth.signInWithEmailAndPassword(email, password).await()
             val uid = result.user?.uid ?: return Resource.Error("Login failed")
             val userDoc = usersCollection.document(uid).get().await()
-            val user = userDoc.toObject(User::class.java) ?: User(uid = uid, email = email, name = email)
+            val user = userDoc.toObject(User::class.java)
+                ?: return Resource.Error("User data not found")
             Resource.Success(user)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Login failed")
+            Resource.Error(e.message ?: "Login failed. Please check your credentials.")
         }
     }
 
-    suspend fun register(name: String, email: String, password: String): Resource<User> {
+    suspend fun register(
+        firstName: String,
+        lastName: String,
+        username: String,
+        email: String,
+        password: String
+    ): Resource<User> {
         return try {
+            // Check if username already exists
+            val usernameQuery = usersCollection.whereEqualTo("username", username).get().await()
+            if (!usernameQuery.isEmpty) {
+                return Resource.Error("Username already taken. Please choose another.")
+            }
+
+            // Check if email already exists
+            val emailQuery = usersCollection.whereEqualTo("email", email).get().await()
+            if (!emailQuery.isEmpty) {
+                return Resource.Error("Email already registered. Please use another.")
+            }
+
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val uid = result.user?.uid ?: return Resource.Error("Registration failed")
-            val user = User(uid = uid, name = name, email = email, role = "user")
+
+            val fullName = "$firstName $lastName"
+
+            // Update auth profile with display name
+            val profileUpdates = com.google.firebase.auth.UserProfileChangeRequest.Builder()
+                .setDisplayName(fullName)
+                .build()
+            result.user?.updateProfile(profileUpdates)?.await()
+
+            val user = User(
+                id = uid,
+                firstName = firstName,
+                lastName = lastName,
+                username = username,
+                email = email,
+                role = "customer",
+                address = "",
+                contact = "",
+                profilePictureUrl = ""
+            )
             usersCollection.document(uid).set(user).await()
-            
+
             // Sign out immediately so it doesn't log them in automatically
             auth.signOut()
-            
+
             Resource.Success(user)
         } catch (e: Exception) {
             Resource.Error(e.message ?: "Registration failed")
         }
     }
 
-    /**
-     * Creates the admin account. Call this ONCE from the app to set up admin.
-     * Admin credentials: admin@smartselect.com / SmartAdmin2024!
-     */
+    // Old register method for compatibility (if needed elsewhere)
+    suspend fun register(name: String, email: String, password: String): Resource<User> {
+        val nameParts = name.split(" ", limit = 2)
+        val firstName = nameParts[0]
+        val lastName = if (nameParts.size > 1) nameParts[1] else ""
+        val username = email.substringBefore("@")
+        return register(firstName, lastName, username, email, password)
+    }
+
     suspend fun createAdminAccount(): Resource<User> {
         return try {
             val adminEmail = "admin@smartselect.com"
             val adminPassword = "SmartAdmin2024!"
-            val adminName = "Admin"
+
+            // Check if admin already exists
+            val existingUser = auth.fetchSignInMethodsForEmail(adminEmail).await().signInMethods?.isNotEmpty() == true
+            if (existingUser) {
+                return Resource.Error("Admin account already exists")
+            }
 
             val result = auth.createUserWithEmailAndPassword(adminEmail, adminPassword).await()
             val uid = result.user?.uid ?: return Resource.Error("Admin creation failed")
-            val user = User(uid = uid, name = adminName, email = adminEmail, role = "admin")
+
+            val user = User(
+                id = uid,
+                firstName = "Admin",
+                lastName = "",
+                username = "admin",
+                email = adminEmail,
+                role = "admin",
+                address = "",
+                contact = "",
+                profilePictureUrl = ""
+            )
             usersCollection.document(uid).set(user).await()
 
-            // Sign out immediately after creating admin (so current session isn't affected)
+            // Sign out immediately after creating admin
             auth.signOut()
 
             Resource.Success(user)
         } catch (e: Exception) {
-            // If already exists, it's fine
             Resource.Error(e.message ?: "Admin creation failed")
         }
     }
@@ -90,32 +165,53 @@ class AuthRepository @Inject constructor(
     suspend fun updateProfile(newName: String, newUsername: String, newPassword: String?, newProfileUrl: String?): Resource<User> {
         return try {
             val uid = auth.currentUser?.uid ?: return Resource.Error("Not logged in")
-            
-            // Update auth profile name and photo
+
+            // Split full name into first and last name
+            val nameParts = newName.split(" ", limit = 2)
+            val firstName = nameParts[0]
+            val lastName = if (nameParts.size > 1) nameParts[1] else ""
+
+            // Check if username is taken by another user
+            if (newUsername.isNotEmpty()) {
+                val usernameQuery = usersCollection
+                    .whereEqualTo("username", newUsername)
+                    .whereNotEqualTo("id", uid)
+                    .get()
+                    .await()
+                if (!usernameQuery.isEmpty) {
+                    return Resource.Error("Username already taken")
+                }
+            }
+
+            // Update auth profile name
             val profileUpdatesBuilder = com.google.firebase.auth.UserProfileChangeRequest.Builder()
                 .setDisplayName(newName)
-            
+
             if (newProfileUrl != null && newProfileUrl.isNotEmpty()) {
                 profileUpdatesBuilder.setPhotoUri(android.net.Uri.parse(newProfileUrl))
             }
-            
+
             auth.currentUser?.updateProfile(profileUpdatesBuilder.build())?.await()
-            
+
             // Update password if provided
             if (newPassword != null && newPassword.isNotEmpty()) {
+                if (newPassword.length < 6) {
+                    return Resource.Error("Password must be at least 6 characters")
+                }
                 auth.currentUser?.updatePassword(newPassword)?.await()
             }
 
             // Update firestore user document
             val updates = mutableMapOf<String, Any>(
-                "name" to newName,
+                "firstName" to firstName,
+                "lastName" to lastName,
                 "username" to newUsername
             )
             if (newProfileUrl != null && newProfileUrl.isNotEmpty()) {
                 updates["profilePictureUrl"] = newProfileUrl
             }
             usersCollection.document(uid).update(updates).await()
-            
+
             val doc = usersCollection.document(uid).get().await()
             val user = doc.toObject(User::class.java) ?: return Resource.Error("User not found after update")
             Resource.Success(user)
@@ -125,104 +221,4 @@ class AuthRepository @Inject constructor(
     }
 
     fun logout() = auth.signOut()
-}
-
-@Singleton
-class OrderRepository @Inject constructor(
-    private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
-) {
-    private val ordersCollection = firestore.collection("orders")
-
-    suspend fun placeOrder(order: Order): Resource<Boolean> {
-        return try {
-            ordersCollection.add(order).await()
-            Resource.Success(true)
-        } catch (e: Exception) {
-            Resource.Error(e.message ?: "Order failed")
-        }
-    }
-
-    suspend fun deleteOrder(orderId: String): Resource<Boolean> {
-        return try {
-            ordersCollection.document(orderId).delete().await()
-            Resource.Success(true)
-        } catch (e: Exception) {
-            Resource.Error(e.message ?: "Delete failed")
-        }
-    }
-
-    /**
-     * Auto-cancels any orders whose pickupDate is in the past
-     * and whose status is still "pending" or "confirmed".
-     */
-    suspend fun autoCancel(orderId: String): Resource<Boolean> {
-        return try {
-            ordersCollection.document(orderId).update("status", "cancelled").await()
-            Resource.Success(true)
-        } catch (e: Exception) {
-            Resource.Error(e.message ?: "Auto-cancel failed")
-        }
-    }
-
-    fun getUserOrders(): Flow<Resource<List<Order>>> = callbackFlow {
-        trySend(Resource.Loading())
-        val uid = auth.currentUser?.uid
-        if (uid == null) {
-            trySend(Resource.Error("Not logged in"))
-            close()
-            return@callbackFlow
-        }
-        val listener = ordersCollection
-            .whereEqualTo("userId", uid)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) { trySend(Resource.Error(error.message ?: "Error")); return@addSnapshotListener }
-                val orders = snapshot?.toObjects(Order::class.java) ?: emptyList()
-                trySend(Resource.Success(orders))
-            }
-        awaitClose { listener.remove() }
-    }
-
-    fun getAllOrders(): Flow<Resource<List<Order>>> = callbackFlow {
-        trySend(Resource.Loading())
-        val listener = ordersCollection.addSnapshotListener { snapshot, error ->
-            if (error != null) { trySend(Resource.Error(error.message ?: "Error")); return@addSnapshotListener }
-            val orders = snapshot?.toObjects(Order::class.java) ?: emptyList()
-            trySend(Resource.Success(orders))
-        }
-        awaitClose { listener.remove() }
-    }
-
-    suspend fun updateOrderStatus(orderId: String, status: String): Resource<Boolean> {
-        return try {
-            ordersCollection.document(orderId).update("status", status).await()
-            Resource.Success(true)
-        } catch (e: Exception) {
-            Resource.Error(e.message ?: "Update failed")
-        }
-    }
-
-    suspend fun updateOrderPickupDate(orderId: String, newDate: Timestamp): Resource<Boolean> {
-        return try {
-            ordersCollection.document(orderId).update("pickupDate", newDate).await()
-            Resource.Success(true)
-        } catch (e: Exception) {
-            Resource.Error(e.message ?: "Update failed")
-        }
-    }
-
-    /** Checks all active orders and cancels those whose pickup date has passed. */
-    suspend fun checkAndCancelExpiredOrders(orders: List<Order>) {
-        val now = Date()
-        orders.forEach { order ->
-            val pickupDate = order.pickupDate?.toDate()
-            if (pickupDate != null
-                && pickupDate.before(now)
-                && order.status != "picked_up"
-                && order.status != "cancelled"
-            ) {
-                autoCancel(order.orderId)
-            }
-        }
-    }
 }

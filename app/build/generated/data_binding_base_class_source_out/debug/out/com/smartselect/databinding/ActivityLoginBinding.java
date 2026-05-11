@@ -33,19 +33,40 @@ public final class ActivityLoginBinding implements ViewBinding {
   public final MaterialCardView cardForm;
 
   @NonNull
-  public final TextInputEditText etEmail;
+  public final TextInputEditText etConfirmPassword;
 
   @NonNull
-  public final TextInputEditText etName;
+  public final TextInputEditText etEmailOrUsername;
+
+  @NonNull
+  public final TextInputEditText etFirstName;
+
+  @NonNull
+  public final TextInputEditText etLastName;
 
   @NonNull
   public final TextInputEditText etPassword;
 
   @NonNull
+  public final TextInputEditText etUsername;
+
+  @NonNull
   public final LinearLayout hero;
 
   @NonNull
-  public final TextInputLayout layoutRegisterName;
+  public final TextInputLayout layoutConfirmPassword;
+
+  @NonNull
+  public final TextInputLayout layoutEmail;
+
+  @NonNull
+  public final TextInputLayout layoutRegisterFirstName;
+
+  @NonNull
+  public final TextInputLayout layoutRegisterLastName;
+
+  @NonNull
+  public final TextInputLayout layoutRegisterUsername;
 
   @NonNull
   public final ProgressBar progressBar;
@@ -58,18 +79,29 @@ public final class ActivityLoginBinding implements ViewBinding {
 
   private ActivityLoginBinding(@NonNull ConstraintLayout rootView,
       @NonNull MaterialButton btnAction, @NonNull MaterialCardView cardForm,
-      @NonNull TextInputEditText etEmail, @NonNull TextInputEditText etName,
-      @NonNull TextInputEditText etPassword, @NonNull LinearLayout hero,
-      @NonNull TextInputLayout layoutRegisterName, @NonNull ProgressBar progressBar,
+      @NonNull TextInputEditText etConfirmPassword, @NonNull TextInputEditText etEmailOrUsername,
+      @NonNull TextInputEditText etFirstName, @NonNull TextInputEditText etLastName,
+      @NonNull TextInputEditText etPassword, @NonNull TextInputEditText etUsername,
+      @NonNull LinearLayout hero, @NonNull TextInputLayout layoutConfirmPassword,
+      @NonNull TextInputLayout layoutEmail, @NonNull TextInputLayout layoutRegisterFirstName,
+      @NonNull TextInputLayout layoutRegisterLastName,
+      @NonNull TextInputLayout layoutRegisterUsername, @NonNull ProgressBar progressBar,
       @NonNull TabLayout tabLayout, @NonNull TextView tvError) {
     this.rootView = rootView;
     this.btnAction = btnAction;
     this.cardForm = cardForm;
-    this.etEmail = etEmail;
-    this.etName = etName;
+    this.etConfirmPassword = etConfirmPassword;
+    this.etEmailOrUsername = etEmailOrUsername;
+    this.etFirstName = etFirstName;
+    this.etLastName = etLastName;
     this.etPassword = etPassword;
+    this.etUsername = etUsername;
     this.hero = hero;
-    this.layoutRegisterName = layoutRegisterName;
+    this.layoutConfirmPassword = layoutConfirmPassword;
+    this.layoutEmail = layoutEmail;
+    this.layoutRegisterFirstName = layoutRegisterFirstName;
+    this.layoutRegisterLastName = layoutRegisterLastName;
+    this.layoutRegisterUsername = layoutRegisterUsername;
     this.progressBar = progressBar;
     this.tabLayout = tabLayout;
     this.tvError = tvError;
@@ -114,15 +146,27 @@ public final class ActivityLoginBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.et_email;
-      TextInputEditText etEmail = ViewBindings.findChildViewById(rootView, id);
-      if (etEmail == null) {
+      id = R.id.et_confirm_password;
+      TextInputEditText etConfirmPassword = ViewBindings.findChildViewById(rootView, id);
+      if (etConfirmPassword == null) {
         break missingId;
       }
 
-      id = R.id.et_name;
-      TextInputEditText etName = ViewBindings.findChildViewById(rootView, id);
-      if (etName == null) {
+      id = R.id.et_email_or_username;
+      TextInputEditText etEmailOrUsername = ViewBindings.findChildViewById(rootView, id);
+      if (etEmailOrUsername == null) {
+        break missingId;
+      }
+
+      id = R.id.et_first_name;
+      TextInputEditText etFirstName = ViewBindings.findChildViewById(rootView, id);
+      if (etFirstName == null) {
+        break missingId;
+      }
+
+      id = R.id.et_last_name;
+      TextInputEditText etLastName = ViewBindings.findChildViewById(rootView, id);
+      if (etLastName == null) {
         break missingId;
       }
 
@@ -132,15 +176,45 @@ public final class ActivityLoginBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.et_username;
+      TextInputEditText etUsername = ViewBindings.findChildViewById(rootView, id);
+      if (etUsername == null) {
+        break missingId;
+      }
+
       id = R.id.hero;
       LinearLayout hero = ViewBindings.findChildViewById(rootView, id);
       if (hero == null) {
         break missingId;
       }
 
-      id = R.id.layout_register_name;
-      TextInputLayout layoutRegisterName = ViewBindings.findChildViewById(rootView, id);
-      if (layoutRegisterName == null) {
+      id = R.id.layout_confirm_password;
+      TextInputLayout layoutConfirmPassword = ViewBindings.findChildViewById(rootView, id);
+      if (layoutConfirmPassword == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_email;
+      TextInputLayout layoutEmail = ViewBindings.findChildViewById(rootView, id);
+      if (layoutEmail == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_register_first_name;
+      TextInputLayout layoutRegisterFirstName = ViewBindings.findChildViewById(rootView, id);
+      if (layoutRegisterFirstName == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_register_last_name;
+      TextInputLayout layoutRegisterLastName = ViewBindings.findChildViewById(rootView, id);
+      if (layoutRegisterLastName == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_register_username;
+      TextInputLayout layoutRegisterUsername = ViewBindings.findChildViewById(rootView, id);
+      if (layoutRegisterUsername == null) {
         break missingId;
       }
 
@@ -162,8 +236,10 @@ public final class ActivityLoginBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityLoginBinding((ConstraintLayout) rootView, btnAction, cardForm, etEmail,
-          etName, etPassword, hero, layoutRegisterName, progressBar, tabLayout, tvError);
+      return new ActivityLoginBinding((ConstraintLayout) rootView, btnAction, cardForm,
+          etConfirmPassword, etEmailOrUsername, etFirstName, etLastName, etPassword, etUsername,
+          hero, layoutConfirmPassword, layoutEmail, layoutRegisterFirstName, layoutRegisterLastName,
+          layoutRegisterUsername, progressBar, tabLayout, tvError);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

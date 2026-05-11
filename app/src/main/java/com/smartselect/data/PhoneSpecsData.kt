@@ -115,5 +115,6 @@ object PhoneSpecsData {
         "6.9\" LTPO AMOLED 1-120Hz","7.6\" Dynamic AMOLED 2X 120Hz"
     )
 
-    val categories = listOf("iPhone","Android","Flagship","Mid-range","Budget")
+    // UPDATED: Added "Gaming" to categories
+    val categories = listOf("iPhone","Android","Flagship","Mid-range","Budget","Gaming")
 }

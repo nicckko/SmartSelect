@@ -4,6 +4,7 @@ package com.smartselect.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -22,6 +23,12 @@ public final class ItemCartBinding implements ViewBinding {
   private final MaterialCardView rootView;
 
   @NonNull
+  public final ImageButton btnDecrease;
+
+  @NonNull
+  public final ImageButton btnIncrease;
+
+  @NonNull
   public final MaterialButton btnRemove;
 
   @NonNull
@@ -31,20 +38,27 @@ public final class ItemCartBinding implements ViewBinding {
   public final TextView tvPhoneName;
 
   @NonNull
-  public final TextView tvPrice;
+  public final TextView tvPricePerUnit;
 
   @NonNull
   public final TextView tvQuantity;
 
-  private ItemCartBinding(@NonNull MaterialCardView rootView, @NonNull MaterialButton btnRemove,
-      @NonNull ImageView ivPhone, @NonNull TextView tvPhoneName, @NonNull TextView tvPrice,
-      @NonNull TextView tvQuantity) {
+  @NonNull
+  public final TextView tvTotalPrice;
+
+  private ItemCartBinding(@NonNull MaterialCardView rootView, @NonNull ImageButton btnDecrease,
+      @NonNull ImageButton btnIncrease, @NonNull MaterialButton btnRemove,
+      @NonNull ImageView ivPhone, @NonNull TextView tvPhoneName, @NonNull TextView tvPricePerUnit,
+      @NonNull TextView tvQuantity, @NonNull TextView tvTotalPrice) {
     this.rootView = rootView;
+    this.btnDecrease = btnDecrease;
+    this.btnIncrease = btnIncrease;
     this.btnRemove = btnRemove;
     this.ivPhone = ivPhone;
     this.tvPhoneName = tvPhoneName;
-    this.tvPrice = tvPrice;
+    this.tvPricePerUnit = tvPricePerUnit;
     this.tvQuantity = tvQuantity;
+    this.tvTotalPrice = tvTotalPrice;
   }
 
   @Override
@@ -74,6 +88,18 @@ public final class ItemCartBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btn_decrease;
+      ImageButton btnDecrease = ViewBindings.findChildViewById(rootView, id);
+      if (btnDecrease == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_increase;
+      ImageButton btnIncrease = ViewBindings.findChildViewById(rootView, id);
+      if (btnIncrease == null) {
+        break missingId;
+      }
+
       id = R.id.btn_remove;
       MaterialButton btnRemove = ViewBindings.findChildViewById(rootView, id);
       if (btnRemove == null) {
@@ -92,9 +118,9 @@ public final class ItemCartBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tv_price;
-      TextView tvPrice = ViewBindings.findChildViewById(rootView, id);
-      if (tvPrice == null) {
+      id = R.id.tv_price_per_unit;
+      TextView tvPricePerUnit = ViewBindings.findChildViewById(rootView, id);
+      if (tvPricePerUnit == null) {
         break missingId;
       }
 
@@ -104,8 +130,14 @@ public final class ItemCartBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemCartBinding((MaterialCardView) rootView, btnRemove, ivPhone, tvPhoneName,
-          tvPrice, tvQuantity);
+      id = R.id.tv_total_price;
+      TextView tvTotalPrice = ViewBindings.findChildViewById(rootView, id);
+      if (tvTotalPrice == null) {
+        break missingId;
+      }
+
+      return new ItemCartBinding((MaterialCardView) rootView, btnDecrease, btnIncrease, btnRemove,
+          ivPhone, tvPhoneName, tvPricePerUnit, tvQuantity, tvTotalPrice);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

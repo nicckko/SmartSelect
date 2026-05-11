@@ -46,7 +46,12 @@ class OrdersFragment : Fragment() {
 
     private fun setupCart() {
         val cartAdapter = CartAdapter(
-            onRemove = { phoneViewModel.removeFromCart(it) }
+            onRemove = { phoneId ->
+                phoneViewModel.removeFromCart(phoneId)
+            },
+            onQuantityChange = { phoneId, newQuantity ->
+                phoneViewModel.updateCartQuantity(phoneId, newQuantity)
+            }
         )
         binding.rvCart.apply {
             adapter = cartAdapter
@@ -61,7 +66,7 @@ class OrdersFragment : Fragment() {
                 binding.tvCartTotal.text = "₱${String.format("%,.0f", total)}"
                 binding.btnCheckout.isEnabled = cart.isNotEmpty()
 
-                // Toggle empty state — now a LinearLayout
+                // Toggle empty state
                 val isEmpty = cart.isEmpty()
                 binding.tvEmptyCart.visibility = if (isEmpty) View.VISIBLE else View.GONE
                 binding.cardEmptyCart.visibility = if (isEmpty) View.VISIBLE else View.GONE

@@ -1,6 +1,7 @@
 package com.smartselect.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FieldValue
 import com.smartselect.data.model.Phone
 import com.smartselect.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
@@ -147,4 +148,63 @@ class PhoneRepository @Inject constructor(
         awaitClose { listener.remove() }
     }
 
+    // Add these to PhoneRepository class
+
+    suspend fun checkStockAvailability(phoneId: String, requestedQuantity: Int): Boolean {
+        return try {
+            val doc = phonesCollection.document(phoneId).get().await()
+            val phone = doc.toObject(Phone::class.java)
+            phone != null && phone.stock >= requestedQuantity
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun decreaseStock(phoneId: String, quantity: Int): Resource<Boolean> {
+        return try {
+            val docRef = phonesCollection.document(phoneId)
+            firestore.runTransaction { transaction ->
+                val snapshot = transaction.get(docRef)
+                val currentStock = snapshot.getLong("stock") ?: 0
+                val newStock = currentStock - quantity
+
+                if (newStock < 0) {
+                    throw Exception("Insufficient stock")
+                }
+
+                transaction.update(docRef, "stock", newStock)
+            }.await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Failed to update stock")
+        }
+    }
+
+    suspend fun increaseStock(phoneId: String, quantity: Int): Resource<Boolean> {
+        return try {
+            val docRef = phonesCollection.document(phoneId)
+            firestore.runTransaction { transaction ->
+                val snapshot = transaction.get(docRef)
+                val currentStock = snapshot.getLong("stock") ?: 0
+                transaction.update(docRef, "stock", currentStock + quantity)
+            }.await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Failed to restore stock")
+        }
+    }
+
+    suspend fun decreaseMultipleStocks(items: List<Pair<String, Int>>): Resource<Boolean> {
+        return try {
+            val batch = firestore.batch()
+            items.forEach { (phoneId, quantity) ->
+                val docRef = phonesCollection.document(phoneId)
+                batch.update(docRef, "stock", com.google.firebase.firestore.FieldValue.increment(-quantity.toLong()))
+            }
+            batch.commit().await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Failed to update stocks")
+        }
+    }
 }

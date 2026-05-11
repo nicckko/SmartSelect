@@ -35,10 +35,14 @@ class AdminPhonesFragment : Fragment() {
 
     private var allPhones: List<Phone> = emptyList()
     private var currentSearch: String = ""
+    private var currentCategory: String = ""
 
     // Multi-select state
     private val selectedIds = mutableSetOf<String>()
     private var isSelectionMode = false
+
+    // Category options
+    private val categories = listOf("All", "iPhone", "Android", "Flagship", "Mid-range", "Budget", "Gaming")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAdminPhonesBinding.inflate(inflater, container, false)
@@ -73,14 +77,23 @@ class AdminPhonesFragment : Fragment() {
         }
 
         // Column selector
-        val options = listOf("1 Column", "2 Columns", "3 Columns")
-        val colAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
+        val columnsOptions = listOf("1 Column", "2 Columns", "3 Columns")
+        val colAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, columnsOptions)
         binding.actvAdminColumns.setAdapter(colAdapter)
         binding.actvAdminColumns.setText("3 Columns", false)
         binding.actvAdminColumns.setOnItemClickListener { _, _, position, _ ->
             val columns = position + 1
             (binding.rvPhones.layoutManager as GridLayoutManager).spanCount = columns
             adapter.notifyItemRangeChanged(0, adapter.itemCount)
+        }
+
+        // Category selector
+        val categoryAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)
+        binding.actvAdminCategory.setAdapter(categoryAdapter)
+        binding.actvAdminCategory.setText("All", false)
+        binding.actvAdminCategory.setOnItemClickListener { _, _, position, _ ->
+            currentCategory = if (position == 0) "" else categories[position]
+            applySearch()
         }
 
         binding.btnAddPhone.setOnClickListener {
@@ -187,7 +200,7 @@ class AdminPhonesFragment : Fragment() {
                         }
                     }
                     if (_binding == null) return@launch
-                    
+
                     if (successCount > 0) {
                         val msg2 = if (successCount == 1) "${phones[0].model} deleted" else "$successCount phones deleted"
                         showSnackbar(msg2)
@@ -213,16 +226,37 @@ class AdminPhonesFragment : Fragment() {
 
     private fun applySearch() {
         if (_binding == null) return
-        val filtered = if (currentSearch.isEmpty()) allPhones
-        else allPhones.filter { phone ->
-            phone.brand.lowercase().contains(currentSearch) ||
-            phone.model.lowercase().contains(currentSearch) ||
-            phone.category.lowercase().contains(currentSearch)
+
+        var filtered = allPhones
+
+        // Apply category filter
+        if (currentCategory.isNotEmpty()) {
+            filtered = filtered.filter { it.category == currentCategory }
         }
+
+        // Apply search filter
+        if (currentSearch.isNotEmpty()) {
+            filtered = filtered.filter { phone ->
+                phone.brand.lowercase().contains(currentSearch) ||
+                        phone.model.lowercase().contains(currentSearch) ||
+                        phone.category.lowercase().contains(currentSearch)
+            }
+        }
+
         adapter.submitList(filtered)
+
         if (!isSelectionMode) {
-            binding.tvCount.text = if (currentSearch.isEmpty()) "${allPhones.size} phones"
-            else "${filtered.size} of ${allPhones.size} phones"
+            val filterInfo = when {
+                currentCategory.isNotEmpty() && currentSearch.isNotEmpty() ->
+                    "${filtered.size} of ${allPhones.size} phones (${currentCategory}, \"$currentSearch\")"
+                currentCategory.isNotEmpty() ->
+                    "${filtered.size} of ${allPhones.size} phones (${currentCategory})"
+                currentSearch.isNotEmpty() ->
+                    "${filtered.size} of ${allPhones.size} phones (\"$currentSearch\")"
+                else ->
+                    "${allPhones.size} phones"
+            }
+            binding.tvCount.text = filterInfo
         }
     }
 

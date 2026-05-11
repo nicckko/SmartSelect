@@ -35,9 +35,9 @@ class AuthViewModel @Inject constructor(
         if (isLoggedIn) loadCurrentUser()
     }
 
-    fun login(email: String, password: String) = viewModelScope.launch {
+    fun login(identifier: String, password: String) = viewModelScope.launch {
         _authState.value = Resource.Loading()
-        _authState.value = authRepository.login(email, password)
+        _authState.value = authRepository.login(identifier, password)
         if (_authState.value is Resource.Success) loadCurrentUser()
     }
 
@@ -73,6 +73,11 @@ class AuthViewModel @Inject constructor(
         if (result is Resource.Success) {
             _currentUser.value = result.data
         }
+    }
+
+    fun register(firstName: String, lastName: String, username: String, email: String, password: String) = viewModelScope.launch {
+        _registerState.value = Resource.Loading()
+        _registerState.value = authRepository.register(firstName, lastName, username, email, password)
     }
 
     private fun loadCurrentUser() = viewModelScope.launch {

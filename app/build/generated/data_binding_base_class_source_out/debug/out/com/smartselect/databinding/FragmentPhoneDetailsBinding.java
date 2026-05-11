@@ -30,7 +30,13 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
   public final MaterialButton btnCompare;
 
   @NonNull
+  public final MaterialButton btnDecrease;
+
+  @NonNull
   public final MaterialButton btnFavorite;
+
+  @NonNull
+  public final MaterialButton btnIncrease;
 
   @NonNull
   public final MaterialButton btnOrder;
@@ -69,26 +75,36 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
   public final TextView tvPrice;
 
   @NonNull
+  public final TextView tvQuantity;
+
+  @NonNull
   public final TextView tvRam;
 
   @NonNull
   public final TextView tvStock;
 
   @NonNull
+  public final TextView tvStockInfo;
+
+  @NonNull
   public final TextView tvStorage;
 
   private FragmentPhoneDetailsBinding(@NonNull CoordinatorLayout rootView,
       @NonNull AppBarLayout appBar, @NonNull MaterialButton btnCompare,
-      @NonNull MaterialButton btnFavorite, @NonNull MaterialButton btnOrder,
+      @NonNull MaterialButton btnDecrease, @NonNull MaterialButton btnFavorite,
+      @NonNull MaterialButton btnIncrease, @NonNull MaterialButton btnOrder,
       @NonNull ImageView ivPhone, @NonNull MaterialToolbar toolbar, @NonNull TextView tvBattery,
       @NonNull TextView tvBestValue, @NonNull TextView tvBrand, @NonNull TextView tvCamera,
       @NonNull TextView tvCategory, @NonNull TextView tvChipset, @NonNull TextView tvDisplay,
-      @NonNull TextView tvModel, @NonNull TextView tvPrice, @NonNull TextView tvRam,
-      @NonNull TextView tvStock, @NonNull TextView tvStorage) {
+      @NonNull TextView tvModel, @NonNull TextView tvPrice, @NonNull TextView tvQuantity,
+      @NonNull TextView tvRam, @NonNull TextView tvStock, @NonNull TextView tvStockInfo,
+      @NonNull TextView tvStorage) {
     this.rootView = rootView;
     this.appBar = appBar;
     this.btnCompare = btnCompare;
+    this.btnDecrease = btnDecrease;
     this.btnFavorite = btnFavorite;
+    this.btnIncrease = btnIncrease;
     this.btnOrder = btnOrder;
     this.ivPhone = ivPhone;
     this.toolbar = toolbar;
@@ -101,8 +117,10 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
     this.tvDisplay = tvDisplay;
     this.tvModel = tvModel;
     this.tvPrice = tvPrice;
+    this.tvQuantity = tvQuantity;
     this.tvRam = tvRam;
     this.tvStock = tvStock;
+    this.tvStockInfo = tvStockInfo;
     this.tvStorage = tvStorage;
   }
 
@@ -145,9 +163,21 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.btn_decrease;
+      MaterialButton btnDecrease = ViewBindings.findChildViewById(rootView, id);
+      if (btnDecrease == null) {
+        break missingId;
+      }
+
       id = R.id.btn_favorite;
       MaterialButton btnFavorite = ViewBindings.findChildViewById(rootView, id);
       if (btnFavorite == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_increase;
+      MaterialButton btnIncrease = ViewBindings.findChildViewById(rootView, id);
+      if (btnIncrease == null) {
         break missingId;
       }
 
@@ -223,6 +253,12 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_quantity;
+      TextView tvQuantity = ViewBindings.findChildViewById(rootView, id);
+      if (tvQuantity == null) {
+        break missingId;
+      }
+
       id = R.id.tv_ram;
       TextView tvRam = ViewBindings.findChildViewById(rootView, id);
       if (tvRam == null) {
@@ -235,6 +271,12 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_stock_info;
+      TextView tvStockInfo = ViewBindings.findChildViewById(rootView, id);
+      if (tvStockInfo == null) {
+        break missingId;
+      }
+
       id = R.id.tv_storage;
       TextView tvStorage = ViewBindings.findChildViewById(rootView, id);
       if (tvStorage == null) {
@@ -242,8 +284,9 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
       }
 
       return new FragmentPhoneDetailsBinding((CoordinatorLayout) rootView, appBar, btnCompare,
-          btnFavorite, btnOrder, ivPhone, toolbar, tvBattery, tvBestValue, tvBrand, tvCamera,
-          tvCategory, tvChipset, tvDisplay, tvModel, tvPrice, tvRam, tvStock, tvStorage);
+          btnDecrease, btnFavorite, btnIncrease, btnOrder, ivPhone, toolbar, tvBattery, tvBestValue,
+          tvBrand, tvCamera, tvCategory, tvChipset, tvDisplay, tvModel, tvPrice, tvQuantity, tvRam,
+          tvStock, tvStockInfo, tvStorage);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

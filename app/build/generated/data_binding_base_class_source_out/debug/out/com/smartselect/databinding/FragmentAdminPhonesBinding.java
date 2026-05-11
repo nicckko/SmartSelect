@@ -29,6 +29,9 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
   private final CoordinatorLayout rootView;
 
   @NonNull
+  public final AutoCompleteTextView actvAdminCategory;
+
+  @NonNull
   public final AutoCompleteTextView actvAdminColumns;
 
   @NonNull
@@ -62,6 +65,7 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
   public final LinearLayout tvEmpty;
 
   private FragmentAdminPhonesBinding(@NonNull CoordinatorLayout rootView,
+      @NonNull AutoCompleteTextView actvAdminCategory,
       @NonNull AutoCompleteTextView actvAdminColumns,
       @NonNull ExtendedFloatingActionButton btnAddPhone, @NonNull MaterialButton btnCancelSelection,
       @NonNull MaterialButton btnDeleteSelected, @NonNull CheckBox cbSelectAll,
@@ -69,6 +73,7 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
       @NonNull ProgressBar progressBar, @NonNull RecyclerView rvPhones, @NonNull TextView tvCount,
       @NonNull LinearLayout tvEmpty) {
     this.rootView = rootView;
+    this.actvAdminCategory = actvAdminCategory;
     this.actvAdminColumns = actvAdminColumns;
     this.btnAddPhone = btnAddPhone;
     this.btnCancelSelection = btnCancelSelection;
@@ -109,6 +114,12 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.actv_admin_category;
+      AutoCompleteTextView actvAdminCategory = ViewBindings.findChildViewById(rootView, id);
+      if (actvAdminCategory == null) {
+        break missingId;
+      }
+
       id = R.id.actv_admin_columns;
       AutoCompleteTextView actvAdminColumns = ViewBindings.findChildViewById(rootView, id);
       if (actvAdminColumns == null) {
@@ -175,9 +186,9 @@ public final class FragmentAdminPhonesBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentAdminPhonesBinding((CoordinatorLayout) rootView, actvAdminColumns,
-          btnAddPhone, btnCancelSelection, btnDeleteSelected, cbSelectAll, etSearch,
-          layoutSelectionBar, progressBar, rvPhones, tvCount, tvEmpty);
+      return new FragmentAdminPhonesBinding((CoordinatorLayout) rootView, actvAdminCategory,
+          actvAdminColumns, btnAddPhone, btnCancelSelection, btnDeleteSelected, cbSelectAll,
+          etSearch, layoutSelectionBar, progressBar, rvPhones, tvCount, tvEmpty);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

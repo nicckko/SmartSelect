@@ -3373,6 +3373,7 @@ drawable exo_styled_controls_vr
 drawable googleg_disabled_color_18
 drawable googleg_standard_color_18
 drawable gradient_card_bottom
+drawable ic_add
 drawable ic_arrow_back
 drawable ic_arrow_back_black_24
 drawable ic_back
@@ -3409,6 +3410,7 @@ drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
 drawable ic_person
 drawable ic_phone
+drawable ic_remove
 drawable ic_search
 drawable ic_search_black_24
 drawable icon_background
@@ -3581,6 +3583,7 @@ id action_text
 id actions
 id activityLogsFragment
 id activity_chooser_view_content
+id actv_admin_category
 id actv_admin_columns
 id actv_category
 id actv_columns
@@ -3646,6 +3649,7 @@ id btn_checkout
 id btn_clear
 id btn_close
 id btn_compare
+id btn_decrease
 id btn_delete
 id btn_delete_selected
 id btn_done
@@ -3654,6 +3658,7 @@ id btn_edit_date
 id btn_edit_profile
 id btn_favorite
 id btn_filter
+id btn_increase
 id btn_logout
 id btn_order
 id btn_pick_date
@@ -3774,9 +3779,12 @@ id et_battery
 id et_brand
 id et_camera
 id et_chipset
+id et_confirm_password
 id et_contact
 id et_display
-id et_email
+id et_email_or_username
+id et_first_name
+id et_last_name
 id et_max_price
 id et_min_price
 id et_model
@@ -3911,12 +3919,16 @@ id jumpToStart
 id label_admin
 id labeled
 id layout
+id layout_confirm_password
+id layout_email
 id layout_empty
 id layout_legend
 id layout_phone_headers
 id layout_pickup_code
 id layout_quick_actions
-id layout_register_name
+id layout_register_first_name
+id layout_register_last_name
+id layout_register_username
 id layout_selection_bar
 id layout_specs
 id left
@@ -4260,6 +4272,7 @@ id tv_pickup_code
 id tv_pickup_date
 id tv_price
 id tv_price_label
+id tv_price_per_unit
 id tv_quantity
 id tv_ram
 id tv_relative_time
@@ -4269,6 +4282,7 @@ id tv_spec_label
 id tv_spec_value
 id tv_status
 id tv_stock
+id tv_stock_info
 id tv_stock_warning
 id tv_storage
 id tv_time

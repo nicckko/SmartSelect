@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.smartselect.data.model.Order
 import com.smartselect.data.repository.AdminLogRepository
 import com.smartselect.data.repository.OrderRepository
+import com.smartselect.data.repository.PhoneRepository
 import com.smartselect.databinding.FragmentAdminOrdersBinding
 import com.smartselect.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +29,7 @@ class AdminOrdersFragment : Fragment() {
 
     @Inject lateinit var orderRepository: OrderRepository
     @Inject lateinit var adminLogRepository: AdminLogRepository
+    @Inject lateinit var phoneRepository: PhoneRepository
     private lateinit var adapter: AdminOrderAdapter
 
     private var allOrders: List<Order> = emptyList()
@@ -49,16 +51,8 @@ class AdminOrdersFragment : Fragment() {
         adapter = AdminOrderAdapter(
             onStatusChange = { order, status ->
                 if (!isSelectionMode) {
-                    lifecycleScope.launch {
-                        val result = orderRepository.updateOrderStatus(order.orderId, status)
-                        if (result is Resource.Error) {
-                            if (_binding != null) {
-                                Snackbar.make(binding.root, "Failed to update: ${result.message}", Snackbar.LENGTH_LONG).show()
-                            }
-                        } else {
-                            adminLogRepository.logAction("Order Status Changed", "Order #${order.orderId.take(8).uppercase()} changed to $status")
-                        }
-                    }
+                    // Show confirmation dialog before changing status
+                    showStatusChangeConfirmation(order, status)
                 }
             },
             onOrderClick = { order ->
@@ -113,6 +107,69 @@ class AdminOrdersFragment : Fragment() {
                     allOrders = orders
                     updateCounts()
                     applyFilters()
+                }
+            }
+        }
+    }
+
+    // UPDATED: Show confirmation dialog for status change
+    private fun showStatusChangeConfirmation(order: Order, newStatus: String) {
+        val title = when (newStatus) {
+            "confirmed" -> "Confirm Order"
+            "cancelled" -> "Cancel Order"
+            "picked_up" -> "Mark as Picked Up"
+            else -> "Update Order Status"
+        }
+
+        val message = when (newStatus) {
+            "confirmed" -> "Confirm order #${order.orderId.take(8).uppercase()}?\n\nThis will notify the customer that their order is confirmed and ready for pickup."
+            "cancelled" -> "Cancel order #${order.orderId.take(8).uppercase()}?\n\nThis action cannot be undone. The customer will be notified of the cancellation."
+            "picked_up" -> "Mark order #${order.orderId.take(8).uppercase()} as picked up?\n\nThis will complete the order."
+            else -> "Change order #${order.orderId.take(8).uppercase()} status to $newStatus?"
+        }
+
+        val positiveButtonText = when (newStatus) {
+            "confirmed" -> "Confirm"
+            "cancelled" -> "Cancel Order"
+            "picked_up" -> "Mark as Picked Up"
+            else -> "Update"
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(positiveButtonText) { _, _ ->
+                performStatusChange(order, newStatus)
+            }
+            .setNegativeButton("Go Back", null)
+            .show()
+    }
+
+    private fun performStatusChange(order: Order, newStatus: String) {
+        lifecycleScope.launch {
+            // If cancelling an order that was previously confirmed, restore stock
+            if (newStatus == "cancelled" && order.status != "cancelled" && order.status != "picked_up") {
+                // Restore stock using phoneIds and quantities
+                val stockUpdates = order.phoneIds.zip(order.phoneQuantities).map { it.first to -it.second }
+                phoneRepository.decreaseMultipleStocks(stockUpdates)
+            }
+
+            val result = orderRepository.updateOrderStatus(order.orderId, newStatus)
+            if (result is Resource.Error) {
+                if (_binding != null) {
+                    Snackbar.make(binding.root, "Failed to update: ${result.message}", Snackbar.LENGTH_LONG).show()
+                }
+            } else {
+                adminLogRepository.logAction("Order Status Changed", "Order #${order.orderId.take(8).uppercase()} changed to $newStatus")
+
+                val successMessage = when (newStatus) {
+                    "confirmed" -> "Order confirmed successfully!"
+                    "cancelled" -> "Order cancelled successfully. Stock restored."
+                    "picked_up" -> "Order marked as picked up."
+                    else -> "Status updated successfully."
+                }
+                if (_binding != null) {
+                    Snackbar.make(binding.root, successMessage, Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
@@ -234,7 +291,7 @@ class AdminOrdersFragment : Fragment() {
         )
         val filterAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, statuses)
         binding.actvStatusFilter.setAdapter(filterAdapter)
-        
+
         // keep current selection text updated
         val currentTextIndex = when (currentFilter) {
             "pending" -> 1
@@ -256,10 +313,10 @@ class AdminOrdersFragment : Fragment() {
         if (currentSearch.isNotEmpty()) {
             filtered = filtered.filter { order ->
                 order.userName.lowercase().contains(currentSearch) ||
-                order.orderId.lowercase().contains(currentSearch) ||
-                order.phoneNames.any { it.lowercase().contains(currentSearch) } ||
-                order.contact.lowercase().contains(currentSearch) ||
-                order.pickupCode.lowercase().contains(currentSearch)
+                        order.orderId.lowercase().contains(currentSearch) ||
+                        order.phoneNames.any { it.lowercase().contains(currentSearch) } ||
+                        order.contact.lowercase().contains(currentSearch) ||
+                        order.pickupCode.lowercase().contains(currentSearch)
             }
         }
 

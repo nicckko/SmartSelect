@@ -197,6 +197,7 @@ id homeFragment
 id icon_container
 id img_container
 id iv_avatar
+id iv_customer_avatar
 id iv_favorite
 id iv_phone
 id iv_phone_preview

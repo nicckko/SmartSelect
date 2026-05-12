@@ -3910,6 +3910,7 @@ int id is_pooling_container_tag 0x7f0a0198
 int id italic 0x7f0a0199
 int id item_touch_helper_previous_elevation 0x7f0a019a
 int id iv_avatar 0x7f0a019b
+int id iv_customer_avatar 0x7f0a0338
 int id iv_favorite 0x7f0a019c
 int id iv_phone 0x7f0a019d
 int id iv_phone_preview 0x7f0a019e

@@ -4,6 +4,7 @@ package com.smartselect.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +33,9 @@ public final class ItemCartBinding implements ViewBinding {
   public final MaterialButton btnRemove;
 
   @NonNull
+  public final CheckBox cbSelect;
+
+  @NonNull
   public final ImageView ivPhone;
 
   @NonNull
@@ -48,12 +52,14 @@ public final class ItemCartBinding implements ViewBinding {
 
   private ItemCartBinding(@NonNull MaterialCardView rootView, @NonNull ImageButton btnDecrease,
       @NonNull ImageButton btnIncrease, @NonNull MaterialButton btnRemove,
-      @NonNull ImageView ivPhone, @NonNull TextView tvPhoneName, @NonNull TextView tvPricePerUnit,
-      @NonNull TextView tvQuantity, @NonNull TextView tvTotalPrice) {
+      @NonNull CheckBox cbSelect, @NonNull ImageView ivPhone, @NonNull TextView tvPhoneName,
+      @NonNull TextView tvPricePerUnit, @NonNull TextView tvQuantity,
+      @NonNull TextView tvTotalPrice) {
     this.rootView = rootView;
     this.btnDecrease = btnDecrease;
     this.btnIncrease = btnIncrease;
     this.btnRemove = btnRemove;
+    this.cbSelect = cbSelect;
     this.ivPhone = ivPhone;
     this.tvPhoneName = tvPhoneName;
     this.tvPricePerUnit = tvPricePerUnit;
@@ -106,6 +112,12 @@ public final class ItemCartBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.cb_select;
+      CheckBox cbSelect = ViewBindings.findChildViewById(rootView, id);
+      if (cbSelect == null) {
+        break missingId;
+      }
+
       id = R.id.iv_phone;
       ImageView ivPhone = ViewBindings.findChildViewById(rootView, id);
       if (ivPhone == null) {
@@ -137,7 +149,7 @@ public final class ItemCartBinding implements ViewBinding {
       }
 
       return new ItemCartBinding((MaterialCardView) rootView, btnDecrease, btnIncrease, btnRemove,
-          ivPhone, tvPhoneName, tvPricePerUnit, tvQuantity, tvTotalPrice);
+          cbSelect, ivPhone, tvPhoneName, tvPricePerUnit, tvQuantity, tvTotalPrice);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

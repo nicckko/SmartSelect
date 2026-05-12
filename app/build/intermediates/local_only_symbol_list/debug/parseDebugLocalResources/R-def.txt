@@ -160,6 +160,7 @@ id card_empty_cart
 id card_form
 id card_pending_alert
 id card_status
+id cb_select
 id cb_select_all
 id cg_phone_filter
 id checkoutFragment
@@ -234,6 +235,7 @@ id switch_best_value
 id switch_dark_mode
 id tab_layout
 id til_brand
+id til_contact
 id til_model
 id til_name
 id til_password
@@ -312,6 +314,7 @@ id tv_total_orders
 id tv_total_phones
 id tv_total_price
 id tv_total_revenue
+id tv_total_stock
 id view_status_strip
 layout activity_login
 layout activity_main

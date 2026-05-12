@@ -81,6 +81,23 @@ class PhoneRepository @Inject constructor(
         }
     }
 
+    /**
+     * Find an existing non-deleted phone with the same brand and model.
+     * Returns the Phone if found, null otherwise.
+     */
+    suspend fun findDuplicatePhone(brand: String, model: String): Phone? {
+        return try {
+            val snapshot = phonesCollection
+                .whereEqualTo("brand", brand)
+                .whereEqualTo("model", model)
+                .get().await()
+            val phones = snapshot.toObjects(Phone::class.java)
+            phones.firstOrNull { !it.isDeleted }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     suspend fun addPhone(phone: Phone): Resource<Boolean> {
         return try {
             val docRef = phonesCollection.document()
@@ -98,6 +115,20 @@ class PhoneRepository @Inject constructor(
             Resource.Success(true)
         } catch (e: Exception) {
             Resource.Error(e.message ?: "Unknown error")
+        }
+    }
+
+    /**
+     * Update only the stock quantity of a phone by its ID.
+     */
+    suspend fun updatePhoneStock(phoneId: String, newStock: Int): Resource<Boolean> {
+        return try {
+            phonesCollection.document(phoneId)
+                .update("stock", newStock)
+                .await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Failed to update stock")
         }
     }
 

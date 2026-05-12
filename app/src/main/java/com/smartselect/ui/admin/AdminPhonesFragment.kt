@@ -6,9 +6,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.smartselect.data.model.Phone
@@ -72,29 +72,12 @@ class AdminPhonesFragment : Fragment() {
 
         binding.rvPhones.apply {
             this.adapter = this@AdminPhonesFragment.adapter
-            layoutManager = GridLayoutManager(requireContext(), 3)
+            layoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 3)
             setHasFixedSize(true)
         }
 
-        // Column selector
-        val columnsOptions = listOf("1 Column", "2 Columns", "3 Columns")
-        val colAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, columnsOptions)
-        binding.actvAdminColumns.setAdapter(colAdapter)
-        binding.actvAdminColumns.setText("3 Columns", false)
-        binding.actvAdminColumns.setOnItemClickListener { _, _, position, _ ->
-            val columns = position + 1
-            (binding.rvPhones.layoutManager as GridLayoutManager).spanCount = columns
-            adapter.notifyItemRangeChanged(0, adapter.itemCount)
-        }
-
-        // Category selector
-        val categoryAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)
-        binding.actvAdminCategory.setAdapter(categoryAdapter)
-        binding.actvAdminCategory.setText("All", false)
-        binding.actvAdminCategory.setOnItemClickListener { _, _, position, _ ->
-            currentCategory = if (position == 0) "" else categories[position]
-            applySearch()
-        }
+        setupColumnSelector()
+        setupCategorySelector()
 
         binding.btnAddPhone.setOnClickListener {
             AddEditPhoneDialog().show(childFragmentManager, "add")
@@ -124,6 +107,64 @@ class AdminPhonesFragment : Fragment() {
 
         setupSearch()
         loadPhones()
+    }
+
+    private fun setupColumnSelector() {
+        val columnsOptions = listOf("1 Column", "2 Columns", "3 Columns")
+        val colAdapter = object : ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            columnsOptions
+        ) {
+            override fun getFilter(): android.widget.Filter {
+                return object : android.widget.Filter() {
+                    override fun performFiltering(constraint: CharSequence?): FilterResults {
+                        return FilterResults().apply {
+                            values = columnsOptions
+                            count = columnsOptions.size
+                        }
+                    }
+                    override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+        binding.actvAdminColumns.setAdapter(colAdapter)
+        binding.actvAdminColumns.setText("3 Columns", false)
+        binding.actvAdminColumns.setOnItemClickListener { _, _, position, _ ->
+            val columns = position + 1
+            (binding.rvPhones.layoutManager as androidx.recyclerview.widget.GridLayoutManager).spanCount = columns
+            adapter.notifyItemRangeChanged(0, adapter.itemCount)
+        }
+    }
+
+    private fun setupCategorySelector() {
+        val categoryAdapter = object : ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            categories
+        ) {
+            override fun getFilter(): android.widget.Filter {
+                return object : android.widget.Filter() {
+                    override fun performFiltering(constraint: CharSequence?): FilterResults {
+                        return FilterResults().apply {
+                            values = categories
+                            count = categories.size
+                        }
+                    }
+                    override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+        binding.actvAdminCategory.setAdapter(categoryAdapter)
+        binding.actvAdminCategory.setText("All", false)
+        binding.actvAdminCategory.setOnItemClickListener { _, _, position, _ ->
+            currentCategory = if (position == 0) "" else categories[position]
+            applySearch()
+        }
     }
 
     private fun loadPhones() {

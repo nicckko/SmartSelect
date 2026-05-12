@@ -56,6 +56,11 @@ class AdminDashboardFragment : Fragment() {
                 if (resource is Resource.Success) {
                     val phones = resource.data ?: emptyList()
                     binding.tvTotalPhones.text = phones.size.toString()
+
+                    // Total stock = sum of all phone quantities
+                    val totalStock = phones.sumOf { it.stock }
+                    binding.tvTotalStock.text = "📦 $totalStock total units"
+
                     val inStock = phones.count { it.stock > 0 }
                     binding.tvInStock.text = "✅ $inStock in stock"
 

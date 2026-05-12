@@ -3684,6 +3684,7 @@ int id card_form 0x7f0a00b6
 int id card_pending_alert 0x7f0a00b7
 int id card_status 0x7f0a00b8
 int id carryVelocity 0x7f0a00b9
+int id cb_select 0x7f0a0335
 int id cb_select_all 0x7f0a00ba
 int id center 0x7f0a00bb
 int id centerCrop 0x7f0a00bc
@@ -4196,6 +4197,7 @@ int id textinput_suffix_text 0x7f0a02b6
 int id texture_view 0x7f0a02b7
 int id thumbnailsRecyclerView 0x7f0a02b8
 int id til_brand 0x7f0a02b9
+int id til_contact 0x7f0a0336
 int id til_model 0x7f0a02ba
 int id til_name 0x7f0a02bb
 int id til_password 0x7f0a02bc
@@ -4290,6 +4292,7 @@ int id tv_total_orders 0x7f0a0314
 int id tv_total_phones 0x7f0a0315
 int id tv_total_price 0x7f0a0316
 int id tv_total_revenue 0x7f0a0317
+int id tv_total_stock 0x7f0a0337
 int id unchecked 0x7f0a0318
 int id uniform 0x7f0a0319
 int id unlabeled 0x7f0a031a

@@ -500,6 +500,7 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
       CheckoutFragment_MembersInjector.injectOrderRepository(instance, singletonCImpl.orderRepositoryProvider.get());
       CheckoutFragment_MembersInjector.injectPhoneRepository(instance, singletonCImpl.phoneRepositoryProvider.get());
       CheckoutFragment_MembersInjector.injectAuth(instance, singletonCImpl.provideFirebaseAuthProvider.get());
+      CheckoutFragment_MembersInjector.injectAuthRepository(instance, singletonCImpl.authRepositoryProvider.get());
       return instance;
     }
 
@@ -751,7 +752,7 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectSmartSelectApp(SmartSelectApp arg0) {
+    public void injectSmartSelectApp(SmartSelectApp smartSelectApp) {
     }
 
     @Override

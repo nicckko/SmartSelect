@@ -13,8 +13,22 @@ import com.smartselect.utils.toPeso
 
 class CartAdapter(
     private val onRemove: (String) -> Unit,
-    private val onQuantityChange: (String, Int) -> Unit
+    private val onQuantityChange: (String, Int) -> Unit,
+    private val onSelectionChange: ((String, Boolean) -> Unit)? = null
 ) : ListAdapter<CartItem, CartAdapter.CartViewHolder>(DiffCallback()) {
+
+    // Track which items are selected for checkout (default all selected)
+    private val selectedIds = mutableSetOf<String>()
+
+    fun getSelectedIds(): Set<String> = selectedIds.toSet()
+
+    fun selectAll() {
+        selectedIds.clear()
+        currentList.forEach { selectedIds.add(it.phone.id) }
+        notifyDataSetChanged()
+    }
+
+    fun isSelected(phoneId: String): Boolean = selectedIds.contains(phoneId)
 
     inner class CartViewHolder(private val binding: ItemCartBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -29,6 +43,23 @@ class CartAdapter(
             binding.tvPricePerUnit.text = "${pricePerUnit.toPeso()} each"
             binding.tvTotalPrice.text = totalPrice.toPeso()
             binding.tvQuantity.text = quantity.toString()
+
+            // Initialize selection state — default to selected if not yet tracked
+            if (!selectedIds.contains(phone.id) && selectedIds.isEmpty() && adapterPosition == 0) {
+                // First load: select all items
+                currentList.forEach { selectedIds.add(it.phone.id) }
+            }
+            binding.cbSelect.setOnCheckedChangeListener(null) // prevent triggering during bind
+            binding.cbSelect.isChecked = selectedIds.contains(phone.id)
+
+            binding.cbSelect.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    selectedIds.add(phone.id)
+                } else {
+                    selectedIds.remove(phone.id)
+                }
+                onSelectionChange?.invoke(phone.id, isChecked)
+            }
 
             Glide.with(binding.root.context)
                 .load(phone.imageUrl)
@@ -62,6 +93,19 @@ class CartAdapter(
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) = holder.bind(getItem(position))
+
+    // When submitting a new list, auto-select new items
+    override fun submitList(list: List<CartItem>?) {
+        list?.forEach { item ->
+            if (!selectedIds.contains(item.phone.id)) {
+                selectedIds.add(item.phone.id)
+            }
+        }
+        // Remove selections for items no longer in cart
+        val validIds = list?.map { it.phone.id }?.toSet() ?: emptySet()
+        selectedIds.retainAll(validIds)
+        super.submitList(list)
+    }
 
     class DiffCallback : DiffUtil.ItemCallback<CartItem>() {
         override fun areItemsTheSame(oldItem: CartItem, newItem: CartItem) = oldItem.phone.id == newItem.phone.id

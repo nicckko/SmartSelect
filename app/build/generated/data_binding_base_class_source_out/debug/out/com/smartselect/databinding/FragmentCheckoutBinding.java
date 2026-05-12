@@ -13,6 +13,7 @@ import androidx.viewbinding.ViewBindings;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.smartselect.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -35,6 +36,12 @@ public final class FragmentCheckoutBinding implements ViewBinding {
   public final TextInputEditText etName;
 
   @NonNull
+  public final TextInputLayout tilContact;
+
+  @NonNull
+  public final TextInputLayout tilName;
+
+  @NonNull
   public final MaterialToolbar toolbar;
 
   @NonNull
@@ -49,6 +56,7 @@ public final class FragmentCheckoutBinding implements ViewBinding {
   private FragmentCheckoutBinding(@NonNull CoordinatorLayout rootView,
       @NonNull MaterialButton btnPickDate, @NonNull MaterialButton btnPlaceOrder,
       @NonNull TextInputEditText etContact, @NonNull TextInputEditText etName,
+      @NonNull TextInputLayout tilContact, @NonNull TextInputLayout tilName,
       @NonNull MaterialToolbar toolbar, @NonNull TextView tvOrderSummary,
       @NonNull TextView tvPickupDate, @NonNull TextView tvTotal) {
     this.rootView = rootView;
@@ -56,6 +64,8 @@ public final class FragmentCheckoutBinding implements ViewBinding {
     this.btnPlaceOrder = btnPlaceOrder;
     this.etContact = etContact;
     this.etName = etName;
+    this.tilContact = tilContact;
+    this.tilName = tilName;
     this.toolbar = toolbar;
     this.tvOrderSummary = tvOrderSummary;
     this.tvPickupDate = tvPickupDate;
@@ -113,6 +123,18 @@ public final class FragmentCheckoutBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.til_contact;
+      TextInputLayout tilContact = ViewBindings.findChildViewById(rootView, id);
+      if (tilContact == null) {
+        break missingId;
+      }
+
+      id = R.id.til_name;
+      TextInputLayout tilName = ViewBindings.findChildViewById(rootView, id);
+      if (tilName == null) {
+        break missingId;
+      }
+
       id = R.id.toolbar;
       MaterialToolbar toolbar = ViewBindings.findChildViewById(rootView, id);
       if (toolbar == null) {
@@ -138,7 +160,7 @@ public final class FragmentCheckoutBinding implements ViewBinding {
       }
 
       return new FragmentCheckoutBinding((CoordinatorLayout) rootView, btnPickDate, btnPlaceOrder,
-          etContact, etName, toolbar, tvOrderSummary, tvPickupDate, tvTotal);
+          etContact, etName, tilContact, tilName, toolbar, tvOrderSummary, tvPickupDate, tvTotal);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

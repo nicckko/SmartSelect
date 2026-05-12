@@ -16,12 +16,11 @@ object CloudinaryHelper {
     private const val TAG = "CloudinaryHelper"
 
     // !!! IMPORTANT: REPLACE WITH YOUR CLOUDINARY CLOUD NAME !!!
-    // Get this from your Cloudinary dashboard after signing up at https://cloudinary.com
     private const val CLOUD_NAME = "ddcxny88s"
 
     // Create this upload preset in Cloudinary: Settings → Upload → Upload Presets → Add Upload Preset
-    // Name it "smartselect_phones" and set Mode to "Unsigned"
-    private const val UPLOAD_PRESET = "smartselect_phones"
+    // Name it "smartselect_uploads" and set Mode to "Unsigned"
+    private const val UPLOAD_PRESET = "smartselect_uploads"
 
     private var isInitialized = false
 
@@ -37,13 +36,17 @@ object CloudinaryHelper {
         }
     }
 
-    suspend fun uploadImage(uri: Uri): String = suspendCancellableCoroutine { continuation ->
-        Log.d(TAG, "Starting upload for URI: $uri")
+    suspend fun uploadPhoneImage(uri: Uri): String = uploadImage(uri, "phones")
+
+    suspend fun uploadProfileImage(uri: Uri): String = uploadImage(uri, "profiles")
+
+    private suspend fun uploadImage(uri: Uri, folder: String): String = suspendCancellableCoroutine { continuation ->
+        Log.d(TAG, "Starting upload for URI: $uri to folder: $folder")
 
         MediaManager.get().upload(uri)
             .unsigned(UPLOAD_PRESET)
-            .option("public_id", "phones/${UUID.randomUUID()}")
-            .option("folder", "smartselect")
+            .option("public_id", "$folder/${UUID.randomUUID()}")
+            .option("folder", "smartselect/$folder")
             .callback(object : UploadCallback {
                 override fun onStart(requestId: String) {
                     Log.d(TAG, "Upload started: $requestId")

@@ -1,5 +1,6 @@
 package com.smartselect.data.repository
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.Timestamp
@@ -166,22 +167,29 @@ class AuthRepository @Inject constructor(
         return try {
             val uid = auth.currentUser?.uid ?: return Resource.Error("Not logged in")
 
+            Log.d("AuthRepository", "=== UPDATE PROFILE ===")
+            Log.d("AuthRepository", "UID: $uid")
+            Log.d("AuthRepository", "newName: $newName")
+            Log.d("AuthRepository", "newUsername: $newUsername")
+            Log.d("AuthRepository", "newProfileUrl: $newProfileUrl")
+
             // Split full name into first and last name
             val nameParts = newName.split(" ", limit = 2)
             val firstName = nameParts[0]
             val lastName = if (nameParts.size > 1) nameParts[1] else ""
 
-            // Check if username is taken by another user
-            if (newUsername.isNotEmpty()) {
-                val usernameQuery = usersCollection
-                    .whereEqualTo("username", newUsername)
-                    .whereNotEqualTo("id", uid)
-                    .get()
-                    .await()
-                if (!usernameQuery.isEmpty) {
-                    return Resource.Error("Username already taken")
-                }
-            }
+            // TEMPORARILY DISABLED: Check if username is taken by another user
+            // This requires a composite index in Firestore. Enable after creating the index.
+            // if (newUsername.isNotEmpty()) {
+            //     val usernameQuery = usersCollection
+            //         .whereEqualTo("username", newUsername)
+            //         .whereNotEqualTo("id", uid)
+            //         .get()
+            //         .await()
+            //     if (!usernameQuery.isEmpty) {
+            //         return Resource.Error("Username already taken")
+            //     }
+            // }
 
             // Update auth profile name
             val profileUpdatesBuilder = com.google.firebase.auth.UserProfileChangeRequest.Builder()
@@ -210,12 +218,16 @@ class AuthRepository @Inject constructor(
             if (newProfileUrl != null && newProfileUrl.isNotEmpty()) {
                 updates["profilePictureUrl"] = newProfileUrl
             }
+
+            Log.d("AuthRepository", "Updates to apply: $updates")
             usersCollection.document(uid).update(updates).await()
+            Log.d("AuthRepository", "Firestore update successful")
 
             val doc = usersCollection.document(uid).get().await()
             val user = doc.toObject(User::class.java) ?: return Resource.Error("User not found after update")
             Resource.Success(user)
         } catch (e: Exception) {
+            Log.e("AuthRepository", "Update failed", e)
             Resource.Error(e.message ?: "Failed to update profile")
         }
     }

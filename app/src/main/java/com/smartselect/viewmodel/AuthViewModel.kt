@@ -44,17 +44,12 @@ class AuthViewModel @Inject constructor(
     fun register(name: String, email: String, password: String) = viewModelScope.launch {
         _registerState.value = Resource.Loading()
         _registerState.value = authRepository.register(name, email, password)
-        // Notice we DO NOT load currentUser here because the user is automatically signed out in the repository
     }
-    
+
     fun resetRegisterState() {
         _registerState.value = null
     }
 
-    /**
-     * One-time setup: creates admin@smartselect.com with password SmartAdmin2024!
-     * Call this once from the Login screen to bootstrap the admin account.
-     */
     fun setupAdminAccount() = viewModelScope.launch {
         _adminSetupState.value = Resource.Loading()
         _adminSetupState.value = authRepository.createAdminAccount()
@@ -70,9 +65,6 @@ class AuthViewModel @Inject constructor(
         _authState.value = Resource.Loading()
         val result = authRepository.updateProfile(newName, newUsername, newPassword, newProfileUrl)
         _authState.value = result
-        if (result is Resource.Success) {
-            _currentUser.value = result.data
-        }
     }
 
     fun register(firstName: String, lastName: String, username: String, email: String, password: String) = viewModelScope.launch {
@@ -80,9 +72,12 @@ class AuthViewModel @Inject constructor(
         _registerState.value = authRepository.register(firstName, lastName, username, email, password)
     }
 
-    private fun loadCurrentUser() = viewModelScope.launch {
+    // Add this function - public so ProfileFragment can call it
+    fun loadCurrentUser() = viewModelScope.launch {
         val result = authRepository.getCurrentUserData()
-        if (result is Resource.Success) _currentUser.value = result.data
+        if (result is Resource.Success) {
+            _currentUser.value = result.data
+        }
     }
 
     fun isAdmin() = _currentUser.value?.role == "admin"

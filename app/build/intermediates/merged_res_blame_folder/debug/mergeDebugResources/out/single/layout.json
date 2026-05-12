@@ -16,6 +16,10 @@
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-main-65:\\layout\\dialog_customer_order_detail.xml"
     },
     {
+        "merged": "com.smartselect.app-mergeDebugResources-62:/layout/dialog_edit_profile.xml",
+        "source": "com.smartselect.app-main-65:/layout/dialog_edit_profile.xml"
+    },
+    {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-62:\\layout\\item_admin_phone_grid.xml",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-main-65:\\layout\\item_admin_phone_grid.xml"
     },
@@ -58,10 +62,6 @@
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-62:\\layout\\fragment_admin_phones.xml",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-main-65:\\layout\\fragment_admin_phones.xml"
-    },
-    {
-        "merged": "com.smartselect.app-mergeDebugResources-62:/layout/fragment_admin_phones.xml",
-        "source": "com.smartselect.app-main-65:/layout/fragment_admin_phones.xml"
     },
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-mergeDebugResources-62:\\layout\\item_admin_phone.xml",

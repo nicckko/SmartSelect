@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +46,9 @@ public final class DialogEditProfileBinding implements ViewBinding {
   public final ShapeableImageView ivProfilePic;
 
   @NonNull
+  public final ProgressBar progressSave;
+
+  @NonNull
   public final TextInputLayout tilName;
 
   @NonNull
@@ -56,13 +60,17 @@ public final class DialogEditProfileBinding implements ViewBinding {
   @NonNull
   public final TextView tvAvatarInitial;
 
+  @NonNull
+  public final TextView tvImageHint;
+
   private DialogEditProfileBinding(@NonNull LinearLayout rootView,
       @NonNull MaterialButton btnCancel, @NonNull View btnPickImage,
       @NonNull MaterialButton btnSave, @NonNull TextInputEditText etName,
       @NonNull TextInputEditText etPassword, @NonNull TextInputEditText etUsername,
-      @NonNull ShapeableImageView ivProfilePic, @NonNull TextInputLayout tilName,
-      @NonNull TextInputLayout tilPassword, @NonNull TextInputLayout tilUsername,
-      @NonNull TextView tvAvatarInitial) {
+      @NonNull ShapeableImageView ivProfilePic, @NonNull ProgressBar progressSave,
+      @NonNull TextInputLayout tilName, @NonNull TextInputLayout tilPassword,
+      @NonNull TextInputLayout tilUsername, @NonNull TextView tvAvatarInitial,
+      @NonNull TextView tvImageHint) {
     this.rootView = rootView;
     this.btnCancel = btnCancel;
     this.btnPickImage = btnPickImage;
@@ -71,10 +79,12 @@ public final class DialogEditProfileBinding implements ViewBinding {
     this.etPassword = etPassword;
     this.etUsername = etUsername;
     this.ivProfilePic = ivProfilePic;
+    this.progressSave = progressSave;
     this.tilName = tilName;
     this.tilPassword = tilPassword;
     this.tilUsername = tilUsername;
     this.tvAvatarInitial = tvAvatarInitial;
+    this.tvImageHint = tvImageHint;
   }
 
   @Override
@@ -146,6 +156,12 @@ public final class DialogEditProfileBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.progress_save;
+      ProgressBar progressSave = ViewBindings.findChildViewById(rootView, id);
+      if (progressSave == null) {
+        break missingId;
+      }
+
       id = R.id.til_name;
       TextInputLayout tilName = ViewBindings.findChildViewById(rootView, id);
       if (tilName == null) {
@@ -170,9 +186,15 @@ public final class DialogEditProfileBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_image_hint;
+      TextView tvImageHint = ViewBindings.findChildViewById(rootView, id);
+      if (tvImageHint == null) {
+        break missingId;
+      }
+
       return new DialogEditProfileBinding((LinearLayout) rootView, btnCancel, btnPickImage, btnSave,
-          etName, etPassword, etUsername, ivProfilePic, tilName, tilPassword, tilUsername,
-          tvAvatarInitial);
+          etName, etPassword, etUsername, ivProfilePic, progressSave, tilName, tilPassword,
+          tilUsername, tvAvatarInitial, tvImageHint);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

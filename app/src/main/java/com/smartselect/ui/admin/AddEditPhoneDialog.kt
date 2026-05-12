@@ -205,7 +205,7 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
             // Upload image to Cloudinary (replaces Firebase Storage)
             val finalImageUrl = if (selectedImageUri != null) {
                 try {
-                    val url = CloudinaryHelper.uploadImage(selectedImageUri!!)
+                    val url = CloudinaryHelper.uploadPhoneImage(selectedImageUri!!)
                     Log.d(TAG, "Cloudinary upload successful: $url")
                     url
                 } catch (e: Exception) {

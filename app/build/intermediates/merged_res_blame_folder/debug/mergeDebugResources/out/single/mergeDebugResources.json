@@ -80,10 +80,6 @@
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-main-65:\\mipmap-hdpi\\ic_launcher_round.png"
     },
     {
-        "merged": "com.smartselect.app-debug-63:/layout_fragment_admin_phones.xml.flat",
-        "source": "com.smartselect.app-main-65:/layout/fragment_admin_phones.xml"
-    },
-    {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-63:\\drawable_ic_heart_outline.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-main-65:\\drawable\\ic_heart_outline.xml"
     },
@@ -334,6 +330,10 @@
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-63:\\layout_dialog_order_detail.xml.flat",
         "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-main-65:\\layout\\dialog_order_detail.xml"
+    },
+    {
+        "merged": "com.smartselect.app-debug-63:/layout_dialog_edit_profile.xml.flat",
+        "source": "com.smartselect.app-main-65:/layout/dialog_edit_profile.xml"
     },
     {
         "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.13\\com.smartselect.app-debug-63:\\anim_slide_out_left.xml.flat",

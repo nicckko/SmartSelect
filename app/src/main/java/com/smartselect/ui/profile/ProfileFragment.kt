@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.smartselect.R
 import com.smartselect.data.model.getFullName
@@ -70,26 +71,34 @@ class ProfileFragment : Fragment() {
                         adminArchiveLayout?.visibility = View.GONE
                     }
 
-                    if (it.profilePictureUrl.isNotEmpty()) {
-                        binding.tvAvatar.visibility = View.GONE
-                        val ivAvatar =
-                            binding.root.findViewById<android.widget.ImageView>(R.id.iv_avatar)
-                        if (ivAvatar != null) {
-                            ivAvatar.visibility = View.VISIBLE
-                            com.bumptech.glide.Glide.with(requireContext())
-                                .load(it.profilePictureUrl).centerCrop().into(ivAvatar)
-                        }
-                    } else {
-                        binding.tvAvatar.visibility = View.VISIBLE
-                        // FIXED: Changed it.name to it.getFullName()
-                        binding.tvAvatar.text =
-                            it.getFullName().firstOrNull()?.uppercaseChar()?.toString() ?: "?"
-                    }
+                    // Load profile image
+                    loadProfileImage(it.profilePictureUrl, it.getFullName())
 
                     binding.btnEditProfile.setOnClickListener { _ ->
-                        // FIXED: Changed it.name to it.getFullName()
-                        EditProfileDialog.newInstance(it.getFullName(), it.username, it.profilePictureUrl)
-                            .show(childFragmentManager, "edit_profile")
+                        val dialog = EditProfileDialog.newInstance(it.getFullName(), it.username, it.profilePictureUrl)
+                        dialog.setOnProfileSavedListener {
+                            // Refresh entire profile section
+                            lifecycleScope.launch {
+                                authViewModel.loadCurrentUser()
+                                // Force refresh the image view
+                                val ivAvatar = binding.root.findViewById<android.widget.ImageView>(R.id.iv_avatar)
+                                if (it.profilePictureUrl.isNotEmpty()) {
+                                    binding.tvAvatar.visibility = View.GONE
+                                    ivAvatar.visibility = View.VISIBLE
+                                    Glide.with(requireContext())
+                                        .load(it.profilePictureUrl)
+                                        .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.NONE)
+                                        .skipMemoryCache(true)
+                                        .centerCrop()
+                                        .into(ivAvatar)
+                                } else {
+                                    binding.tvAvatar.visibility = View.VISIBLE
+                                    ivAvatar.visibility = View.GONE
+                                    binding.tvAvatar.text = it.getFullName().firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+                                }
+                            }
+                        }
+                        dialog.show(childFragmentManager, "edit_profile")
                     }
                 }
             }
@@ -128,6 +137,35 @@ class ProfileFragment : Fragment() {
         val adminArchiveLayout = binding.root.findViewById<ViewGroup>(R.id.admin_archive_layout)
         adminArchiveLayout?.setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_archive)
+        }
+    }
+
+    private fun loadProfileImage(imageUrl: String, fullName: String) {
+        val ivAvatar = binding.root.findViewById<android.widget.ImageView>(R.id.iv_avatar)
+
+        if (imageUrl.isNotEmpty()) {
+            binding.tvAvatar.visibility = View.GONE
+            ivAvatar.visibility = View.VISIBLE
+
+            // Force clear cache and reload
+            Glide.with(requireContext())
+                .load(imageUrl)
+                .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .centerCrop()
+                .into(ivAvatar)
+        } else {
+            binding.tvAvatar.visibility = View.VISIBLE
+            ivAvatar.visibility = View.GONE
+            binding.tvAvatar.text = fullName.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh user data when returning to profile
+        lifecycleScope.launch {
+            authViewModel.loadCurrentUser()
         }
     }
 

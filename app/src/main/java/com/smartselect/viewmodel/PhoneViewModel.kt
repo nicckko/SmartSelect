@@ -49,6 +49,14 @@ class PhoneViewModel @Inject constructor(
     private val _stockError = MutableStateFlow<String?>(null)
     val stockError: StateFlow<String?> = _stockError.asStateFlow()
 
+    // Track which cart items are selected for checkout
+    private val _selectedCheckoutIds = MutableStateFlow<Set<String>>(emptySet())
+    val selectedCheckoutIds: StateFlow<Set<String>> = _selectedCheckoutIds.asStateFlow()
+
+    fun setSelectedCheckoutIds(ids: Set<String>) {
+        _selectedCheckoutIds.value = ids
+    }
+
     init {
         loadPhones()
     }

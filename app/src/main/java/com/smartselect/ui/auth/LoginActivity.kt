@@ -104,49 +104,86 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupActions() {
         binding.btnAction.setOnClickListener {
+            clearErrors()
             val identifier = binding.etEmailOrUsername.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
             val isRegister = binding.tabLayout.selectedTabPosition == 1
 
-            if (identifier.isEmpty() || password.isEmpty()) {
-                showError("Please fill in all fields")
-                return@setOnClickListener
-            }
-
             if (isRegister) {
-                // Registration validation
+                // Registration validation with field-level errors
                 val firstName = binding.etFirstName.text.toString().trim()
                 val lastName = binding.etLastName.text.toString().trim()
                 val username = binding.etUsername.text.toString().trim()
-                val email = identifier // identifier is email in registration mode
+                val email = identifier
                 val confirmPassword = binding.etConfirmPassword.text.toString().trim()
 
+                var hasError = false
+
                 if (firstName.isEmpty()) {
-                    showError("Please enter your first name")
-                    return@setOnClickListener
+                    binding.layoutRegisterFirstName.error = "First name is required"
+                    hasError = true
+                } else if (firstName.length < 2) {
+                    binding.layoutRegisterFirstName.error = "Must be at least 2 characters"
+                    hasError = true
+                } else if (!firstName.matches(Regex("^[a-zA-Z\\s]+$"))) {
+                    binding.layoutRegisterFirstName.error = "Only letters allowed"
+                    hasError = true
                 }
+
                 if (lastName.isEmpty()) {
-                    showError("Please enter your last name")
-                    return@setOnClickListener
+                    binding.layoutRegisterLastName.error = "Last name is required"
+                    hasError = true
+                } else if (lastName.length < 2) {
+                    binding.layoutRegisterLastName.error = "Must be at least 2 characters"
+                    hasError = true
+                } else if (!lastName.matches(Regex("^[a-zA-Z\\s]+$"))) {
+                    binding.layoutRegisterLastName.error = "Only letters allowed"
+                    hasError = true
                 }
+
                 if (username.isEmpty()) {
-                    showError("Please choose a username")
-                    return@setOnClickListener
+                    binding.layoutRegisterUsername.error = "Username is required"
+                    hasError = true
+                } else if (username.length < 3) {
+                    binding.layoutRegisterUsername.error = "Must be at least 3 characters"
+                    hasError = true
+                } else if (!username.matches(Regex("^[a-zA-Z0-9_]+$"))) {
+                    binding.layoutRegisterUsername.error = "Only letters, numbers, and underscores"
+                    hasError = true
+                } else if (username.length > 20) {
+                    binding.layoutRegisterUsername.error = "Maximum 20 characters"
+                    hasError = true
                 }
-                if (username.length < 3) {
-                    showError("Username must be at least 3 characters")
-                    return@setOnClickListener
+
+                if (email.isEmpty()) {
+                    binding.layoutEmail.error = "Email is required"
+                    hasError = true
+                } else if (!isValidEmail(email)) {
+                    binding.layoutEmail.error = "Please enter a valid email address"
+                    hasError = true
                 }
-                if (!isValidEmail(email)) {
-                    showError("Please enter a valid email address")
-                    return@setOnClickListener
+
+                if (password.isEmpty()) {
+                    setPasswordLayoutError("Password is required")
+                    hasError = true
+                } else if (password.length < 6) {
+                    setPasswordLayoutError("Must be at least 6 characters")
+                    hasError = true
+                } else if (!password.matches(Regex(".*[A-Za-z].*")) || !password.matches(Regex(".*[0-9].*"))) {
+                    setPasswordLayoutError("Must contain both letters and numbers")
+                    hasError = true
                 }
-                if (password.length < 6) {
-                    showError("Password must be at least 6 characters")
-                    return@setOnClickListener
+
+                if (confirmPassword.isEmpty()) {
+                    binding.layoutConfirmPassword.error = "Please confirm your password"
+                    hasError = true
+                } else if (password != confirmPassword) {
+                    binding.layoutConfirmPassword.error = "Passwords do not match"
+                    hasError = true
                 }
-                if (password != confirmPassword) {
-                    showError("Passwords do not match")
+
+                if (hasError) {
+                    showError("Please fix the errors above")
                     return@setOnClickListener
                 }
 
@@ -156,11 +193,24 @@ class LoginActivity : AppCompatActivity() {
 
                 authViewModel.register(firstName, lastName, username, email, password)
             } else {
-                // Login validation
-                if (password.length < 6) {
-                    showError("Password must be at least 6 characters")
-                    return@setOnClickListener
+                // Login validation with field-level errors
+                var hasError = false
+
+                if (identifier.isEmpty()) {
+                    binding.layoutEmail.error = "Email or username is required"
+                    hasError = true
                 }
+
+                if (password.isEmpty()) {
+                    setPasswordLayoutError("Password is required")
+                    hasError = true
+                } else if (password.length < 6) {
+                    setPasswordLayoutError("Password must be at least 6 characters")
+                    hasError = true
+                }
+
+                if (hasError) return@setOnClickListener
+
                 authViewModel.login(identifier, password)
             }
         }
@@ -170,7 +220,20 @@ class LoginActivity : AppCompatActivity() {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
+    private fun setPasswordLayoutError(msg: String) {
+        // Password field's parent TextInputLayout doesn't have an ID,
+        // so we access it through the parent hierarchy
+        val passwordLayout = binding.etPassword.parent.parent as? TextInputLayout
+        passwordLayout?.error = msg
+    }
+
     private fun clearErrors() {
+        binding.layoutRegisterFirstName.error = null
+        binding.layoutRegisterLastName.error = null
+        binding.layoutRegisterUsername.error = null
+        binding.layoutEmail.error = null
+        binding.layoutConfirmPassword.error = null
+        (binding.etPassword.parent.parent as? TextInputLayout)?.error = null
         binding.etFirstName.error = null
         binding.etLastName.error = null
         binding.etUsername.error = null

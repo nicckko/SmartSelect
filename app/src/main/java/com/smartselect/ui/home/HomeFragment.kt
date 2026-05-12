@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -80,7 +81,26 @@ class HomeFragment : Fragment() {
 
     private fun setupColumnSelector() {
         val options = listOf("1 Column", "2 Columns", "3 Columns")
-        val adapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
+        // Use a non-filtering adapter so setText() won't hide items
+        val adapter = object : ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            options
+        ) {
+            override fun getFilter(): android.widget.Filter {
+                return object : android.widget.Filter() {
+                    override fun performFiltering(constraint: CharSequence?): FilterResults {
+                        return FilterResults().apply {
+                            values = options
+                            count = options.size
+                        }
+                    }
+                    override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+        }
         binding.actvColumns.setAdapter(adapter)
         binding.actvColumns.setText("3 Columns", false)
 
@@ -108,8 +128,28 @@ class HomeFragment : Fragment() {
 
     private fun setupFilters() {
         val categories = listOf("All Categories", "iPhone", "Android", "Flagship", "Mid-range", "Budget")
-        val adapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)
+        // Use a non-filtering adapter so setText() won't hide items
+        val adapter = object : ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            categories
+        ) {
+            override fun getFilter(): android.widget.Filter {
+                return object : android.widget.Filter() {
+                    override fun performFiltering(constraint: CharSequence?): FilterResults {
+                        return FilterResults().apply {
+                            values = categories
+                            count = categories.size
+                        }
+                    }
+                    override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+        }
         binding.actvCategory.setAdapter(adapter)
+        binding.actvCategory.setText("All Categories", false)
 
         binding.actvCategory.setOnItemClickListener { _, _, position, _ ->
             currentCategory = if (position == 0) "" else categories[position]

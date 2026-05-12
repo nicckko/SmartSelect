@@ -3685,6 +3685,7 @@ id card_form
 id card_pending_alert
 id card_status
 id carryVelocity
+id cb_select
 id cb_select_all
 id center
 id centerCrop
@@ -4197,6 +4198,7 @@ id textinput_suffix_text
 id texture_view
 id thumbnailsRecyclerView
 id til_brand
+id til_contact
 id til_model
 id til_name
 id til_password
@@ -4291,6 +4293,7 @@ id tv_total_orders
 id tv_total_phones
 id tv_total_price
 id tv_total_revenue
+id tv_total_stock
 id unchecked
 id uniform
 id unlabeled

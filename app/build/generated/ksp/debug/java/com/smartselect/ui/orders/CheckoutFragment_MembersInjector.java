@@ -1,6 +1,7 @@
 package com.smartselect.ui.orders;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.smartselect.data.repository.AuthRepository;
 import com.smartselect.data.repository.OrderRepository;
 import com.smartselect.data.repository.PhoneRepository;
 import dagger.MembersInjector;
@@ -29,17 +30,22 @@ public final class CheckoutFragment_MembersInjector implements MembersInjector<C
 
   private final Provider<FirebaseAuth> authProvider;
 
+  private final Provider<AuthRepository> authRepositoryProvider;
+
   public CheckoutFragment_MembersInjector(Provider<OrderRepository> orderRepositoryProvider,
-      Provider<PhoneRepository> phoneRepositoryProvider, Provider<FirebaseAuth> authProvider) {
+      Provider<PhoneRepository> phoneRepositoryProvider, Provider<FirebaseAuth> authProvider,
+      Provider<AuthRepository> authRepositoryProvider) {
     this.orderRepositoryProvider = orderRepositoryProvider;
     this.phoneRepositoryProvider = phoneRepositoryProvider;
     this.authProvider = authProvider;
+    this.authRepositoryProvider = authRepositoryProvider;
   }
 
   public static MembersInjector<CheckoutFragment> create(
       Provider<OrderRepository> orderRepositoryProvider,
-      Provider<PhoneRepository> phoneRepositoryProvider, Provider<FirebaseAuth> authProvider) {
-    return new CheckoutFragment_MembersInjector(orderRepositoryProvider, phoneRepositoryProvider, authProvider);
+      Provider<PhoneRepository> phoneRepositoryProvider, Provider<FirebaseAuth> authProvider,
+      Provider<AuthRepository> authRepositoryProvider) {
+    return new CheckoutFragment_MembersInjector(orderRepositoryProvider, phoneRepositoryProvider, authProvider, authRepositoryProvider);
   }
 
   @Override
@@ -47,6 +53,7 @@ public final class CheckoutFragment_MembersInjector implements MembersInjector<C
     injectOrderRepository(instance, orderRepositoryProvider.get());
     injectPhoneRepository(instance, phoneRepositoryProvider.get());
     injectAuth(instance, authProvider.get());
+    injectAuthRepository(instance, authRepositoryProvider.get());
   }
 
   @InjectedFieldSignature("com.smartselect.ui.orders.CheckoutFragment.orderRepository")
@@ -64,5 +71,11 @@ public final class CheckoutFragment_MembersInjector implements MembersInjector<C
   @InjectedFieldSignature("com.smartselect.ui.orders.CheckoutFragment.auth")
   public static void injectAuth(CheckoutFragment instance, FirebaseAuth auth) {
     instance.auth = auth;
+  }
+
+  @InjectedFieldSignature("com.smartselect.ui.orders.CheckoutFragment.authRepository")
+  public static void injectAuthRepository(CheckoutFragment instance,
+      AuthRepository authRepository) {
+    instance.authRepository = authRepository;
   }
 }

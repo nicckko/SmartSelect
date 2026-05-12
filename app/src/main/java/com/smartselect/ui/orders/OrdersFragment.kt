@@ -29,6 +29,8 @@ class OrdersFragment : Fragment() {
 
     @Inject lateinit var orderRepository: OrderRepository
 
+    private lateinit var cartAdapter: CartAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,12 +47,15 @@ class OrdersFragment : Fragment() {
     }
 
     private fun setupCart() {
-        val cartAdapter = CartAdapter(
+        cartAdapter = CartAdapter(
             onRemove = { phoneId ->
                 phoneViewModel.removeFromCart(phoneId)
             },
             onQuantityChange = { phoneId, newQuantity ->
                 phoneViewModel.updateCartQuantity(phoneId, newQuantity)
+            },
+            onSelectionChange = { _, _ ->
+                updateSelectedTotal()
             }
         )
         binding.rvCart.apply {
@@ -62,9 +67,7 @@ class OrdersFragment : Fragment() {
             phoneViewModel.cart.collect { cart ->
                 if (_binding == null) return@collect
                 cartAdapter.submitList(cart)
-                val total = phoneViewModel.getCartTotal()
-                binding.tvCartTotal.text = "₱${String.format("%,.0f", total)}"
-                binding.btnCheckout.isEnabled = cart.isNotEmpty()
+                updateSelectedTotal()
 
                 // Toggle empty state
                 val isEmpty = cart.isEmpty()
@@ -74,7 +77,36 @@ class OrdersFragment : Fragment() {
         }
 
         binding.btnCheckout.setOnClickListener {
+            // Store selected IDs in ViewModel before navigating
+            val selectedIds = cartAdapter.getSelectedIds()
+            if (selectedIds.isEmpty()) {
+                com.google.android.material.snackbar.Snackbar.make(
+                    binding.root,
+                    "Please select at least one item to checkout",
+                    com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+            phoneViewModel.setSelectedCheckoutIds(selectedIds)
             findNavController().navigate(R.id.action_orders_to_checkout)
+        }
+    }
+
+    private fun updateSelectedTotal() {
+        if (_binding == null) return
+        val cart = phoneViewModel.cart.value
+        val selectedIds = cartAdapter.getSelectedIds()
+        val selectedTotal = cart.filter { it.phone.id in selectedIds }
+            .sumOf { it.phone.price * it.quantity }
+        val selectedCount = selectedIds.size
+        val totalCount = cart.size
+
+        binding.tvCartTotal.text = "₱${String.format("%,.0f", selectedTotal)}"
+        binding.btnCheckout.isEnabled = selectedIds.isNotEmpty()
+        binding.btnCheckout.text = if (selectedCount < totalCount && totalCount > 0) {
+            "Checkout ($selectedCount/$totalCount) →"
+        } else {
+            "Checkout →"
         }
     }
 

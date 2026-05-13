@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AutoCompleteTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.smartselect.R
 import com.smartselect.data.model.Order
+import com.smartselect.data.model.Phone
 import com.smartselect.data.repository.OrderRepository
 import com.smartselect.data.repository.PhoneRepository
 import com.smartselect.databinding.FragmentAdminDashboardBinding
@@ -30,7 +32,39 @@ class AdminDashboardFragment : Fragment() {
     @Inject lateinit var orderRepository: OrderRepository
 
     private var allOrders: List<Order> = emptyList()
+    private var allPhones: List<Phone> = emptyList()
     private var currentPeriod = "today"
+    private var currentBrand = ""
+    private var currentCategory = ""
+
+    // Brand options (Apple, Samsung, etc.)
+    private val brands = listOf("All Brands", "Apple", "Samsung", "Infinix", "Tecno", "vivo", "Honor", "realme", "POCO", "Redmi")
+
+    // Category options (iPhone, Android, Flagship, etc.)
+    private val categories = listOf("All Categories", "iPhone", "Android", "Flagship", "Mid-range", "Budget", "Gaming")
+
+    // Brand-to-category relationship
+    private val brandCategories = mapOf(
+        "Apple" to listOf("iPhone"),
+        "Samsung" to listOf("Android"),
+        "Infinix" to listOf("Android"),
+        "Tecno" to listOf("Android"),
+        "vivo" to listOf("Android"),
+        "Honor" to listOf("Android"),
+        "realme" to listOf("Android"),
+        "POCO" to listOf("Android"),
+        "Redmi" to listOf("Android")
+    )
+
+    // Category-to-brand relationship
+    private val categoryBrands = mapOf(
+        "iPhone" to listOf("Apple"),
+        "Android" to listOf("Samsung", "Infinix", "Tecno", "vivo", "Honor", "realme", "POCO", "Redmi"),
+        "Flagship" to listOf("Apple", "Samsung", "vivo", "Honor", "realme", "POCO"),
+        "Mid-range" to listOf("Samsung", "Infinix", "Tecno", "vivo", "Honor", "realme", "POCO", "Redmi"),
+        "Budget" to listOf("Infinix", "Tecno", "Redmi"),
+        "Gaming" to listOf("POCO", "Infinix", "vivo")
+    )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAdminDashboardBinding.inflate(inflater, container, false)
@@ -49,35 +83,7 @@ class AdminDashboardFragment : Fragment() {
         }
 
         setupRevenueFilters()
-
-        lifecycleScope.launch {
-            phoneRepository.getPhones().collect { resource ->
-                if (_binding == null) return@collect
-                if (resource is Resource.Success) {
-                    val phones = resource.data ?: emptyList()
-                    binding.tvTotalPhones.text = phones.size.toString()
-
-                    // Total stock = sum of all phone quantities
-                    val totalStock = phones.sumOf { it.stock }
-                    binding.tvTotalStock.text = "📦 $totalStock total units"
-
-                    val inStock = phones.count { it.stock > 0 }
-                    binding.tvInStock.text = "✅ $inStock in stock"
-
-                    val outOfStock = phones.count { it.stock == 0 }
-                    val lowStock = phones.count { it.stock in 1..3 }
-                    if (outOfStock > 0 || lowStock > 0) {
-                        val parts = mutableListOf<String>()
-                        if (outOfStock > 0) parts.add("⚠️ $outOfStock out of stock")
-                        if (lowStock > 0) parts.add("⚠️ $lowStock low stock")
-                        binding.tvStockWarning.text = parts.joinToString(" · ")
-                        binding.tvStockWarning.visibility = View.VISIBLE
-                    } else {
-                        binding.tvStockWarning.visibility = View.GONE
-                    }
-                }
-            }
-        }
+        loadPhones()
 
         lifecycleScope.launch {
             orderRepository.getAllOrders().collect { resource ->
@@ -92,10 +98,41 @@ class AdminDashboardFragment : Fragment() {
         }
     }
 
+    private fun loadPhones() {
+        lifecycleScope.launch {
+            phoneRepository.getPhones().collect { resource ->
+                if (_binding == null) return@collect
+                if (resource is Resource.Success) {
+                    allPhones = resource.data ?: emptyList()
+
+                    binding.tvTotalPhones.text = allPhones.size.toString()
+                    val totalStock = allPhones.sumOf { it.stock }
+                    binding.tvTotalStock.text = "📦 $totalStock total units"
+                    val inStock = allPhones.count { it.stock > 0 }
+                    binding.tvInStock.text = "✅ $inStock in stock"
+
+                    val outOfStock = allPhones.count { it.stock == 0 }
+                    val lowStock = allPhones.count { it.stock in 1..3 }
+                    if (outOfStock > 0 || lowStock > 0) {
+                        val parts = mutableListOf<String>()
+                        if (outOfStock > 0) parts.add("⚠️ $outOfStock out of stock")
+                        if (lowStock > 0) parts.add("⚠️ $lowStock low stock")
+                        binding.tvStockWarning.text = parts.joinToString(" · ")
+                        binding.tvStockWarning.visibility = View.VISIBLE
+                    } else {
+                        binding.tvStockWarning.visibility = View.GONE
+                    }
+                }
+            }
+        }
+    }
+
     private fun setupRevenueFilters() {
+        // Time period filter
         val periods = listOf("Today", "This Week", "This Month", "This Year", "All Time")
-        val filterAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, periods)
-        binding.actvRevenueFilter.setAdapter(filterAdapter)
+        val periodAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, periods)
+        binding.actvRevenueFilter.setAdapter(periodAdapter)
+        binding.actvRevenueFilter.setText("Today", false)
 
         binding.actvRevenueFilter.setOnItemClickListener { _, _, position, _ ->
             currentPeriod = when (position) {
@@ -106,6 +143,68 @@ class AdminDashboardFragment : Fragment() {
                 else -> "all"
             }
             updateRevenue()
+        }
+
+        // Category filter (First)
+        val categoryAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)
+        binding.actvCategoryFilter.setAdapter(categoryAdapter)
+        binding.actvCategoryFilter.setText("All Categories", false)
+
+        binding.actvCategoryFilter.setOnItemClickListener { _, _, position, _ ->
+            currentCategory = if (position == 0) "" else categories[position]
+            // When category changes, filter the brand dropdown options
+            updateBrandDropdown()
+            updateRevenue()
+        }
+
+        // Brand filter (Second)
+        val brandAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, brands)
+        binding.actvBrandFilter.setAdapter(brandAdapter)
+        binding.actvBrandFilter.setText("All Brands", false)
+
+        binding.actvBrandFilter.setOnItemClickListener { _, _, position, _ ->
+            currentBrand = if (position == 0) "" else brands[position]
+            // When brand changes, filter the category dropdown options
+            updateCategoryDropdown()
+            updateRevenue()
+        }
+    }
+
+    private fun updateBrandDropdown() {
+        val filteredBrands = if (currentCategory.isNotEmpty()) {
+            // Get brands that match the selected category
+            categoryBrands[currentCategory] ?: listOf("All Brands")
+        } else {
+            brands
+        }
+
+        val displayBrands = listOf("All Brands") + filteredBrands.filter { it != "All Brands" }
+        val brandAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, displayBrands)
+        binding.actvBrandFilter.setAdapter(brandAdapter)
+
+        // Reset brand selection if current brand is not in filtered list
+        if (currentBrand.isNotEmpty() && !displayBrands.contains(currentBrand)) {
+            currentBrand = ""
+            binding.actvBrandFilter.setText("All Brands", false)
+        }
+    }
+
+    private fun updateCategoryDropdown() {
+        val filteredCategories = if (currentBrand.isNotEmpty()) {
+            // Get categories that match the selected brand
+            brandCategories[currentBrand] ?: listOf("All Categories")
+        } else {
+            categories
+        }
+
+        val displayCategories = listOf("All Categories") + filteredCategories.filter { it != "All Categories" }
+        val categoryAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, displayCategories)
+        binding.actvCategoryFilter.setAdapter(categoryAdapter)
+
+        // Reset category selection if current category is not in filtered list
+        if (currentCategory.isNotEmpty() && !displayCategories.contains(currentCategory)) {
+            currentCategory = ""
+            binding.actvCategoryFilter.setText("All Categories", false)
         }
     }
 
@@ -145,42 +244,81 @@ class AdminDashboardFragment : Fragment() {
     }
 
     private fun updateRevenue() {
-        val confirmedOrders = allOrders.filter {
+        // Get completed orders (confirmed or picked up)
+        var completedOrders = allOrders.filter {
             it.status == "confirmed" || it.status == "picked_up"
         }
 
+        // Apply brand and category filters
+        completedOrders = completedOrders.filter { order ->
+            var matches = true
+
+            // Get phones in this order
+            val orderPhones = order.phoneIds.mapNotNull { phoneId ->
+                allPhones.find { it.id == phoneId }
+            }
+
+            // Filter by brand
+            if (matches && currentBrand.isNotEmpty()) {
+                val hasBrand = orderPhones.any { it.brand == currentBrand }
+                if (!hasBrand) matches = false
+            }
+
+            // Filter by category
+            if (matches && currentCategory.isNotEmpty()) {
+                val hasCategory = orderPhones.any { it.category == currentCategory }
+                if (!hasCategory) matches = false
+            }
+
+            matches
+        }
+
+        // Apply time period filter
         val now = Calendar.getInstance()
         val filtered = when (currentPeriod) {
-            "today" -> confirmedOrders.filter { order ->
+            "today" -> completedOrders.filter { order ->
                 val ts = order.timestamp?.toDate() ?: return@filter false
                 isSameDay(ts, now)
             }
-            "week" -> confirmedOrders.filter { order ->
+            "week" -> completedOrders.filter { order ->
                 val ts = order.timestamp?.toDate() ?: return@filter false
                 isSameWeek(ts, now)
             }
-            "month" -> confirmedOrders.filter { order ->
+            "month" -> completedOrders.filter { order ->
                 val ts = order.timestamp?.toDate() ?: return@filter false
                 isSameMonth(ts, now)
             }
-            "year" -> confirmedOrders.filter { order ->
+            "year" -> completedOrders.filter { order ->
                 val ts = order.timestamp?.toDate() ?: return@filter false
                 isSameYear(ts, now)
             }
-            else -> confirmedOrders
+            else -> completedOrders
         }
 
         val revenue = filtered.sumOf { it.totalPrice }
         binding.tvTotalRevenue.text = revenue.toPeso()
-        
-        val label = when (currentPeriod) {
-            "today" -> "Today's sales · ${filtered.size} orders"
-            "week" -> "This week · ${filtered.size} orders"
-            "month" -> "This month · ${filtered.size} orders"
-            "year" -> "This year · ${filtered.size} orders"
-            else -> "All time · ${filtered.size} orders"
+
+        // Build subtitle with filter info
+        val filterParts = mutableListOf<String>()
+
+        val periodLabel = when (currentPeriod) {
+            "today" -> "Today"
+            "week" -> "This week"
+            "month" -> "This month"
+            "year" -> "This year"
+            else -> "All time"
         }
-        binding.tvRevenueSubtitle.text = label
+        filterParts.add(periodLabel)
+
+        if (currentCategory.isNotEmpty()) {
+            filterParts.add(currentCategory)
+        }
+        if (currentBrand.isNotEmpty()) {
+            filterParts.add(currentBrand)
+        }
+
+        val filterText = filterParts.joinToString(" · ")
+        binding.tvRevenueSubtitle.text = "$filterText · ${filtered.size} orders"
     }
 
     private fun isSameDay(date: Date, cal: Calendar): Boolean {

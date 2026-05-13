@@ -3585,7 +3585,9 @@ id activityLogsFragment
 id activity_chooser_view_content
 id actv_admin_category
 id actv_admin_columns
+id actv_brand_filter
 id actv_category
+id actv_category_filter
 id actv_columns
 id actv_date_filter
 id actv_revenue_filter

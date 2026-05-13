@@ -22,6 +22,12 @@ public final class FragmentAdminDashboardBinding implements ViewBinding {
   private final NestedScrollView rootView;
 
   @NonNull
+  public final AutoCompleteTextView actvBrandFilter;
+
+  @NonNull
+  public final AutoCompleteTextView actvCategoryFilter;
+
+  @NonNull
   public final AutoCompleteTextView actvRevenueFilter;
 
   @NonNull
@@ -70,6 +76,8 @@ public final class FragmentAdminDashboardBinding implements ViewBinding {
   public final TextView tvTotalStock;
 
   private FragmentAdminDashboardBinding(@NonNull NestedScrollView rootView,
+      @NonNull AutoCompleteTextView actvBrandFilter,
+      @NonNull AutoCompleteTextView actvCategoryFilter,
       @NonNull AutoCompleteTextView actvRevenueFilter, @NonNull MaterialCardView cardPendingAlert,
       @NonNull TextView tvCancellationRate, @NonNull TextView tvConfirmedOrders,
       @NonNull TextView tvDeliveredOrders, @NonNull TextView tvGreeting,
@@ -79,6 +87,8 @@ public final class FragmentAdminDashboardBinding implements ViewBinding {
       @NonNull TextView tvTotalOrders, @NonNull TextView tvTotalPhones,
       @NonNull TextView tvTotalRevenue, @NonNull TextView tvTotalStock) {
     this.rootView = rootView;
+    this.actvBrandFilter = actvBrandFilter;
+    this.actvCategoryFilter = actvCategoryFilter;
     this.actvRevenueFilter = actvRevenueFilter;
     this.cardPendingAlert = cardPendingAlert;
     this.tvCancellationRate = tvCancellationRate;
@@ -124,6 +134,18 @@ public final class FragmentAdminDashboardBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.actv_brand_filter;
+      AutoCompleteTextView actvBrandFilter = ViewBindings.findChildViewById(rootView, id);
+      if (actvBrandFilter == null) {
+        break missingId;
+      }
+
+      id = R.id.actv_category_filter;
+      AutoCompleteTextView actvCategoryFilter = ViewBindings.findChildViewById(rootView, id);
+      if (actvCategoryFilter == null) {
+        break missingId;
+      }
+
       id = R.id.actv_revenue_filter;
       AutoCompleteTextView actvRevenueFilter = ViewBindings.findChildViewById(rootView, id);
       if (actvRevenueFilter == null) {
@@ -220,10 +242,11 @@ public final class FragmentAdminDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentAdminDashboardBinding((NestedScrollView) rootView, actvRevenueFilter,
-          cardPendingAlert, tvCancellationRate, tvConfirmedOrders, tvDeliveredOrders, tvGreeting,
-          tvInStock, tvPendingAlertMsg, tvPendingCount, tvPendingOrders, tvRevenueSubtitle,
-          tvStockWarning, tvTotalOrders, tvTotalPhones, tvTotalRevenue, tvTotalStock);
+      return new FragmentAdminDashboardBinding((NestedScrollView) rootView, actvBrandFilter,
+          actvCategoryFilter, actvRevenueFilter, cardPendingAlert, tvCancellationRate,
+          tvConfirmedOrders, tvDeliveredOrders, tvGreeting, tvInStock, tvPendingAlertMsg,
+          tvPendingCount, tvPendingOrders, tvRevenueSubtitle, tvStockWarning, tvTotalOrders,
+          tvTotalPhones, tvTotalRevenue, tvTotalStock);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

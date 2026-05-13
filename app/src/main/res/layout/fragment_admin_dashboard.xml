@@ -105,7 +105,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ═══ REVENUE CARD WITH FILTER ═══ -->
+            <!-- ═══ REVENUE CARD WITH FILTERS ═══ -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -147,32 +147,93 @@
                         android:textColor="#A5B4FC"
                         android:layout_marginTop="4dp" />
 
-                    <!-- Dropdown Filter for Revenue -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="160dp"
+                    <!-- Filters Row: Time + Category + Brand -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        app:boxCornerRadiusBottomEnd="10dp"
-                        app:boxCornerRadiusBottomStart="10dp"
-                        app:boxCornerRadiusTopEnd="10dp"
-                        app:boxCornerRadiusTopStart="10dp"
-                        app:boxStrokeColor="#A5B4FC"
-                        app:boxBackgroundColor="#3730A3"
-                        app:hintEnabled="false"
-                        app:endIconTint="#C7D2FE">
+                        android:orientation="vertical"
+                        android:layout_marginTop="14dp">
 
-                        <AutoCompleteTextView
-                            android:id="@+id/actv_revenue_filter"
+                        <!-- Time Period Filter -->
+                        <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:text="Today"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_marginBottom="8dp"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            app:boxCornerRadiusBottomEnd="10dp"
+                            app:boxCornerRadiusBottomStart="10dp"
+                            app:boxCornerRadiusTopEnd="10dp"
+                            app:boxCornerRadiusTopStart="10dp"
+                            app:boxStrokeColor="#A5B4FC"
+                            app:boxBackgroundColor="#3730A3"
+                            app:hintEnabled="false"
+                            app:endIconTint="#C7D2FE">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/actv_revenue_filter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:text="Today"
+                                android:textColor="#FFFFFF"
+                                android:textSize="12sp"
+                                android:paddingTop="10dp"
+                                android:paddingBottom="10dp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Category Filter (First) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            app:boxCornerRadiusBottomEnd="10dp"
+                            app:boxCornerRadiusBottomStart="10dp"
+                            app:boxCornerRadiusTopEnd="10dp"
+                            app:boxCornerRadiusTopStart="10dp"
+                            app:boxStrokeColor="#A5B4FC"
+                            app:boxBackgroundColor="#3730A3"
+                            app:hintEnabled="false"
+                            app:endIconTint="#C7D2FE">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/actv_category_filter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:text="All Categories"
+                                android:textColor="#FFFFFF"
+                                android:textSize="12sp"
+                                android:paddingTop="10dp"
+                                android:paddingBottom="10dp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Brand Filter (Second) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            app:boxCornerRadiusBottomEnd="10dp"
+                            app:boxCornerRadiusBottomStart="10dp"
+                            app:boxCornerRadiusTopEnd="10dp"
+                            app:boxCornerRadiusTopStart="10dp"
+                            app:boxStrokeColor="#A5B4FC"
+                            app:boxBackgroundColor="#3730A3"
+                            app:hintEnabled="false"
+                            app:endIconTint="#C7D2FE">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/actv_brand_filter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:text="All Brands"
+                                android:textColor="#FFFFFF"
+                                android:textSize="12sp"
+                                android:paddingTop="10dp"
+                                android:paddingBottom="10dp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

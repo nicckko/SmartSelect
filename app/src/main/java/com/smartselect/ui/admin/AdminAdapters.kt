@@ -89,6 +89,9 @@ class AdminOrderAdapter(
     private val selectedIds: Set<String>? = null
 ) : ListAdapter<Order, AdminOrderAdapter.ViewHolder>(DiffCallback()) {
 
+    // Cache user profile pictures to avoid repeated Firestore calls
+    private val profileCache = mutableMapOf<String, String>()
+
     inner class ViewHolder(private val binding: ItemAdminOrderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -100,6 +103,9 @@ class AdminOrderAdapter(
             binding.tvCustomer.text = order.userName.ifEmpty { "Unknown" }
             binding.tvPhones.text = order.phoneNames.joinToString(" · ")
             binding.tvTotal.text = order.totalPrice.toPeso()
+
+            // Load customer profile picture
+            loadCustomerAvatar(order.userId, binding)
 
             // Selection styling
             val isSelected = selectedIds?.contains(order.orderId) == true
@@ -239,6 +245,56 @@ class AdminOrderAdapter(
         ItemAdminOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position))
+
+    /**
+     * Fetches and displays the customer's profile picture from Firestore.
+     * Results are cached to avoid repeated network calls.
+     */
+    private fun loadCustomerAvatar(userId: String, binding: ItemAdminOrderBinding) {
+        if (userId.isEmpty()) {
+            binding.ivCustomerAvatar.setImageResource(R.drawable.ic_person)
+            return
+        }
+
+        // Check cache first
+        val cachedUrl = profileCache[userId]
+        if (cachedUrl != null) {
+            if (cachedUrl.isNotEmpty()) {
+                Glide.with(binding.root.context)
+                    .load(cachedUrl)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_person)
+                    .error(R.drawable.ic_person)
+                    .into(binding.ivCustomerAvatar)
+            } else {
+                binding.ivCustomerAvatar.setImageResource(R.drawable.ic_person)
+            }
+            return
+        }
+
+        // Fetch from Firestore
+        binding.ivCustomerAvatar.setImageResource(R.drawable.ic_person) // placeholder while loading
+        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { doc ->
+                val profileUrl = doc.getString("profilePictureUrl") ?: ""
+                profileCache[userId] = profileUrl
+
+                if (profileUrl.isNotEmpty()) {
+                    Glide.with(binding.root.context)
+                        .load(profileUrl)
+                        .circleCrop()
+                        .placeholder(R.drawable.ic_person)
+                        .error(R.drawable.ic_person)
+                        .into(binding.ivCustomerAvatar)
+                }
+            }
+            .addOnFailureListener {
+                profileCache[userId] = ""
+            }
+    }
 
     class DiffCallback : DiffUtil.ItemCallback<Order>() {
         override fun areItemsTheSame(a: Order, b: Order) = a.orderId == b.orderId

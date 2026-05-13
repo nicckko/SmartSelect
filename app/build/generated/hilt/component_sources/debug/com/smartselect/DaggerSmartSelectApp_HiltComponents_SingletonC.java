@@ -752,7 +752,7 @@ public final class DaggerSmartSelectApp_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectSmartSelectApp(SmartSelectApp arg0) {
+    public void injectSmartSelectApp(SmartSelectApp smartSelectApp) {
     }
 
     @Override

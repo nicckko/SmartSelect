@@ -29,13 +29,32 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Row 1: Customer name + Total + Relative time -->
+            <!-- Row 1: Avatar + Customer name + Total + Relative time -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="4dp">
+
+                <!-- Customer profile picture -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/divider"
+                    app:cardBackgroundColor="@color/surface_variant">
+
+                    <ImageView
+                        android:id="@+id/iv_customer_avatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_person" />
+                </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
                     android:layout_width="0dp"

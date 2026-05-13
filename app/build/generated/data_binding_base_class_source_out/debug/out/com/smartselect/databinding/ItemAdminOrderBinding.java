@@ -4,6 +4,7 @@ package com.smartselect.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -29,6 +30,9 @@ public final class ItemAdminOrderBinding implements ViewBinding {
 
   @NonNull
   public final MaterialButton btnStatus;
+
+  @NonNull
+  public final ImageView ivCustomerAvatar;
 
   @NonNull
   public final LinearLayout layoutQuickActions;
@@ -65,15 +69,16 @@ public final class ItemAdminOrderBinding implements ViewBinding {
 
   private ItemAdminOrderBinding(@NonNull MaterialCardView rootView,
       @NonNull MaterialButton btnQuickCancel, @NonNull MaterialButton btnQuickConfirm,
-      @NonNull MaterialButton btnStatus, @NonNull LinearLayout layoutQuickActions,
-      @NonNull TextView tvContact, @NonNull TextView tvCustomer, @NonNull TextView tvDate,
-      @NonNull TextView tvOrderId, @NonNull TextView tvPhones, @NonNull TextView tvPickupCode,
-      @NonNull TextView tvPickupDate, @NonNull TextView tvRelativeTime, @NonNull TextView tvTotal,
-      @NonNull View viewStatusStrip) {
+      @NonNull MaterialButton btnStatus, @NonNull ImageView ivCustomerAvatar,
+      @NonNull LinearLayout layoutQuickActions, @NonNull TextView tvContact,
+      @NonNull TextView tvCustomer, @NonNull TextView tvDate, @NonNull TextView tvOrderId,
+      @NonNull TextView tvPhones, @NonNull TextView tvPickupCode, @NonNull TextView tvPickupDate,
+      @NonNull TextView tvRelativeTime, @NonNull TextView tvTotal, @NonNull View viewStatusStrip) {
     this.rootView = rootView;
     this.btnQuickCancel = btnQuickCancel;
     this.btnQuickConfirm = btnQuickConfirm;
     this.btnStatus = btnStatus;
+    this.ivCustomerAvatar = ivCustomerAvatar;
     this.layoutQuickActions = layoutQuickActions;
     this.tvContact = tvContact;
     this.tvCustomer = tvCustomer;
@@ -129,6 +134,12 @@ public final class ItemAdminOrderBinding implements ViewBinding {
       id = R.id.btn_status;
       MaterialButton btnStatus = ViewBindings.findChildViewById(rootView, id);
       if (btnStatus == null) {
+        break missingId;
+      }
+
+      id = R.id.iv_customer_avatar;
+      ImageView ivCustomerAvatar = ViewBindings.findChildViewById(rootView, id);
+      if (ivCustomerAvatar == null) {
         break missingId;
       }
 
@@ -199,8 +210,8 @@ public final class ItemAdminOrderBinding implements ViewBinding {
       }
 
       return new ItemAdminOrderBinding((MaterialCardView) rootView, btnQuickCancel, btnQuickConfirm,
-          btnStatus, layoutQuickActions, tvContact, tvCustomer, tvDate, tvOrderId, tvPhones,
-          tvPickupCode, tvPickupDate, tvRelativeTime, tvTotal, viewStatusStrip);
+          btnStatus, ivCustomerAvatar, layoutQuickActions, tvContact, tvCustomer, tvDate, tvOrderId,
+          tvPhones, tvPickupCode, tvPickupDate, tvRelativeTime, tvTotal, viewStatusStrip);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

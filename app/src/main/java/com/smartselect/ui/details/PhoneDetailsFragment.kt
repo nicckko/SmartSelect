@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -59,7 +60,7 @@ class PhoneDetailsFragment : Fragment() {
             tvStock.text = phone.stock.getStockLabel()
             tvStock.setTextColor(ContextCompat.getColor(requireContext(), phone.stock.getStockColor()))
 
-            // Spec rows bound directly to TextViews
+            // Core Specs
             tvChipset.text = phone.chipset
             tvRam.text = phone.ram
             tvStorage.text = phone.storage
@@ -67,11 +68,66 @@ class PhoneDetailsFragment : Fragment() {
             tvBattery.text = phone.battery
             tvDisplay.text = phone.display
 
+            // New GSMArena Specs with empty handling
+            setSpecValue(binding.layoutOsNetwork, tvOs, phone.os)
+            setSpecValue(binding.layoutWeightDimensions, tvWeight, phone.weight)
+            setSpecValue(binding.layoutWeightDimensions, tvDimensions, phone.dimensions)
+            setSpecValue(binding.layoutBuildProtection, tvBuild, phone.build)
+            setSpecValue(binding.layoutBuildProtection, tvProtection, phone.protection)
+            setSpecValue(binding.layoutGpuCharging, tvGpu, phone.gpu)
+            setSpecValue(binding.layoutGpuCharging, tvCharging, phone.charging)
+            setSpecValue(binding.layoutSensorsColors, tvSensors, phone.sensors)
+            setSpecValue(binding.layoutSensorsColors, tvColors, phone.colors)
+            setSpecValue(binding.layoutReleaseDate, tvReleaseDate, phone.releaseDate)
+
             tvBestValue.visibility = if (phone.isBestValue) View.VISIBLE else View.GONE
+
+            // Handle OS + Network row
+            showSpecRow(binding.layoutOsNetwork, tvOs, phone.os, tvNetwork, phone.network)
+
+            // Handle Weight + Dimensions row
+            showSpecRow(binding.layoutWeightDimensions, tvWeight, phone.weight, tvDimensions, phone.dimensions)
+
+            // Handle Build + Protection row
+            showSpecRow(binding.layoutBuildProtection, tvBuild, phone.build, tvProtection, phone.protection)
+
+            // Handle GPU + Charging row
+            showSpecRow(binding.layoutGpuCharging, tvGpu, phone.gpu, tvCharging, phone.charging)
+
+            // Handle Sensors + Colors row
+            showSpecRow(binding.layoutSensorsColors, tvSensors, phone.sensors, tvColors, phone.colors)
+
+            // Handle Release Date row (single value)
+            if (phone.releaseDate.isNotEmpty()) {
+                tvReleaseDate.text = phone.releaseDate
+                binding.layoutReleaseDate.visibility = View.VISIBLE
+            } else {
+                binding.layoutReleaseDate.visibility = View.GONE
+            }
 
             updateFavoriteBtn(phone.id)
 
             GlideImageLoader.loadImage(requireContext(), phone.imageUrl, binding.ivPhone)
+        }
+    }
+
+    private fun setSpecValue(layout: View, textView: TextView, value: String) {
+        if (value.isNotEmpty()) {
+            textView.text = value
+            layout.visibility = View.VISIBLE
+        } else {
+            layout.visibility = View.GONE
+        }
+    }
+
+    private fun setSpecValue(textView: TextView, value: String) {
+        if (value.isNotEmpty()) {
+            textView.text = value
+            // Make parent layout visible if it was hidden
+            (textView.parent as? View)?.visibility = View.VISIBLE
+        } else {
+            // Hide the entire spec row if value is empty
+            (textView.parent as? View)?.visibility = View.GONE
         }
     }
 
@@ -174,6 +230,16 @@ class PhoneDetailsFragment : Fragment() {
         Snackbar.make(binding.root, msg, Snackbar.LENGTH_SHORT)
             .apply { if (action != null && onClick != null) setAction(action) { onClick() } }
             .show()
+    }
+
+    private fun showSpecRow(layout: View, textView1: TextView, value1: String, textView2: TextView, value2: String) {
+        val hasValue1 = value1.isNotEmpty()
+        val hasValue2 = value2.isNotEmpty()
+
+        if (hasValue1) textView1.text = value1
+        if (hasValue2) textView2.text = value2
+
+        layout.visibility = if (hasValue1 || hasValue2) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {

@@ -224,8 +224,9 @@
                         android:textColor="@color/text_primary"
                         android:layout_marginBottom="16dp" />
 
-                    <!-- Spec Grid: 2 columns -->
+                    <!-- Row 1: Chipset + RAM -->
                     <LinearLayout
+                        android:id="@+id/layout_chipset_ram"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -260,7 +261,9 @@
                         </LinearLayout>
                     </LinearLayout>
 
+                    <!-- Row 2: Storage + Battery -->
                     <LinearLayout
+                        android:id="@+id/layout_storage_battery"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -295,10 +298,13 @@
                         </LinearLayout>
                     </LinearLayout>
 
+                    <!-- Row 3: Camera + Display -->
                     <LinearLayout
+                        android:id="@+id/layout_camera_display"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="10dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -328,6 +334,222 @@
                                 android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" android:maxLines="2" android:ellipsize="end" />
                         </LinearLayout>
                     </LinearLayout>
+
+                    <!-- Row 4: OS + Network -->
+                    <LinearLayout
+                        android:id="@+id/layout_os_network"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginEnd="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="📱 OS" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_os" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginStart="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="📡 Network" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_network" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Row 5: Weight + Dimensions -->
+                    <LinearLayout
+                        android:id="@+id/layout_weight_dimensions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginEnd="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="⚖️ Weight" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_weight" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginStart="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="📏 Dimensions" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_dimensions" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Row 6: Build + Protection -->
+                    <LinearLayout
+                        android:id="@+id/layout_build_protection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginEnd="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="🏗️ Build" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_build" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginStart="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="🛡️ Protection" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_protection" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Row 7: GPU + Charging -->
+                    <LinearLayout
+                        android:id="@+id/layout_gpu_charging"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginEnd="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="🎮 GPU" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_gpu" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginStart="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="⚡ Charging" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_charging" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Row 8: Sensors + Colors -->
+                    <LinearLayout
+                        android:id="@+id/layout_sensors_colors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginEnd="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="📡 Sensors" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_sensors" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginStart="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="🎨 Colors" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_colors" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Row 9: Release Date (only one column) -->
+                    <LinearLayout
+                        android:id="@+id/layout_release_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@color/surface_variant"
+                            android:padding="14dp"
+                            android:layout_marginEnd="5dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="📅 Release Date" android:textSize="9sp" android:textColor="@color/text_tertiary" />
+                            <TextView android:id="@+id/tv_release_date" android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:textSize="12sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+                        </LinearLayout>
+
+                        <!-- Empty spacer for balance -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="5dp" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

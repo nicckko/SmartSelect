@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +46,33 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
   public final ImageView ivPhone;
 
   @NonNull
+  public final LinearLayout layoutBuildProtection;
+
+  @NonNull
+  public final LinearLayout layoutCameraDisplay;
+
+  @NonNull
+  public final LinearLayout layoutChipsetRam;
+
+  @NonNull
+  public final LinearLayout layoutGpuCharging;
+
+  @NonNull
+  public final LinearLayout layoutOsNetwork;
+
+  @NonNull
+  public final LinearLayout layoutReleaseDate;
+
+  @NonNull
+  public final LinearLayout layoutSensorsColors;
+
+  @NonNull
+  public final LinearLayout layoutStorageBattery;
+
+  @NonNull
+  public final LinearLayout layoutWeightDimensions;
+
+  @NonNull
   public final MaterialToolbar toolbar;
 
   @NonNull
@@ -57,28 +85,58 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
   public final TextView tvBrand;
 
   @NonNull
+  public final TextView tvBuild;
+
+  @NonNull
   public final TextView tvCamera;
 
   @NonNull
   public final TextView tvCategory;
 
   @NonNull
+  public final TextView tvCharging;
+
+  @NonNull
   public final TextView tvChipset;
+
+  @NonNull
+  public final TextView tvColors;
+
+  @NonNull
+  public final TextView tvDimensions;
 
   @NonNull
   public final TextView tvDisplay;
 
   @NonNull
+  public final TextView tvGpu;
+
+  @NonNull
   public final TextView tvModel;
 
   @NonNull
+  public final TextView tvNetwork;
+
+  @NonNull
+  public final TextView tvOs;
+
+  @NonNull
   public final TextView tvPrice;
+
+  @NonNull
+  public final TextView tvProtection;
 
   @NonNull
   public final TextView tvQuantity;
 
   @NonNull
   public final TextView tvRam;
+
+  @NonNull
+  public final TextView tvReleaseDate;
+
+  @NonNull
+  public final TextView tvSensors;
 
   @NonNull
   public final TextView tvStock;
@@ -89,16 +147,27 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
   @NonNull
   public final TextView tvStorage;
 
+  @NonNull
+  public final TextView tvWeight;
+
   private FragmentPhoneDetailsBinding(@NonNull CoordinatorLayout rootView,
       @NonNull AppBarLayout appBar, @NonNull MaterialButton btnCompare,
       @NonNull MaterialButton btnDecrease, @NonNull MaterialButton btnFavorite,
       @NonNull MaterialButton btnIncrease, @NonNull MaterialButton btnOrder,
-      @NonNull ImageView ivPhone, @NonNull MaterialToolbar toolbar, @NonNull TextView tvBattery,
-      @NonNull TextView tvBestValue, @NonNull TextView tvBrand, @NonNull TextView tvCamera,
-      @NonNull TextView tvCategory, @NonNull TextView tvChipset, @NonNull TextView tvDisplay,
-      @NonNull TextView tvModel, @NonNull TextView tvPrice, @NonNull TextView tvQuantity,
-      @NonNull TextView tvRam, @NonNull TextView tvStock, @NonNull TextView tvStockInfo,
-      @NonNull TextView tvStorage) {
+      @NonNull ImageView ivPhone, @NonNull LinearLayout layoutBuildProtection,
+      @NonNull LinearLayout layoutCameraDisplay, @NonNull LinearLayout layoutChipsetRam,
+      @NonNull LinearLayout layoutGpuCharging, @NonNull LinearLayout layoutOsNetwork,
+      @NonNull LinearLayout layoutReleaseDate, @NonNull LinearLayout layoutSensorsColors,
+      @NonNull LinearLayout layoutStorageBattery, @NonNull LinearLayout layoutWeightDimensions,
+      @NonNull MaterialToolbar toolbar, @NonNull TextView tvBattery, @NonNull TextView tvBestValue,
+      @NonNull TextView tvBrand, @NonNull TextView tvBuild, @NonNull TextView tvCamera,
+      @NonNull TextView tvCategory, @NonNull TextView tvCharging, @NonNull TextView tvChipset,
+      @NonNull TextView tvColors, @NonNull TextView tvDimensions, @NonNull TextView tvDisplay,
+      @NonNull TextView tvGpu, @NonNull TextView tvModel, @NonNull TextView tvNetwork,
+      @NonNull TextView tvOs, @NonNull TextView tvPrice, @NonNull TextView tvProtection,
+      @NonNull TextView tvQuantity, @NonNull TextView tvRam, @NonNull TextView tvReleaseDate,
+      @NonNull TextView tvSensors, @NonNull TextView tvStock, @NonNull TextView tvStockInfo,
+      @NonNull TextView tvStorage, @NonNull TextView tvWeight) {
     this.rootView = rootView;
     this.appBar = appBar;
     this.btnCompare = btnCompare;
@@ -107,21 +176,41 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
     this.btnIncrease = btnIncrease;
     this.btnOrder = btnOrder;
     this.ivPhone = ivPhone;
+    this.layoutBuildProtection = layoutBuildProtection;
+    this.layoutCameraDisplay = layoutCameraDisplay;
+    this.layoutChipsetRam = layoutChipsetRam;
+    this.layoutGpuCharging = layoutGpuCharging;
+    this.layoutOsNetwork = layoutOsNetwork;
+    this.layoutReleaseDate = layoutReleaseDate;
+    this.layoutSensorsColors = layoutSensorsColors;
+    this.layoutStorageBattery = layoutStorageBattery;
+    this.layoutWeightDimensions = layoutWeightDimensions;
     this.toolbar = toolbar;
     this.tvBattery = tvBattery;
     this.tvBestValue = tvBestValue;
     this.tvBrand = tvBrand;
+    this.tvBuild = tvBuild;
     this.tvCamera = tvCamera;
     this.tvCategory = tvCategory;
+    this.tvCharging = tvCharging;
     this.tvChipset = tvChipset;
+    this.tvColors = tvColors;
+    this.tvDimensions = tvDimensions;
     this.tvDisplay = tvDisplay;
+    this.tvGpu = tvGpu;
     this.tvModel = tvModel;
+    this.tvNetwork = tvNetwork;
+    this.tvOs = tvOs;
     this.tvPrice = tvPrice;
+    this.tvProtection = tvProtection;
     this.tvQuantity = tvQuantity;
     this.tvRam = tvRam;
+    this.tvReleaseDate = tvReleaseDate;
+    this.tvSensors = tvSensors;
     this.tvStock = tvStock;
     this.tvStockInfo = tvStockInfo;
     this.tvStorage = tvStorage;
+    this.tvWeight = tvWeight;
   }
 
   @Override
@@ -193,6 +282,60 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.layout_build_protection;
+      LinearLayout layoutBuildProtection = ViewBindings.findChildViewById(rootView, id);
+      if (layoutBuildProtection == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_camera_display;
+      LinearLayout layoutCameraDisplay = ViewBindings.findChildViewById(rootView, id);
+      if (layoutCameraDisplay == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_chipset_ram;
+      LinearLayout layoutChipsetRam = ViewBindings.findChildViewById(rootView, id);
+      if (layoutChipsetRam == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_gpu_charging;
+      LinearLayout layoutGpuCharging = ViewBindings.findChildViewById(rootView, id);
+      if (layoutGpuCharging == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_os_network;
+      LinearLayout layoutOsNetwork = ViewBindings.findChildViewById(rootView, id);
+      if (layoutOsNetwork == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_release_date;
+      LinearLayout layoutReleaseDate = ViewBindings.findChildViewById(rootView, id);
+      if (layoutReleaseDate == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_sensors_colors;
+      LinearLayout layoutSensorsColors = ViewBindings.findChildViewById(rootView, id);
+      if (layoutSensorsColors == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_storage_battery;
+      LinearLayout layoutStorageBattery = ViewBindings.findChildViewById(rootView, id);
+      if (layoutStorageBattery == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_weight_dimensions;
+      LinearLayout layoutWeightDimensions = ViewBindings.findChildViewById(rootView, id);
+      if (layoutWeightDimensions == null) {
+        break missingId;
+      }
+
       id = R.id.toolbar;
       MaterialToolbar toolbar = ViewBindings.findChildViewById(rootView, id);
       if (toolbar == null) {
@@ -217,6 +360,12 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_build;
+      TextView tvBuild = ViewBindings.findChildViewById(rootView, id);
+      if (tvBuild == null) {
+        break missingId;
+      }
+
       id = R.id.tv_camera;
       TextView tvCamera = ViewBindings.findChildViewById(rootView, id);
       if (tvCamera == null) {
@@ -229,9 +378,27 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_charging;
+      TextView tvCharging = ViewBindings.findChildViewById(rootView, id);
+      if (tvCharging == null) {
+        break missingId;
+      }
+
       id = R.id.tv_chipset;
       TextView tvChipset = ViewBindings.findChildViewById(rootView, id);
       if (tvChipset == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_colors;
+      TextView tvColors = ViewBindings.findChildViewById(rootView, id);
+      if (tvColors == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_dimensions;
+      TextView tvDimensions = ViewBindings.findChildViewById(rootView, id);
+      if (tvDimensions == null) {
         break missingId;
       }
 
@@ -241,15 +408,39 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_gpu;
+      TextView tvGpu = ViewBindings.findChildViewById(rootView, id);
+      if (tvGpu == null) {
+        break missingId;
+      }
+
       id = R.id.tv_model;
       TextView tvModel = ViewBindings.findChildViewById(rootView, id);
       if (tvModel == null) {
         break missingId;
       }
 
+      id = R.id.tv_network;
+      TextView tvNetwork = ViewBindings.findChildViewById(rootView, id);
+      if (tvNetwork == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_os;
+      TextView tvOs = ViewBindings.findChildViewById(rootView, id);
+      if (tvOs == null) {
+        break missingId;
+      }
+
       id = R.id.tv_price;
       TextView tvPrice = ViewBindings.findChildViewById(rootView, id);
       if (tvPrice == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_protection;
+      TextView tvProtection = ViewBindings.findChildViewById(rootView, id);
+      if (tvProtection == null) {
         break missingId;
       }
 
@@ -262,6 +453,18 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
       id = R.id.tv_ram;
       TextView tvRam = ViewBindings.findChildViewById(rootView, id);
       if (tvRam == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_release_date;
+      TextView tvReleaseDate = ViewBindings.findChildViewById(rootView, id);
+      if (tvReleaseDate == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_sensors;
+      TextView tvSensors = ViewBindings.findChildViewById(rootView, id);
+      if (tvSensors == null) {
         break missingId;
       }
 
@@ -283,10 +486,20 @@ public final class FragmentPhoneDetailsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_weight;
+      TextView tvWeight = ViewBindings.findChildViewById(rootView, id);
+      if (tvWeight == null) {
+        break missingId;
+      }
+
       return new FragmentPhoneDetailsBinding((CoordinatorLayout) rootView, appBar, btnCompare,
-          btnDecrease, btnFavorite, btnIncrease, btnOrder, ivPhone, toolbar, tvBattery, tvBestValue,
-          tvBrand, tvCamera, tvCategory, tvChipset, tvDisplay, tvModel, tvPrice, tvQuantity, tvRam,
-          tvStock, tvStockInfo, tvStorage);
+          btnDecrease, btnFavorite, btnIncrease, btnOrder, ivPhone, layoutBuildProtection,
+          layoutCameraDisplay, layoutChipsetRam, layoutGpuCharging, layoutOsNetwork,
+          layoutReleaseDate, layoutSensorsColors, layoutStorageBattery, layoutWeightDimensions,
+          toolbar, tvBattery, tvBestValue, tvBrand, tvBuild, tvCamera, tvCategory, tvCharging,
+          tvChipset, tvColors, tvDimensions, tvDisplay, tvGpu, tvModel, tvNetwork, tvOs, tvPrice,
+          tvProtection, tvQuantity, tvRam, tvReleaseDate, tvSensors, tvStock, tvStockInfo,
+          tvStorage, tvWeight);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

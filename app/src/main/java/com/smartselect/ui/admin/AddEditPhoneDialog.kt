@@ -146,6 +146,18 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         setupSubstringDropdown(binding.etChipset, PhoneSpecsData.chipsets)
         setupSubstringDropdown(binding.etCamera, PhoneSpecsData.camera)
         setupSubstringDropdown(binding.etDisplay, PhoneSpecsData.display)
+
+        // New GSMArena specs
+        setupSubstringDropdown(binding.etOs, PhoneSpecsData.osOptions)
+        setupSubstringDropdown(binding.etNetwork, PhoneSpecsData.networkOptions)
+        setupSubstringDropdown(binding.etWeight, PhoneSpecsData.weightOptions)
+        setupSubstringDropdown(binding.etDimensions, PhoneSpecsData.dimensionsOptions)
+        setupSubstringDropdown(binding.etBuild, PhoneSpecsData.buildOptions)
+        setupSubstringDropdown(binding.etProtection, PhoneSpecsData.protectionOptions)
+        setupSubstringDropdown(binding.etGpu, PhoneSpecsData.gpuOptions)
+        setupSubstringDropdown(binding.etCharging, PhoneSpecsData.chargingOptions)
+        setupSubstringDropdown(binding.etSensors, PhoneSpecsData.sensorsOptions)
+        setupSubstringDropdown(binding.etColors, PhoneSpecsData.colorsOptions)
     }
 
     private fun setupImagePicker() {
@@ -157,21 +169,35 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         binding.tvDialogTitle.text = "Edit Phone"
         binding.tvDialogSubtitle.text = "Update the phone specifications"
 
-        binding.etBrand.setText(phone.brand, false)
+        binding.etBrand.setText(phone.brand)
         // Load brand-specific models
         val models = PhoneSpecsData.modelsByBrand[phone.brand] ?: PhoneSpecsData.modelsByBrand.values.flatten()
         setupSubstringDropdown(binding.etModel, models)
-        binding.etModel.setText(phone.model, false)
+        binding.etModel.setText(phone.model)
 
         binding.etPrice.setText(phone.price.toLong().toString())
         binding.etStock.setText(phone.stock.toString())
-        binding.actvCategory.setText(phone.category, false)
-        binding.etRam.setText(phone.ram, false)
-        binding.etStorage.setText(phone.storage, false)
-        binding.etCamera.setText(phone.camera, false)
-        binding.etBattery.setText(phone.battery, false)
-        binding.etChipset.setText(phone.chipset, false)
-        binding.etDisplay.setText(phone.display, false)
+        binding.actvCategory.setText(phone.category)
+        binding.etRam.setText(phone.ram)
+        binding.etStorage.setText(phone.storage)
+        binding.etCamera.setText(phone.camera)
+        binding.etBattery.setText(phone.battery)
+        binding.etChipset.setText(phone.chipset)
+        binding.etDisplay.setText(phone.display)
+
+        // New specs - remove the false parameter
+        binding.etOs.setText(phone.os)
+        binding.etNetwork.setText(phone.network)
+        binding.etWeight.setText(phone.weight)
+        binding.etDimensions.setText(phone.dimensions)
+        binding.etBuild.setText(phone.build)
+        binding.etProtection.setText(phone.protection)
+        binding.etGpu.setText(phone.gpu)
+        binding.etCharging.setText(phone.charging)
+        binding.etSensors.setText(phone.sensors)
+        binding.etColors.setText(phone.colors)
+        binding.etReleaseDate.setText(phone.releaseDate)
+
         binding.switchBestValue.isChecked = phone.isBestValue
 
         existingImageUrl = phone.imageUrl
@@ -442,6 +468,19 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         val chipset = binding.etChipset.text.toString().trim()
         val display = binding.etDisplay.text.toString().trim()
 
+        // New specs
+        val os = binding.etOs.text.toString().trim()
+        val network = binding.etNetwork.text.toString().trim()
+        val weight = binding.etWeight.text.toString().trim()
+        val dimensions = binding.etDimensions.text.toString().trim()
+        val build = binding.etBuild.text.toString().trim()
+        val protection = binding.etProtection.text.toString().trim()
+        val gpu = binding.etGpu.text.toString().trim()
+        val charging = binding.etCharging.text.toString().trim()
+        val sensors = binding.etSensors.text.toString().trim()
+        val colors = binding.etColors.text.toString().trim()
+        val releaseDate = binding.etReleaseDate.text.toString().trim()
+
         // Stock validation
         if (stockStr.isEmpty()) {
             (binding.etStock.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Stock is required"
@@ -487,7 +526,8 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         }
 
         return Phone(
-            brand = brand, model = model,
+            brand = brand,
+            model = model,
             price = price,
             stock = stock,
             category = category,
@@ -498,7 +538,18 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
             chipset = chipset,
             display = display,
             imageUrl = existingImageUrl,
-            isBestValue = binding.switchBestValue.isChecked
+            isBestValue = binding.switchBestValue.isChecked,
+            os = os,
+            network = network,
+            weight = weight,
+            dimensions = dimensions,
+            build = build,
+            protection = protection,
+            gpu = gpu,
+            charging = charging,
+            sensors = sensors,
+            colors = colors,
+            releaseDate = releaseDate
         )
     }
 

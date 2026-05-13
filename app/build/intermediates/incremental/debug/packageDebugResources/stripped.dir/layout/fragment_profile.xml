@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@color/primary"
+            android:background="?attr/colorSurface"
             android:paddingTop="36dp"
             android:paddingBottom="24dp"
             android:paddingHorizontal="24dp">
@@ -48,7 +48,7 @@
                     android:gravity="center"
                     android:textSize="34sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_on_primary" />
+                    android:textColor="?attr/colorOnSurface" />
             </FrameLayout>
 
             <TextView
@@ -57,14 +57,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF" />
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:id="@+id/tv_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
-                android:textColor="#94A3B8"
+                android:textColor="@color/text_secondary"
                 android:layout_marginTop="3dp" />
 
             <!-- Role pill -->
@@ -75,7 +75,7 @@
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:textColor="@color/teal"
-                android:background="@color/primary_light"
+                android:background="@color/teal_light"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:paddingTop="5dp"

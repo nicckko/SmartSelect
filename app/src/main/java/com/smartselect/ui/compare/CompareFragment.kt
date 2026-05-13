@@ -42,14 +42,42 @@ class CompareFragment : Fragment() {
     )
 
     private val specs = listOf(
-        SpecDef("💰", "Price",     { it.price.toPeso() },  { it.price * -1 }),  // lower = better
+        // Basic specs
+        SpecDef("💰", "Price",     { it.price.toPeso() },  { it.price * -1 }),
+        SpecDef("📱", "Category",  { it.category },         null),
+
+        // Hardware
         SpecDef("⚡", "Chipset",   { it.chipset },          null),
+        SpecDef("🎮", "GPU",       { it.gpu },              null),
         SpecDef("🧠", "RAM",       { it.ram },              { parseGb(it.ram) }),
         SpecDef("💾", "Storage",   { it.storage },          { parseGb(it.storage) }),
+
+        // Display
+        SpecDef("🖥️", "Display",  { it.display },          { parseInch(it.display) }),
+
+        // Camera & Battery
         SpecDef("📷", "Camera",    { it.camera },           { parseMp(it.camera) }),
         SpecDef("🔋", "Battery",   { it.battery },          { parseMah(it.battery) }),
-        SpecDef("🖥️", "Display",  { it.display },          { parseInch(it.display) }),
-        SpecDef("📱", "Category",  { it.category },         null),
+        SpecDef("⚡", "Charging",  { it.charging },         null),
+
+        // Physical
+        SpecDef("⚖️", "Weight",    { it.weight },           { parseWeight(it.weight) }),
+        SpecDef("📏", "Dimensions",{ it.dimensions },       null),
+
+        // Build & Protection
+        SpecDef("🏗️", "Build",     { it.build },            null),
+        SpecDef("🛡️", "Protection",{ it.protection },       null),
+
+        // Software & Network
+        SpecDef("📱", "OS",        { it.os },               null),
+        SpecDef("📡", "Network",   { it.network },          null),
+
+        // Sensors & Colors
+        SpecDef("📡", "Sensors",   { it.sensors },          null),
+        SpecDef("🎨", "Colors",    { it.colors },           null),
+
+        // Release
+        SpecDef("📅", "Release",   { it.releaseDate },      null)
     )
 
     // ─── Lifecycle ───────────────────────────────────────────────────────────
@@ -219,6 +247,10 @@ class CompareFragment : Fragment() {
                 phones.indices.maxByOrNull { spec.parse.invoke(phones[it]) }
             } else null
 
+            // Skip showing if all values are empty (for optional specs)
+            val allEmpty = values.all { it.isEmpty() }
+            if (allEmpty) return@forEach
+
             // Outer spec card
             val specCard = MaterialCardView(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(
@@ -265,7 +297,7 @@ class CompareFragment : Fragment() {
             labelRow.addView(tvLabel)
 
             // "Different" badge when values differ
-            if (!allSame) {
+            if (!allSame && values.size > 1) {
                 val badge = TextView(requireContext()).apply {
                     text     = "DIFFERENT"
                     textSize = 8f
@@ -309,7 +341,7 @@ class CompareFragment : Fragment() {
                         if (idx > 0) it.marginStart = dp(8)
                     }
 
-                    // Winner gets a tinted background, loser gets nothing
+                    // Winner gets a tinted background
                     if (isWinner) {
                         setBackgroundColor(ContextCompat.getColor(context, R.color.success_light))
                         setPadding(dp(8), dp(10), dp(8), dp(10))
@@ -334,10 +366,11 @@ class CompareFragment : Fragment() {
                 }
                 colOuter.addView(tvPhoneName)
 
-                // The value itself
+                // The value itself (show "—" if empty)
+                val displayValue = if (value.isEmpty()) "—" else value
                 val tvValue = TextView(requireContext()).apply {
-                    text      = value
-                    textSize  = 13f
+                    text      = displayValue
+                    textSize  = 12f
                     gravity   = Gravity.CENTER
                     maxLines  = 3
                     layoutParams = LinearLayout.LayoutParams(
@@ -402,9 +435,13 @@ class CompareFragment : Fragment() {
             ?.groupValues?.get(1)?.toDoubleOrNull() ?: 0.0
 
     private fun parseInch(s: String): Double {
-        // Extract last number from display string (e.g. "6.7 inch", "6.7"")
         return Regex("[0-9]+(?:\\.[0-9]+)?").findAll(s)
             .lastOrNull()?.value?.toDoubleOrNull() ?: 0.0
+    }
+
+    private fun parseWeight(s: String): Double {
+        return Regex("""(\d+)\s*(?:g|gram)""", RegexOption.IGNORE_CASE).find(s)
+            ?.groupValues?.get(1)?.toDoubleOrNull() ?: 0.0
     }
 
     private fun dp(value: Int): Int =

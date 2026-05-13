@@ -117,4 +117,75 @@ object PhoneSpecsData {
 
     // UPDATED: Added "Gaming" to categories
     val categories = listOf("iPhone","Android","Flagship","Mid-range","Budget","Gaming")
+
+    // Add these new lists to PhoneSpecsData object
+
+    val osOptions = listOf(
+        "Android 14", "Android 13", "Android 12", "Android 11",
+        "iOS 18", "iOS 17", "iOS 16",
+        "HarmonyOS 4", "HarmonyOS 3"
+    )
+
+    val networkOptions = listOf(
+        "5G", "5G Ready", "4G LTE", "4G", "3G"
+    )
+
+    val weightOptions = listOf(
+        "150g", "160g", "170g", "180g", "187g", "190g", "200g", "210g", "220g", "240g"
+    )
+
+    val dimensionsOptions = listOf(
+        "140.0 x 70.0 x 8.0 mm",
+        "150.0 x 75.0 x 8.5 mm",
+        "160.0 x 75.0 x 8.0 mm",
+        "160.9 x 75.9 x 8.2 mm",
+        "163.0 x 78.0 x 9.0 mm"
+    )
+
+    val buildOptions = listOf(
+        "Glass front, glass back, aluminum frame",
+        "Glass front, plastic back, plastic frame",
+        "Glass front, glass back, stainless steel frame",
+        "Plastic front, plastic back, plastic frame",
+        "Glass front, silicone polymer back, aluminum frame"
+    )
+
+    val protectionOptions = listOf(
+        "Corning Gorilla Glass Victus 2",
+        "Corning Gorilla Glass Victus",
+        "Corning Gorilla Glass 5",
+        "Corning Gorilla Glass 3",
+        "IP68 dust/water resistant",
+        "IP67 dust/water resistant",
+        "Shatterproof glass",
+        "None"
+    )
+
+    val gpuOptions = listOf(
+        "Adreno 750", "Adreno 740", "Adreno 730", "Adreno 660", "Adreno 650",
+        "Apple GPU (5-core)", "Apple GPU (4-core)",
+        "Mali-G710", "Mali-G78", "Mali-G77",
+        "Immortalis-G715"
+    )
+
+    val chargingOptions = listOf(
+        "15W wired", "25W wired", "33W wired", "45W wired", "65W wired", "100W wired",
+        "15W wireless", "30W wireless",
+        "Reverse wireless charging",
+        "No fast charging"
+    )
+
+    val sensorsOptions = listOf(
+        "Fingerprint (under display), accelerometer, gyro, proximity, compass, barometer",
+        "Fingerprint (side-mounted), accelerometer, gyro, proximity, compass",
+        "Fingerprint (rear-mounted), accelerometer, proximity",
+        "Face ID, accelerometer, gyro, proximity, compass",
+        "Accelerometer, gyro, proximity, compass"
+    )
+
+    val colorsOptions = listOf(
+        "Black", "White", "Blue", "Green", "Red", "Purple", "Gold",
+        "Titanium Black", "Titanium White", "Titanium Blue",
+        "Midnight", "Starlight", "Product Red"
+    )
 }

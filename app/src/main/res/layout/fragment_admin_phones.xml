@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
+        style="@style/SmartSelect.AppBarLayout"
         app:elevation="0dp">
 
         <LinearLayout
@@ -36,116 +36,120 @@
                     android:text="Manage Phones"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:textColor="#94A3B8" />
+                    android:textColor="@color/text_tertiary" />
             </LinearLayout>
 
-            <!-- Search bar only -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Search..."
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxStrokeColor="#334155"
-                app:boxBackgroundColor="#1E293B"
-                app:hintTextColor="#64748B"
-                app:startIconDrawable="@drawable/ic_search"
-                app:startIconTint="#64748B">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_search"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#64748B"
-                    android:textSize="13sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Category and Columns row (below search) -->
+            <!-- Search row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Filter:"
-                    android:textSize="11sp"
-                    android:textColor="#94A3B8"
-                    android:layout_marginEnd="8dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="38dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="#334155"
-                    app:boxBackgroundColor="#1E293B"
-                    app:hintEnabled="false">
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/divider"
+                    app:strokeWidth="1dp"
+                    app:cardBackgroundColor="@color/surface_variant">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/actv_admin_category"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:text="All Categories"
-                        android:textColor="#FFFFFF"
-                        android:textSize="12sp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp">
 
-                <TextView
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_search"
+                            android:layout_marginEnd="8dp"
+                            app:tint="@color/text_tertiary" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_search"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="Search..."
+                            android:textColorHint="@color/text_tertiary"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="13sp"
+                            android:imeOptions="actionSearch"
+                            android:inputType="text"
+                            android:background="@null"
+                            android:singleLine="true" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Columns selector -->
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="View:"
-                    android:textSize="11sp"
-                    android:textColor="#94A3B8"
-                    android:layout_marginEnd="8dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="#334155"
-                    app:boxBackgroundColor="#1E293B"
+                    app:boxCornerRadiusBottomEnd="10dp"
+                    app:boxCornerRadiusBottomStart="10dp"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:boxStrokeColor="@color/divider"
+                    app:boxBackgroundColor="@color/surface"
                     app:hintEnabled="false">
 
                     <AutoCompleteTextView
                         android:id="@+id/actv_admin_columns"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minWidth="80dp"
                         android:inputType="none"
-                        android:text="3 Columns"
-                        android:textColor="#FFFFFF"
+                        android:text="3 Cols"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="11sp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp" />
+                        android:singleLine="true"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
+            <!-- Category Filter -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/divider"
+                app:boxBackgroundColor="@color/surface"
+                app:hintEnabled="false">
+
+                <AutoCompleteTextView
+                    android:id="@+id/actv_admin_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:text="All Categories"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

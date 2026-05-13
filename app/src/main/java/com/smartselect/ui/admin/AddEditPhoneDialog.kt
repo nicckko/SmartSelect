@@ -132,6 +132,9 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
             val models = PhoneSpecsData.modelsByBrand[brand] ?: emptyList()
             binding.etModel.setText("")
             setupSubstringDropdown(binding.etModel, models)
+
+            // Update specs based on selected brand
+            updateSpecsBasedOnBrand(brand)
         }
         // Default model list (all models combined)
         setupSubstringDropdown(binding.etModel, PhoneSpecsData.modelsByBrand.values.flatten())
@@ -139,25 +142,43 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         // Category
         setupSubstringDropdown(binding.actvCategory, PhoneSpecsData.categories)
 
-        // Specs
+        // Specs (these will be updated dynamically when brand changes)
         setupSubstringDropdown(binding.etRam, PhoneSpecsData.ram)
         setupSubstringDropdown(binding.etStorage, PhoneSpecsData.storage)
         setupSubstringDropdown(binding.etBattery, PhoneSpecsData.battery)
+        // Chipset, GPU, and OS will be set by updateSpecsBasedOnBrand
         setupSubstringDropdown(binding.etChipset, PhoneSpecsData.chipsets)
         setupSubstringDropdown(binding.etCamera, PhoneSpecsData.camera)
         setupSubstringDropdown(binding.etDisplay, PhoneSpecsData.display)
 
         // New GSMArena specs
-        setupSubstringDropdown(binding.etOs, PhoneSpecsData.osOptions)
         setupSubstringDropdown(binding.etNetwork, PhoneSpecsData.networkOptions)
         setupSubstringDropdown(binding.etWeight, PhoneSpecsData.weightOptions)
         setupSubstringDropdown(binding.etDimensions, PhoneSpecsData.dimensionsOptions)
         setupSubstringDropdown(binding.etBuild, PhoneSpecsData.buildOptions)
         setupSubstringDropdown(binding.etProtection, PhoneSpecsData.protectionOptions)
-        setupSubstringDropdown(binding.etGpu, PhoneSpecsData.gpuOptions)
         setupSubstringDropdown(binding.etCharging, PhoneSpecsData.chargingOptions)
         setupSubstringDropdown(binding.etSensors, PhoneSpecsData.sensorsOptions)
         setupSubstringDropdown(binding.etColors, PhoneSpecsData.colorsOptions)
+
+        // These will be updated dynamically when brand changes
+        setupSubstringDropdown(binding.etOs, PhoneSpecsData.osOptions)
+        setupSubstringDropdown(binding.etGpu, PhoneSpecsData.gpuOptions)
+    }
+
+    // ── Update dropdowns based on selected brand ─────────────────────────────
+    private fun updateSpecsBasedOnBrand(brand: String) {
+        // Update Chipset dropdown
+        val filteredChipsets = PhoneSpecsData.getFilteredChipsets(brand)
+        setupSubstringDropdown(binding.etChipset, filteredChipsets)
+
+        // Update GPU dropdown
+        val filteredGpu = PhoneSpecsData.getFilteredGpu(brand)
+        setupSubstringDropdown(binding.etGpu, filteredGpu)
+
+        // Update OS dropdown
+        val filteredOs = PhoneSpecsData.getFilteredOs(brand)
+        setupSubstringDropdown(binding.etOs, filteredOs)
     }
 
     private fun setupImagePicker() {
@@ -170,7 +191,9 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         binding.tvDialogSubtitle.text = "Update the phone specifications"
 
         binding.etBrand.setText(phone.brand)
-        // Load brand-specific models
+        // Apply brand-specific filtering for existing phone
+        updateSpecsBasedOnBrand(phone.brand)
+
         val models = PhoneSpecsData.modelsByBrand[phone.brand] ?: PhoneSpecsData.modelsByBrand.values.flatten()
         setupSubstringDropdown(binding.etModel, models)
         binding.etModel.setText(phone.model)
@@ -184,8 +207,6 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         binding.etBattery.setText(phone.battery)
         binding.etChipset.setText(phone.chipset)
         binding.etDisplay.setText(phone.display)
-
-        // New specs - remove the false parameter
         binding.etOs.setText(phone.os)
         binding.etNetwork.setText(phone.network)
         binding.etWeight.setText(phone.weight)
@@ -225,17 +246,14 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         lifecycleScope.launch {
             setLoadingState(true)
 
-            // If we're adding a new phone (not editing), check for duplicate
             if (editPhone == null) {
                 val existingPhone = phoneRepository.findDuplicatePhone(phone.brand, phone.model)
                 if (existingPhone != null) {
-                    // Duplicate found — show quantity update dialog instead of blocking
                     setLoadingState(false)
                     showDuplicateStockDialog(existingPhone)
                     return@launch
                 }
             } else {
-                // Editing: check for duplicate with other phones (not self)
                 val isDuplicate = phoneRepository.isDuplicate(phone.brand, phone.model, editPhone?.id)
                 if (isDuplicate) {
                     setLoadingState(false)
@@ -244,7 +262,6 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
                 }
             }
 
-            // Upload image to Cloudinary (replaces Firebase Storage)
             val finalImageUrl = if (selectedImageUri != null) {
                 try {
                     val url = CloudinaryHelper.uploadPhoneImage(selectedImageUri!!)
@@ -279,21 +296,15 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         }
     }
 
-    /**
-     * Shows a dialog when a duplicate phone (same brand + model) is detected.
-     * Instead of blocking, allows the admin to increase/decrease the quantity to add.
-     */
     private fun showDuplicateStockDialog(existingPhone: Phone) {
         val ctx = context ?: return
         var quantityToAdd = 1
 
-        // Build custom layout
         val container = LinearLayout(ctx).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(64, 48, 64, 16)
         }
 
-        // Info text
         val infoText = TextView(ctx).apply {
             text = "${existingPhone.brand} ${existingPhone.model} already exists.\nCurrent stock: ${existingPhone.stock}\n\nHow many units to add?"
             textSize = 14f
@@ -301,22 +312,15 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         }
         container.addView(infoText)
 
-        // Spacer
         val spacer = View(ctx).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 32
-            )
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 32)
         }
         container.addView(spacer)
 
-        // Quantity row: [ - ] qty [ + ]
         val qtyRow = LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = android.view.Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         }
 
         val qtyText = TextView(ctx).apply {
@@ -362,7 +366,6 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         qtyRow.addView(btnIncrease)
         container.addView(qtyRow)
 
-        // Preview of new total
         val previewText = TextView(ctx).apply {
             text = "New total stock: ${existingPhone.stock + quantityToAdd}"
             textSize = 12f
@@ -372,7 +375,6 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         }
         container.addView(previewText)
 
-        // Update preview when quantity changes
         btnDecrease.setOnClickListener {
             if (quantityToAdd > 1) {
                 quantityToAdd--
@@ -417,12 +419,11 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
     }
 
     private fun buildPhoneFromForm(): Phone? {
-        val brand    = binding.etBrand.text.toString().trim()
-        val model    = binding.etModel.text.toString().trim()
+        val brand = binding.etBrand.text.toString().trim()
+        val model = binding.etModel.text.toString().trim()
         val priceStr = binding.etPrice.text.toString().trim()
         val category = binding.actvCategory.text.toString().trim()
 
-        // Clear previous errors
         binding.tilBrand?.error = null
         binding.tilModel?.error = null
         (binding.etPrice.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = null
@@ -436,7 +437,6 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
             binding.tilModel?.error = "Model is required"; binding.etModel.requestFocus(); return null
         }
 
-        // Price validation
         if (priceStr.isEmpty()) {
             (binding.etPrice.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Price is required"
             binding.etPrice.requestFocus(); return null
@@ -467,8 +467,6 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         val battery = binding.etBattery.text.toString().trim()
         val chipset = binding.etChipset.text.toString().trim()
         val display = binding.etDisplay.text.toString().trim()
-
-        // New specs
         val os = binding.etOs.text.toString().trim()
         val network = binding.etNetwork.text.toString().trim()
         val weight = binding.etWeight.text.toString().trim()
@@ -481,7 +479,6 @@ class AddEditPhoneDialog : BottomSheetDialogFragment() {
         val colors = binding.etColors.text.toString().trim()
         val releaseDate = binding.etReleaseDate.text.toString().trim()
 
-        // Stock validation
         if (stockStr.isEmpty()) {
             (binding.etStock.parent.parent as? com.google.android.material.textfield.TextInputLayout)?.error = "Stock is required"
             binding.etStock.requestFocus(); return null

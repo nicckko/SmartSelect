@@ -39,7 +39,7 @@
 22-->[com.google.android.recaptcha:recaptcha:18.4.0] C:\Users\ADMIN\.gradle\caches\8.13\transforms\0bf6c478e568fc7bc90174d4b2d2c753\transformed\jetified-recaptcha-18.4.0\AndroidManifest.xml:9:22-95
 23
 24    <application
-24-->C:\Users\ADMIN\AndroidStudioProjects\smartSelect1\app\src\main\AndroidManifest.xml:7:5-32:19
+24-->C:\Users\ADMIN\AndroidStudioProjects\smartSelect1\app\src\main\AndroidManifest.xml:7:5-31:19
 25        android:name="com.smartselect.SmartSelectApp"
 25-->C:\Users\ADMIN\AndroidStudioProjects\smartSelect1\app\src\main\AndroidManifest.xml:8:9-39
 26        android:allowBackup="true"

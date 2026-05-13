@@ -70,6 +70,57 @@ object PhoneSpecsData {
         )
     )
 
+    // ============ BRAND-SPECIFIC FILTERED OPTIONS ============
+
+    // Apple-only options
+    val appleChipsets = listOf(
+        "Apple A13 Bionic", "Apple A14 Bionic", "Apple A15 Bionic", "Apple A16 Bionic",
+        "Apple A17 Pro", "Apple A18", "Apple A18 Pro"
+    )
+
+    val appleGpu = listOf("Apple GPU (5-core)", "Apple GPU (4-core)")
+
+    val appleOs = listOf("iOS 18", "iOS 17", "iOS 16")
+
+    // Android options (all non-Apple brands)
+    val androidChipsets = listOf(
+        "Snapdragon 460","Snapdragon 480","Snapdragon 480+","Snapdragon 662","Snapdragon 665","Snapdragon 680","Snapdragon 695",
+        "Snapdragon 720G","Snapdragon 730G","Snapdragon 732G","Snapdragon 750G","Snapdragon 765G",
+        "Snapdragon 778G","Snapdragon 778G+","Snapdragon 782G","Snapdragon 7s Gen 2","Snapdragon 7 Gen 1","Snapdragon 7 Gen 3",
+        "Snapdragon 855","Snapdragon 860","Snapdragon 865","Snapdragon 870","Snapdragon 888","Snapdragon 888+",
+        "Snapdragon 8 Gen 1","Snapdragon 8+ Gen 1","Snapdragon 8 Gen 2","Snapdragon 8 Gen 3","Snapdragon 8 Elite",
+        "Dimensity 700","Dimensity 810","Dimensity 900","Dimensity 920","Dimensity 1080","Dimensity 1200",
+        "Dimensity 6020","Dimensity 6100+","Dimensity 7020","Dimensity 7050","Dimensity 7200","Dimensity 7300",
+        "Dimensity 8050","Dimensity 8100","Dimensity 8200","Dimensity 8300",
+        "Dimensity 9000","Dimensity 9200","Dimensity 9200+","Dimensity 9300","Dimensity 9400",
+        "Exynos 850","Exynos 1280","Exynos 1380","Exynos 2200","Exynos 2400",
+        "Helio G35","Helio G70","Helio G80","Helio G85","Helio G88","Helio G95","Helio G96","Helio G99",
+        "Google Tensor G3","Google Tensor G4",
+        "Unisoc T606","Unisoc T612","Unisoc T616","Unisoc T618"
+    )
+
+    val androidGpu = listOf(
+        "Adreno 750", "Adreno 740", "Adreno 730", "Adreno 660", "Adreno 650",
+        "Mali-G710", "Mali-G78", "Mali-G77", "Immortalis-G715"
+    )
+
+    val androidOs = listOf("Android 14", "Android 13", "Android 12", "Android 11", "HarmonyOS 4", "HarmonyOS 3")
+
+    // Helper functions to get filtered options based on brand
+    fun getFilteredChipsets(brand: String): List<String> {
+        return if (brand == "Apple") appleChipsets else androidChipsets
+    }
+
+    fun getFilteredGpu(brand: String): List<String> {
+        return if (brand == "Apple") appleGpu else androidGpu
+    }
+
+    fun getFilteredOs(brand: String): List<String> {
+        return if (brand == "Apple") appleOs else androidOs
+    }
+
+    // ============ EXISTING LISTS (keep as is for backup/compatibility) ============
+
     val chipsets = listOf(
         "Apple A13 Bionic","Apple A14 Bionic","Apple A15 Bionic","Apple A16 Bionic","Apple A17 Pro","Apple A18","Apple A18 Pro",
         "Snapdragon 460","Snapdragon 480","Snapdragon 480+","Snapdragon 662","Snapdragon 665","Snapdragon 680","Snapdragon 695",
@@ -115,10 +166,7 @@ object PhoneSpecsData {
         "6.9\" LTPO AMOLED 1-120Hz","7.6\" Dynamic AMOLED 2X 120Hz"
     )
 
-    // UPDATED: Added "Gaming" to categories
     val categories = listOf("iPhone","Android","Flagship","Mid-range","Budget","Gaming")
-
-    // Add these new lists to PhoneSpecsData object
 
     val osOptions = listOf(
         "Android 14", "Android 13", "Android 12", "Android 11",
